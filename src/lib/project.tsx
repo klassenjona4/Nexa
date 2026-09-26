@@ -19,6 +19,7 @@ export type Project = {
   plan: string;
   brief: Brief | null;
   last_activity_at: string;
+  deletion_warned_at: string | null;
 };
 
 type ProjectState = { project: Project; members: Member[]; role: 'owner' | 'member'; isOwner: boolean; memberName: (id: string | null | undefined) => string };
@@ -42,7 +43,7 @@ export function useProjectQuery(projectId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('projects')
-        .select('id, group_id, title, module_code, final_deadline, plan, brief, last_activity_at, groups(name)')
+        .select('id, group_id, title, module_code, final_deadline, plan, brief, last_activity_at, deletion_warned_at, groups(name)')
         .eq('id', projectId!)
         .single();
       if (error) throw error;
@@ -58,6 +59,7 @@ export function useProjectQuery(projectId: string | undefined) {
         plan: data.plan,
         brief: parseBrief(data.brief),
         last_activity_at: data.last_activity_at,
+        deletion_warned_at: data.deletion_warned_at,
       };
       return { project, members: (members ?? []) as Member[] };
     },

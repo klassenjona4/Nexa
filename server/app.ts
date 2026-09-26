@@ -12,6 +12,8 @@ import { inviteRoutes, projectInviteRoutes } from './routes/invites.js';
 import { projectTaskRoutes, taskRoutes } from './routes/tasks.js';
 import { briefRoutes } from './routes/briefs.js';
 import { projectStatementRoutes, statementRoutes } from './routes/statements.js';
+import { cronRoutes } from './routes/cron.js';
+import { projectRoutes } from './routes/projects.js';
 import { readOutbox } from './services/email.js';
 
 export const app = new Hono<AppEnv>();
@@ -66,6 +68,8 @@ app.route('/api/tasks', taskRoutes);
 app.route('/api/projects/:projectId/briefs', briefRoutes);
 app.route('/api/projects/:projectId/statements', projectStatementRoutes);
 app.route('/api/statements', statementRoutes);
+app.route('/api/projects', projectRoutes);
+app.route('/api/cron', cronRoutes);
 
 // Test support: only when EMAIL_MOCK=1 outside production.
 if (flags.emailMock && !flags.production) {
