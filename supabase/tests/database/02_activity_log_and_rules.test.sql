@@ -147,6 +147,14 @@ select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), null, '
 select lives_ok(format('select public.release_usage(%L, %L)', pg_temp.fx('p'), 'statement_generation'), 'a failed call releases its reservation');
 select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), 5, 'the released unit can be used again');
 
+-- A paid tier is new data, not a schema change.
+insert into public.plan_limits (plan, kind, max_per_project) values ('pro', 'brief_breakdown', 7);
+update public.projects set plan = 'pro' where id = pg_temp.fx('p');
+select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), n, 'pro plan brief breakdown ' || n || ' is allowed')
+  from generate_series(1, 7) n;
+select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), null, 'the pro plan limit of 7 is enforced');
+select is(public.reserve_usage(gen_random_uuid(), 'brief_breakdown'), null, 'unknown projects get no usage');
+
 -- Rate limits -----------------------------------------------------------------------
 select is(public.rate_limit_hit('bucket-1', 2, 3600), true, 'first request is allowed');
 select is(public.rate_limit_hit('bucket-1', 2, 3600), true, 'second request is allowed');
