@@ -1,0 +1,54 @@
+.panel {
+  background: var(--white);
+  padding: var(--s6) var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  max-width: 640px;
+}
+.errorPanel {
+  border-top: var(--rule-strong);
+  padding: var(--s5);
+}
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.body {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--graphite);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  padding-top: var(--s2);
+}
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.loadingText {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+}
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.skeleton > div {
+  background: var(--mist);
+  height: 96px;
+}
+.skeleton > div:first-child {
+  height: 32px;
+  width: 60%;
+}
+.skeleton > div:last-child {
+  width: 80%;
+}

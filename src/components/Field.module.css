@@ -1,0 +1,55 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  min-width: 0;
+}
+.label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.control {
+  min-height: 44px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--graphite);
+  border-radius: 0;
+  background: var(--white);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+.control[readonly] {
+  background: var(--paper);
+}
+.control[aria-invalid='true'] {
+  border: 2px solid var(--rust);
+  padding: 9px 11px;
+}
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+.select {
+  padding: 0 8px;
+}
+.textarea {
+  font-family: var(--font-serif);
+  line-height: 1.5;
+  padding: 12px;
+  resize: vertical;
+}
+.hint {
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}
+.error {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--rust);
+}
+.compactLabel {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--graphite);
+}

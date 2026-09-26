@@ -1,0 +1,80 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.lg {
+  min-height: 48px;
+  padding: 0 24px;
+  font-size: 1rem;
+}
+.sm {
+  padding: 0 16px;
+  font-size: 0.875rem;
+}
+.block {
+  width: 100%;
+}
+.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.primary:hover:not(:disabled) {
+  background: var(--graphite);
+  border-color: var(--graphite);
+  color: var(--paper);
+}
+.secondary {
+  background: var(--white);
+  color: var(--ink);
+}
+.secondary:hover:not(:disabled) {
+  background: var(--mist);
+  color: var(--ink);
+}
+.text {
+  min-height: 44px;
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: var(--slate);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.text:hover:not(:disabled) {
+  color: var(--ink);
+}
+.destructive {
+  background: var(--white);
+  color: var(--rust);
+  border-color: var(--rust);
+}
+.destructive:hover:not(:disabled) {
+  background: var(--mist);
+}
+.danger {
+  background: var(--rust);
+  color: var(--white);
+  border-color: var(--rust);
+}
+.btn:disabled {
+  background: var(--stone);
+  border-color: var(--stone);
+  color: var(--white);
+}
+.text:disabled {
+  background: none;
+  color: var(--graphite);
+}
