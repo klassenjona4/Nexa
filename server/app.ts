@@ -9,6 +9,7 @@ import { authRoutes } from './routes/auth.js';
 import { profileRoutes } from './routes/profile.js';
 import { groupRoutes } from './routes/groups.js';
 import { inviteRoutes, projectInviteRoutes } from './routes/invites.js';
+import { projectTaskRoutes, taskRoutes } from './routes/tasks.js';
 import { readOutbox } from './services/email.js';
 
 export const app = new Hono<AppEnv>();
@@ -61,6 +62,8 @@ app.route('/api/profile', profileRoutes);
 app.route('/api/groups', groupRoutes);
 app.route('/api/projects/:projectId/invites', projectInviteRoutes);
 app.route('/api/invites', inviteRoutes);
+app.route('/api/projects/:projectId/tasks', projectTaskRoutes);
+app.route('/api/tasks', taskRoutes);
 
 // Test support: only when EMAIL_MOCK=1 outside production.
 if (flags.emailMock && !flags.production) {

@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 import { ToastProvider } from '../components/Toast';
 import { AuthCallback, AuthConfirm } from '../screens/auth/AuthConfirm';
+import { Board } from '../screens/board/Board';
+import { TaskDetail } from '../screens/board/TaskDetail';
 import { SignIn } from '../screens/auth/SignIn';
 import { Welcome } from '../screens/auth/Welcome';
 import { Placeholder } from '../screens/Placeholder';
@@ -54,8 +56,8 @@ const router = createBrowserRouter([
             element: <ProjectLayout />,
             children: [
               { index: true, element: <Navigate to="board" replace /> },
-              { path: 'board', element: <Placeholder title="Task board" /> },
-              { path: 'tasks/:taskId', element: <Placeholder title="Task" /> },
+              { path: 'board', element: <Board /> },
+              { path: 'tasks/:taskId', element: <TaskDetail /> },
               { path: 'brief', element: <Placeholder title="Brief" /> },
               { path: 'proposal', element: <Placeholder title="Task proposal" /> },
               { path: 'log', element: <Placeholder title="Contribution log" /> },

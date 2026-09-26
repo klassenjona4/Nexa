@@ -4,12 +4,14 @@ import p from '../../app/page.module.css';
 import { ErrorPanel, LoadingState } from '../../components/States';
 import { codeOf } from '../../lib/api';
 import { ProjectProvider, useProjectQuery } from '../../lib/project';
+import { useProjectRealtime } from '../../lib/tasks';
 import { ButtonLink } from '../../components/Button';
 
 export function ProjectLayout() {
   const { projectId } = useParams();
   const { user } = useAuth();
   const q = useProjectQuery(projectId);
+  useProjectRealtime(projectId ?? '');
 
   if (q.isPending) {
     return (

@@ -53,3 +53,15 @@ export async function newPage(browser: Browser, like: Page): Promise<Page> {
   const ctx = await browser.newContext({ viewport: like.viewportSize() ?? undefined });
   return ctx.newPage();
 }
+
+// Owner opens the invite page; a second student signs up through the link and joins.
+export async function inviteAndJoin(owner: Page, browser: Browser, projectId: string, name: string): Promise<Page> {
+  await owner.goto(`/p/${projectId}/invite`);
+  const field = owner.getByLabel('Invite link', { exact: true });
+  await expect(field).toHaveValue(/\/join\/[A-Za-z0-9_-]{22}$/);
+  const url = new URL(await field.inputValue());
+  const guest = await newPage(browser, owner);
+  await signIn(guest, uniqueEmail(name.split(' ')[0]!.toLowerCase()), name, `${url.pathname}/accept`);
+  await expect(guest).toHaveURL(new RegExp(`/p/${projectId}/board`));
+  return guest;
+}
