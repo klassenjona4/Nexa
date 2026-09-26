@@ -17,6 +17,7 @@ import { Dashboard } from '../screens/projects/Dashboard';
 import { GroupSettings } from '../screens/projects/GroupSettings';
 import { Invite } from '../screens/projects/Invite';
 import { ProjectLayout } from '../screens/projects/ProjectLayout';
+import { Legal } from '../screens/legal/Legal';
 import { Join, JoinAccept, JoinEntry } from '../screens/public/Join';
 import { Landing } from '../screens/public/Landing';
 import { AuthProvider } from './AuthProvider';
@@ -37,6 +38,8 @@ const router = createBrowserRouter([
       { path: '/sign-in', element: <SignIn /> },
       { path: '/auth/confirm', element: <AuthConfirm /> },
       { path: '/auth/callback', element: <AuthCallback /> },
+      { path: '/privacy', element: <Legal kind="privacy" /> },
+      { path: '/terms', element: <Legal kind="terms" /> },
       { path: '/join', element: <JoinEntry /> },
       { path: '/join/:code', element: <Join /> },
     ],
