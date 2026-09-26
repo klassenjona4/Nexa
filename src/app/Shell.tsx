@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useMemo } from 'react';
-import { Link, matchPath, NavLink, Outlet, useLocation } from 'react-router';
+import { Link, matchPath, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { Avatar } from '../components/Avatar';
 import { ButtonLink } from '../components/Button';
 import { Label } from '../components/Label';
@@ -46,6 +46,7 @@ export function AppShell() {
   const bp = useBreakpoint();
   const desktop = bp === 'desktop';
   const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
   const projects = useMyProjects(user?.id);
   const { pathname, projectId, section } = useRouteInfo();
   const current = projects.data?.find((p) => p.id === projectId);
@@ -122,7 +123,14 @@ export function AppShell() {
                 <span className={s.projectModule}>Account settings</span>
               </span>
             </NavLink>
-            <button type="button" className={s.signOut} onClick={() => void signOut()}>
+            <button
+              type="button"
+              className={s.signOut}
+              onClick={() => {
+                navigate('/', { replace: true });
+                void signOut();
+              }}
+            >
               Sign out
             </button>
           </div>

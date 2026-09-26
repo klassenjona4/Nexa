@@ -15,6 +15,7 @@ import { projectStatementRoutes, statementRoutes } from './routes/statements.js'
 import { cronRoutes } from './routes/cron.js';
 import { projectRoutes } from './routes/projects.js';
 import { calendarRoutes, icsRoutes, projectCalendarRoutes } from './routes/calendar.js';
+import { accountRoutes } from './routes/account.js';
 import { readOutbox } from './services/email.js';
 
 export const app = new Hono<AppEnv>();
@@ -74,6 +75,7 @@ app.route('/api/calendar', calendarRoutes);
 app.route('/cal', icsRoutes);
 app.route('/api/projects', projectRoutes);
 app.route('/api/cron', cronRoutes);
+app.route('/api/account', accountRoutes);
 
 // Test support: only when EMAIL_MOCK=1 outside production.
 if (flags.emailMock && !flags.production) {

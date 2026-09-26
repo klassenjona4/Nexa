@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 import { ToastProvider } from '../components/Toast';
+import { Account } from '../screens/account/Account';
 import { AuthCallback, AuthConfirm } from '../screens/auth/AuthConfirm';
 import { Board } from '../screens/board/Board';
 import { Brief } from '../screens/brief/Brief';
@@ -11,7 +12,6 @@ import { Statement } from '../screens/statement/Statement';
 import { TaskDetail } from '../screens/board/TaskDetail';
 import { SignIn } from '../screens/auth/SignIn';
 import { Welcome } from '../screens/auth/Welcome';
-import { Placeholder } from '../screens/Placeholder';
 import { CreateProject } from '../screens/projects/CreateProject';
 import { Dashboard } from '../screens/projects/Dashboard';
 import { GroupSettings } from '../screens/projects/GroupSettings';
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
               { path: 'settings', element: <GroupSettings /> },
             ],
           },
-          { path: '/account', element: <Placeholder title="Account settings" /> },
+          { path: '/account', element: <Account /> },
         ],
       },
     ],

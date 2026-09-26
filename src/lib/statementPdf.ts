@@ -99,13 +99,4 @@ export function statementText(input: Input): string {
   return [input.label, input.title, input.period, '', ...input.sections.flatMap((s) => [s.heading, s.body, '']), ...input.members.map((m) => `${m}: signature and date ____________________`)].join('\n');
 }
 
-export function download(blob: Blob, name: string) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = name;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
+export { saveBlob as download } from './download';
