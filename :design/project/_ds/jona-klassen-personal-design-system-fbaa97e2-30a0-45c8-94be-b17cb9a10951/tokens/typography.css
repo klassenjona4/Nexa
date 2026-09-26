@@ -1,0 +1,38 @@
+:root{
+--font-sans:'Hanken Grotesk','Helvetica Neue',Arial,sans-serif;
+--font-serif:'Source Serif 4',Georgia,Cambria,'Times New Roman',serif;
+--font-heading:var(--font-sans);
+--font-body:var(--font-serif);
+
+--weight-regular:400;--weight-medium:500;--weight-semibold:600;--weight-bold:700;
+
+/* Document scale (A4) — size / leading / tracking */
+--doc-title-size:32pt;--doc-title-leading:35pt;--doc-title-tracking:-0.02em;
+--doc-h1-size:20pt;--doc-h1-leading:24pt;--doc-h1-tracking:-0.01em;
+--doc-h2-size:14pt;--doc-h2-leading:18pt;
+--doc-h3-size:11pt;--doc-h3-leading:15pt;
+--doc-body-size:11pt;--doc-body-leading:16.5pt;
+--doc-quote-size:12pt;--doc-quote-leading:18pt;
+--doc-caption-size:9pt;--doc-caption-leading:12pt;--doc-caption-tracking:0.01em;
+--doc-label-size:8pt;--doc-label-leading:10pt;
+--doc-footnote-size:8.5pt;--doc-footnote-leading:11.5pt;
+--doc-references-size:10pt;--doc-references-leading:14pt;
+--doc-running-size:8pt;
+
+/* Slide scale (960 x 540 pt) */
+--slide-title-size:72pt;--slide-title-leading:1;--slide-title-tracking:-0.03em;
+--slide-h1-size:40pt;--slide-h1-leading:1.05;--slide-h1-tracking:-0.02em;
+--slide-h2-size:24pt;--slide-h2-leading:1.2;--slide-h2-tracking:-0.01em;
+--slide-h3-size:18pt;--slide-h3-leading:1.3;
+--slide-body-size:18pt;--slide-body-leading:1.4;
+--slide-quote-size:56pt;--slide-quote-leading:1.15;
+--slide-divider-size:64pt;
+--slide-divider-number-size:200pt;
+--slide-caption-size:14pt;
+--slide-label-size:12pt;
+--slide-meta-size:12pt;
+
+/* Shared */
+--label-tracking:0.08em;
+--min-doc-size:8pt;--min-slide-size:12pt;
+}

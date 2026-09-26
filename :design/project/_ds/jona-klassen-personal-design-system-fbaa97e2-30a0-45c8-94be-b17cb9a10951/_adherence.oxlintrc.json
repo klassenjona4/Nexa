@@ -1,0 +1,498 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": [
+              "components/core/**",
+              "components/data/**",
+              "components/document/**",
+              "components/slides/**"
+            ],
+            "message": "Import design-system components from 'index.js', not component internals."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Hanken Grotesk|Source Serif 4))/i]",
+        "message": "Font not provided by the design system. Available: Hanken Grotesk, Source Serif 4."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|highlight|max|size|unit|categoryLabel|valueLabel|baseline|key|ref|className|style|children)$/]",
+        "message": "<BarChart> doesn't accept that prop. Declared props: data, highlight, max, size, unit, categoryLabel, valueLabel, baseline."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute[name.name='size'] > Literal[value!=/^(?:slide|compact)$/]",
+        "message": "<BarChart> size must be one of 'slide' | 'compact'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='BlockQuote'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|citation|key|ref|className|style|children)$/]",
+        "message": "<BlockQuote> doesn't accept that prop. Declared props: children, citation."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ChartSlide'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|description|data|highlight|categoryLabel|valueLabel|meta|source|page|key|ref|className|style|children)$/]",
+        "message": "<ChartSlide> doesn't accept that prop. Declared props: title, description, data, highlight, categoryLabel, valueLabel, meta, source, page."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ClosingSlide'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|items|key|ref|className|style|children)$/]",
+        "message": "<ClosingSlide> doesn't accept that prop. Declared props: title, items."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ContentSlide'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|points|meta|footer|key|ref|className|style|children)$/]",
+        "message": "<ContentSlide> doesn't accept that prop. Declared props: title, points, meta, footer."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='CoverPage'] > JSXAttribute > JSXIdentifier[name!=/^(?:institution|programme|label|title|subtitle|fields|key|ref|className|style|children)$/]",
+        "message": "<CoverPage> doesn't accept that prop. Declared props: institution, programme, label, title, subtitle, fields."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='DataTable'] > JSXAttribute > JSXIdentifier[name!=/^(?:number|title|columns|rows|highlight|widths|key|ref|className|style|children)$/]",
+        "message": "<DataTable> doesn't accept that prop. Declared props: number, title, columns, rows, highlight, widths."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='DocPage'] > JSXAttribute > JSXIdentifier[name!=/^(?:header|pageNumber|label|children|style|key|ref|className|style|children)$/]",
+        "message": "<DocPage> doesn't accept that prop. Declared props: header, pageNumber, label, children, style."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Figure'] > JSXAttribute > JSXIdentifier[name!=/^(?:number|caption|source|src|placeholder|ratio|width|key|ref|className|style|children)$/]",
+        "message": "<Figure> doesn't accept that prop. Declared props: number, caption, source, src, placeholder, ratio, width."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Footnotes'] > JSXAttribute > JSXIdentifier[name!=/^(?:notes|key|ref|className|style|children)$/]",
+        "message": "<Footnotes> doesn't accept that prop. Declared props: notes."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='GroupedBarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:categories|series|max|height|gridlines|note|key|ref|className|style|children)$/]",
+        "message": "<GroupedBarChart> doesn't accept that prop. Declared props: categories, series, max, height, gridlines, note."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Heading'] > JSXAttribute > JSXIdentifier[name!=/^(?:level|first|children|style|key|ref|className|style|children)$/]",
+        "message": "<Heading> doesn't accept that prop. Declared props: level, first, children, style."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ImagePlaceholder'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|src|alt|ratio|tone|fontSize|grayscale|style|key|ref|className|style|children)$/]",
+        "message": "<ImagePlaceholder> doesn't accept that prop. Declared props: children, src, alt, ratio, tone, fontSize, grayscale, style."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ImagePlaceholder'] > JSXAttribute[name.name='tone'] > Literal[value!=/^(?:mist|sage)$/]",
+        "message": "<ImagePlaceholder> tone must be one of 'mist' | 'sage'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ImageSlide'] > JSXAttribute > JSXIdentifier[name!=/^(?:src|imageLabel|title|body|meta|credit|page|key|ref|className|style|children)$/]",
+        "message": "<ImageSlide> doesn't accept that prop. Declared props: src, imageLabel, title, body, meta, credit, page."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Label'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|color|size|style|key|ref|className|style|children)$/]",
+        "message": "<Label> doesn't accept that prop. Declared props: children, color, size, style."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Label'] > JSXAttribute[name.name='color'] > Literal[value!=/^(?:ink|graphite|rust|sage|paper)$/]",
+        "message": "<Label> color must be one of 'ink' | 'graphite' | 'rust' | 'sage' | 'paper'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Paragraph'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|last|style|key|ref|className|style|children)$/]",
+        "message": "<Paragraph> doesn't accept that prop. Declared props: children, last, style."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='QuoteSlide'] > JSXAttribute > JSXIdentifier[name!=/^(?:quote|attribution|meta|footer|size|key|ref|className|style|children)$/]",
+        "message": "<QuoteSlide> doesn't accept that prop. Declared props: quote, attribution, meta, footer, size."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ReferenceList'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|entries|key|ref|className|style|children)$/]",
+        "message": "<ReferenceList> doesn't accept that prop. Declared props: title, entries."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='SectionDivider'] > JSXAttribute > JSXIdentifier[name!=/^(?:number|name|label|key|ref|className|style|children)$/]",
+        "message": "<SectionDivider> doesn't accept that prop. Declared props: number, name, label."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Slide'] > JSXAttribute > JSXIdentifier[name!=/^(?:tone|label|children|style|key|ref|className|style|children)$/]",
+        "message": "<Slide> doesn't accept that prop. Declared props: tone, label, children, style."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Slide'] > JSXAttribute[name.name='tone'] > Literal[value!=/^(?:paper|ink|mist)$/]",
+        "message": "<Slide> tone must be one of 'paper' | 'ink' | 'mist'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='SlideMeta'] > JSXAttribute > JSXIdentifier[name!=/^(?:items|position|left|right|color|key|ref|className|style|children)$/]",
+        "message": "<SlideMeta> doesn't accept that prop. Declared props: items, position, left, right, color."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='SlideMeta'] > JSXAttribute[name.name='position'] > Literal[value!=/^(?:top|bottom)$/]",
+        "message": "<SlideMeta> position must be one of 'top' | 'bottom'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='TableOfContents'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|entries|key|ref|className|style|children)$/]",
+        "message": "<TableOfContents> doesn't accept that prop. Declared props: title, entries."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='TitleSlide'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|place|title|meta|key|ref|className|style|children)$/]",
+        "message": "<TitleSlide> doesn't accept that prop. Declared props: label, place, title, meta."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {
+      "BarChart": {
+        "replaces": []
+      },
+      "BlockQuote": {
+        "replaces": []
+      },
+      "ChartSlide": {
+        "replaces": []
+      },
+      "ClosingSlide": {
+        "replaces": []
+      },
+      "ContentSlide": {
+        "replaces": []
+      },
+      "CoverPage": {
+        "replaces": []
+      },
+      "DataTable": {
+        "replaces": []
+      },
+      "DocPage": {
+        "replaces": []
+      },
+      "Figure": {
+        "replaces": []
+      },
+      "Footnotes": {
+        "replaces": []
+      },
+      "GroupedBarChart": {
+        "replaces": []
+      },
+      "Heading": {
+        "replaces": []
+      },
+      "ImagePlaceholder": {
+        "replaces": []
+      },
+      "ImageSlide": {
+        "replaces": []
+      },
+      "Label": {
+        "replaces": []
+      },
+      "Paragraph": {
+        "replaces": []
+      },
+      "QuoteSlide": {
+        "replaces": []
+      },
+      "ReferenceList": {
+        "replaces": []
+      },
+      "SectionDivider": {
+        "replaces": []
+      },
+      "Slide": {
+        "replaces": []
+      },
+      "SlideMeta": {
+        "replaces": []
+      },
+      "TableOfContents": {
+        "replaces": []
+      },
+      "TitleSlide": {
+        "replaces": []
+      }
+    },
+    "tokens": [
+      "--chart-1",
+      "--chart-2",
+      "--chart-3",
+      "--chart-4",
+      "--chart-5",
+      "--chart-baseline",
+      "--chart-grid",
+      "--chart-highlight",
+      "--chart-muted",
+      "--doc-body-leading",
+      "--doc-body-size",
+      "--doc-caption-leading",
+      "--doc-caption-max",
+      "--doc-caption-size",
+      "--doc-caption-tracking",
+      "--doc-column",
+      "--doc-footnote-leading",
+      "--doc-footnote-rule",
+      "--doc-footnote-size",
+      "--doc-gutter",
+      "--doc-h",
+      "--doc-h1-leading",
+      "--doc-h1-size",
+      "--doc-h1-tracking",
+      "--doc-h2-leading",
+      "--doc-h2-size",
+      "--doc-h3-leading",
+      "--doc-h3-size",
+      "--doc-hanging-indent",
+      "--doc-label-leading",
+      "--doc-label-size",
+      "--doc-margin-bottom",
+      "--doc-margin-top",
+      "--doc-margin-x",
+      "--doc-quote-indent",
+      "--doc-quote-leading",
+      "--doc-quote-size",
+      "--doc-references-leading",
+      "--doc-references-size",
+      "--doc-running-offset",
+      "--doc-running-size",
+      "--doc-text-width",
+      "--doc-title-leading",
+      "--doc-title-size",
+      "--doc-title-tracking",
+      "--doc-toc-indent",
+      "--doc-w",
+      "--font-body",
+      "--font-heading",
+      "--font-sans",
+      "--font-serif",
+      "--graphite",
+      "--ink",
+      "--label-tracking",
+      "--min-doc-size",
+      "--min-slide-size",
+      "--mist",
+      "--paper",
+      "--radius",
+      "--rule-hairline",
+      "--rule-hairline-color",
+      "--rule-row-color",
+      "--rule-strong",
+      "--rule-strong-color",
+      "--rust",
+      "--s1",
+      "--s2",
+      "--s3",
+      "--s4",
+      "--s5",
+      "--s6",
+      "--s7",
+      "--s8",
+      "--s9",
+      "--sage",
+      "--sage-dark",
+      "--shadow",
+      "--slate",
+      "--slate-light",
+      "--slide-body-leading",
+      "--slide-body-size",
+      "--slide-caption-size",
+      "--slide-column",
+      "--slide-content-top",
+      "--slide-divider-number-size",
+      "--slide-divider-size",
+      "--slide-gutter",
+      "--slide-h",
+      "--slide-h1-leading",
+      "--slide-h1-size",
+      "--slide-h1-tracking",
+      "--slide-h2-leading",
+      "--slide-h2-size",
+      "--slide-h2-tracking",
+      "--slide-h3-leading",
+      "--slide-h3-size",
+      "--slide-half",
+      "--slide-label-size",
+      "--slide-margin",
+      "--slide-meta-offset",
+      "--slide-meta-size",
+      "--slide-quote-leading",
+      "--slide-quote-size",
+      "--slide-title-leading",
+      "--slide-title-size",
+      "--slide-title-tracking",
+      "--slide-w",
+      "--stone",
+      "--surface-desk",
+      "--surface-inverse",
+      "--surface-page",
+      "--surface-panel",
+      "--surface-panel-alt",
+      "--surface-slide",
+      "--text-accent",
+      "--text-link",
+      "--text-on-inverse",
+      "--text-on-inverse-muted",
+      "--text-primary",
+      "--text-secondary",
+      "--weight-bold",
+      "--weight-medium",
+      "--weight-regular",
+      "--weight-semibold",
+      "--white"
+    ],
+    "tokenKinds": {
+      "--ink": "color",
+      "--slate": "color",
+      "--white": "color",
+      "--paper": "color",
+      "--mist": "color",
+      "--sage": "color",
+      "--stone": "color",
+      "--graphite": "color",
+      "--rust": "color",
+      "--slate-light": "color",
+      "--sage-dark": "color",
+      "--text-primary": "font",
+      "--text-secondary": "font",
+      "--text-link": "font",
+      "--text-accent": "font",
+      "--text-on-inverse": "font",
+      "--text-on-inverse-muted": "font",
+      "--surface-page": "color",
+      "--surface-slide": "color",
+      "--surface-panel": "color",
+      "--surface-panel-alt": "color",
+      "--surface-inverse": "color",
+      "--surface-desk": "color",
+      "--rule-strong-color": "color",
+      "--rule-hairline-color": "color",
+      "--rule-row-color": "color",
+      "--chart-1": "color",
+      "--chart-2": "color",
+      "--chart-3": "color",
+      "--chart-4": "color",
+      "--chart-5": "color",
+      "--chart-muted": "color",
+      "--chart-highlight": "color",
+      "--chart-grid": "color",
+      "--chart-baseline": "color",
+      "--font-sans": "font",
+      "--font-serif": "font",
+      "--font-heading": "font",
+      "--font-body": "font",
+      "--weight-regular": "font",
+      "--weight-medium": "font",
+      "--weight-semibold": "font",
+      "--weight-bold": "font",
+      "--doc-title-size": "spacing",
+      "--doc-title-leading": "font",
+      "--doc-title-tracking": "font",
+      "--doc-h1-size": "spacing",
+      "--doc-h1-leading": "font",
+      "--doc-h1-tracking": "font",
+      "--doc-h2-size": "spacing",
+      "--doc-h2-leading": "font",
+      "--doc-h3-size": "spacing",
+      "--doc-h3-leading": "font",
+      "--doc-body-size": "spacing",
+      "--doc-body-leading": "font",
+      "--doc-quote-size": "spacing",
+      "--doc-quote-leading": "font",
+      "--doc-caption-size": "spacing",
+      "--doc-caption-leading": "font",
+      "--doc-caption-tracking": "font",
+      "--doc-label-size": "spacing",
+      "--doc-label-leading": "font",
+      "--doc-footnote-size": "spacing",
+      "--doc-footnote-leading": "font",
+      "--doc-references-size": "spacing",
+      "--doc-references-leading": "font",
+      "--doc-running-size": "spacing",
+      "--slide-title-size": "spacing",
+      "--slide-title-leading": "font",
+      "--slide-title-tracking": "font",
+      "--slide-h1-size": "spacing",
+      "--slide-h1-leading": "font",
+      "--slide-h1-tracking": "font",
+      "--slide-h2-size": "spacing",
+      "--slide-h2-leading": "font",
+      "--slide-h2-tracking": "font",
+      "--slide-h3-size": "spacing",
+      "--slide-h3-leading": "font",
+      "--slide-body-size": "spacing",
+      "--slide-body-leading": "font",
+      "--slide-quote-size": "spacing",
+      "--slide-quote-leading": "font",
+      "--slide-divider-size": "spacing",
+      "--slide-divider-number-size": "spacing",
+      "--slide-caption-size": "spacing",
+      "--slide-label-size": "spacing",
+      "--slide-meta-size": "spacing",
+      "--label-tracking": "font",
+      "--min-doc-size": "spacing",
+      "--min-slide-size": "spacing",
+      "--s1": "spacing",
+      "--s2": "spacing",
+      "--s3": "spacing",
+      "--s4": "spacing",
+      "--s5": "spacing",
+      "--s6": "spacing",
+      "--s7": "spacing",
+      "--s8": "spacing",
+      "--s9": "spacing",
+      "--doc-w": "spacing",
+      "--doc-h": "spacing",
+      "--doc-margin-top": "spacing",
+      "--doc-margin-bottom": "spacing",
+      "--doc-margin-x": "spacing",
+      "--doc-text-width": "spacing",
+      "--doc-column": "spacing",
+      "--doc-gutter": "spacing",
+      "--doc-running-offset": "spacing",
+      "--doc-quote-indent": "spacing",
+      "--doc-hanging-indent": "spacing",
+      "--doc-toc-indent": "spacing",
+      "--doc-footnote-rule": "spacing",
+      "--doc-caption-max": "spacing",
+      "--slide-w": "spacing",
+      "--slide-h": "spacing",
+      "--slide-margin": "spacing",
+      "--slide-column": "spacing",
+      "--slide-gutter": "spacing",
+      "--slide-meta-offset": "spacing",
+      "--slide-content-top": "spacing",
+      "--slide-half": "spacing",
+      "--rule-hairline": "spacing",
+      "--rule-strong": "spacing",
+      "--radius": "radius",
+      "--shadow": "shadow"
+    },
+    "fontFamilies": [
+      "Hanken Grotesk",
+      "Source Serif 4"
+    ]
+  }
+}

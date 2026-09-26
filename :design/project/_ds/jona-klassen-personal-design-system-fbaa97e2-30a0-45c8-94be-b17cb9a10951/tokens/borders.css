@@ -1,0 +1,6 @@
+:root{
+--rule-hairline:0.5pt; /* @kind spacing */
+--rule-strong:1pt; /* @kind spacing */
+--radius:0; /* @kind radius */
+--shadow:none; /* @kind shadow */
+}

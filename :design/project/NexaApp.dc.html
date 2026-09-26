@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/colors.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/typography.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/borders.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/styles.css">
+<script src="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/_ds_bundle.js"></script>
+<meta name="theme-color" content="#FFFFFF">
+<style>
+html,body{margin:0;height:100%;background:#F7F7F5}
+*:focus-visible{outline:2px solid #34566A;outline-offset:2px}
+a{color:#34566A;text-underline-offset:3px}
+a:hover{color:#141414}
+button,input,select,textarea{font:inherit}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="position:relative;height:{{ rootH }};display:flex;flex-direction:row;background:var(--paper);overflow:hidden;font-family:var(--font-sans);color:var(--ink)">
+
+<sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ false }}">
+<nav aria-label="Main" style="width:248px;flex:none;box-sizing:border-box;background:var(--white);border-right:0.5pt solid var(--sage);display:flex;flex-direction:column;gap:24px;padding:24px 16px;overflow:auto">
+  <button onClick="{{ go.dashboard }}" style="align-self:flex-start;background:none;border:none;padding:0 4px;min-height:44px;font-family:var(--font-sans);font-weight:600;font-size:1.5rem;letter-spacing:-0.03em;color:var(--ink);cursor:pointer">Nexa</button>
+  <button onClick="{{ go.create }}" style="min-height:44px;padding:0 16px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite);border-color:var(--graphite)">New group and project</button>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="padding:0 12px 8px"><x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Projects</x-import></div>
+    <sc-for list="{{ sideProjects }}" as="p" hint-placeholder-count="2">
+      <button onClick="{{ p.onClick }}" aria-current="{{ p.current }}" style="text-align:left;min-height:44px;padding:8px 12px;background:{{ p.bg }};border:none;border-radius:0;cursor:pointer;display:flex;flex-direction:column;gap:2px" style-hover="background:var(--mist)">
+        <span style="font-weight:{{ p.weight }};font-size:0.9375rem;color:var(--ink)">{{ p.group }}</span>
+        <span style="font-size:0.8125rem;color:var(--graphite)">{{ p.module }}</span>
+      </button>
+    </sc-for>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <div style="padding:0 12px 8px"><x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Media Law group 4</x-import></div>
+    <sc-for list="{{ sideNav }}" as="n" hint-placeholder-count="8">
+      <button onClick="{{ n.onClick }}" aria-current="{{ n.current }}" style="text-align:left;min-height:44px;padding:0 12px;background:{{ n.bg }};border:none;border-radius:0;font-weight:{{ n.weight }};font-size:0.9375rem;color:var(--ink);cursor:pointer" style-hover="background:var(--mist)">{{ n.label }}</button>
+    </sc-for>
+  </div>
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:2px;border-top:0.5pt solid var(--sage);padding-top:16px">
+    <button onClick="{{ go.account }}" aria-current="{{ accountCurrent }}" style="text-align:left;min-height:44px;padding:0 12px;background:{{ accountBg }};border:none;border-radius:0;display:flex;align-items:center;gap:12px;cursor:pointer" style-hover="background:var(--mist)">
+      <span aria-hidden="true" style="width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.75rem">AB</span>
+      <span style="display:flex;flex-direction:column"><span style="font-weight:600;font-size:0.9375rem;color:var(--ink)">Aoife Byrne</span><span style="font-size:0.8125rem;color:var(--graphite)">Account settings</span></span>
+    </button>
+    <button onClick="{{ go.landing }}" style="text-align:left;min-height:44px;padding:0 12px;background:none;border:none;font-size:0.9375rem;color:var(--graphite);cursor:pointer" style-hover="color:var(--ink)">Sign out</button>
+  </div>
+</nav>
+</sc-if>
+
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;position:relative">
+
+<sc-if value="{{ showTopBar }}" hint-placeholder-val="{{ false }}">
+<header style="flex:none;min-height:56px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 8px;background:var(--white);border-bottom:0.5pt solid var(--sage)">
+  <sc-if value="{{ back.show }}">
+    <button onClick="{{ back.onClick }}" style="min-height:44px;min-width:44px;padding:0 8px;background:none;border:none;font-weight:600;font-size:0.9375rem;color:var(--ink);cursor:pointer">← {{ back.label }}</button>
+  </sc-if>
+  <sc-if value="{{ back.hide }}">
+    <span style="padding:0 8px;font-weight:600;font-size:1.25rem;letter-spacing:-0.03em">Nexa</span>
+  </sc-if>
+  <h1 style="margin:0;flex:1;min-width:0;font-size:1rem;font-weight:600;text-align:{{ topTitleAlign }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ topTitle }}</h1>
+  <span style="min-width:44px"></span>
+</header>
+</sc-if>
+
+<sc-if value="{{ showSubNav }}" hint-placeholder-val="{{ false }}">
+<nav aria-label="Project" style="flex:none;display:flex;gap:0;overflow-x:auto;background:var(--white);border-bottom:0.5pt solid var(--sage);padding:0 8px">
+  <sc-for list="{{ subNav }}" as="n" hint-placeholder-count="6">
+    <button onClick="{{ n.onClick }}" aria-current="{{ n.current }}" style="flex:none;min-height:44px;padding:0 12px;background:none;border:none;border-bottom:2px solid {{ n.line }};font-weight:{{ n.weight }};font-size:0.875rem;color:var(--ink);cursor:pointer;white-space:nowrap">{{ n.short }}</button>
+  </sc-for>
+</nav>
+</sc-if>
+
+<sc-if value="{{ showPublicBar }}" hint-placeholder-val="{{ false }}">
+<header style="flex:none;min-height:64px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 {{ L.pad }};background:var(--paper);border-bottom:0.5pt solid var(--sage)">
+  <button onClick="{{ go.landing }}" style="background:none;border:none;padding:0;min-height:44px;font-weight:600;font-size:1.5rem;letter-spacing:-0.03em;color:var(--ink);cursor:pointer">Nexa</button>
+  <sc-if value="{{ publicSignIn }}">
+    <button onClick="{{ go.signin }}" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Sign in</button>
+  </sc-if>
+</header>
+</sc-if>
+
+<main ref="{{ mainRef }}" style="flex:1;min-height:0;overflow:auto">
+<div style="max-width:{{ L.maxW }};margin:0 auto;box-sizing:border-box;padding:{{ L.padY }} {{ L.pad }} 64px;display:flex;flex-direction:column;gap:32px">
+
+<sc-if value="{{ st.loading }}" hint-placeholder-val="{{ false }}">
+<div role="status" aria-live="polite" style="display:flex;flex-direction:column;gap:16px">
+  <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Loading</x-import>
+  <p style="margin:0;font-family:var(--font-serif);font-size:1rem;color:var(--ink)">{{ copy.loading }}</p>
+  <div aria-hidden="true" style="display:flex;flex-direction:column;gap:12px">
+    <div style="height:32px;width:60%;background:var(--mist)"></div>
+    <div style="height:96px;background:var(--mist)"></div>
+    <div style="height:96px;background:var(--mist)"></div>
+    <div style="height:96px;width:80%;background:var(--mist)"></div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ st.error }}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:12px;max-width:640px">
+  <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="rust" hint-size="auto,14px">Error</x-import>
+  <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em">{{ copy.errorTitle }}</h2>
+  <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">{{ copy.errorBody }}</p>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:8px">
+    <button onClick="{{ retry }}" style="min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">Try again</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ st.empty }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--white);padding:32px 24px;display:flex;flex-direction:column;gap:12px;max-width:640px">
+  <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">{{ copy.emptyLabel }}</x-import>
+  <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em">{{ copy.emptyTitle }}</h2>
+  <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">{{ copy.emptyBody }}</p>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:8px">
+    <button onClick="{{ copy.emptyAction }}" style="min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">{{ copy.emptyActionLabel }}</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.landing }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="01 Landing" style="display:flex;flex-direction:column;gap:64px;padding-top:32px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px;align-items:end">
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Group assignment planner</x-import>
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.hero }};line-height:1.05;letter-spacing:-0.03em;text-wrap:balance">Plan a group assignment and record who did each part</h1>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <p style="margin:0;font-family:var(--font-serif);font-size:1.125rem;line-height:1.55;color:var(--ink);text-wrap:pretty">Nexa reads your assignment brief, lists the deliverables, deadlines, word counts and marking criteria, and proposes tasks with estimated hours. Your group splits the tasks on a shared board. Every completed task, file link and confirmation is recorded, and at the end the group exports a contribution statement for peer assessment.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <button onClick="{{ go.signin }}" style="min-height:48px;padding:0 24px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Sign in</button>
+        <button onClick="{{ go.join }}" style="min-height:48px;padding:0 24px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">I have an invite link</button>
+      </div>
+      <p style="margin:0;font-size:0.875rem;color:var(--graphite)">Free for students. Works in the browser and can be installed on your phone.</p>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:24px">
+    <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em">How it works</h2>
+    <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:24px">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+        <li style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-weight:600;font-size:2.5rem;letter-spacing:-0.03em;line-height:1">{{ s.n }}</span>
+          <h3 style="margin:0;font-size:1.125rem;font-weight:700">{{ s.title }}</h3>
+          <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">{{ s.body }}</p>
+        </li>
+      </sc-for>
+    </ol>
+  </div>
+  <footer style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;border-top:0.5pt solid var(--sage);padding-top:16px">
+    <span style="font-size:0.875rem;color:var(--graphite)">Nexa · Cork, Ireland</span>
+    <button onClick="{{ go.privacy }}" style="min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-size:0.875rem;cursor:pointer" style-hover="color:var(--ink)">Privacy policy</button>
+    <button onClick="{{ go.terms }}" style="min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-size:0.875rem;cursor:pointer" style-hover="color:var(--ink)">Terms of use</button>
+  </footer>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.signin }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="02 Sign in" style="width:100%;max-width:440px;margin:0 auto;padding-top:{{ L.padY }};display:flex;flex-direction:column;gap:24px">
+  <sc-if value="{{ signForm }}">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Sign in to Nexa</h1>
+      <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Enter your email address and a sign in link will be sent to it. No password is needed. A new account is created the first time you sign in.</p>
+    </div>
+    <form onSubmit="{{ sendLink }}" style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="si-email" style="font-weight:600;font-size:0.875rem">Email address</label>
+        <input id="si-email" type="email" autoComplete="email" value="{{ email }}" onChange="{{ onEmail }}" aria-invalid="{{ emailInvalid }}" aria-describedby="si-email-err" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:{{ emailBorder }};border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+        <sc-if value="{{ emailError }}">
+          <p id="si-email-err" style="margin:0;font-size:0.875rem;color:var(--rust);font-weight:600">Error: {{ emailError }}</p>
+        </sc-if>
+      </div>
+      <button type="submit" style="min-height:48px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Send sign in link</button>
+    </form>
+    <div style="display:flex;align-items:center;gap:12px"><span style="flex:1;border-top:0.5pt solid var(--sage)"></span><span style="font-size:0.875rem;color:var(--graphite)">or</span><span style="flex:1;border-top:0.5pt solid var(--sage)"></span></div>
+    <button onClick="{{ go.dashboard }}" style="min-height:48px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Continue with Google</button>
+    <p style="margin:0;font-size:0.8125rem;line-height:1.5;color:var(--graphite)">By signing in you accept the <a href="#" onClick="{{ go.terms }}">terms of use</a> and the <a href="#" onClick="{{ go.privacy }}">privacy policy</a>.</p>
+  </sc-if>
+  <sc-if value="{{ signSent }}">
+    <div role="status" style="display:flex;flex-direction:column;gap:16px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Link sent</x-import>
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Check your email</h1>
+      <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--ink)">A sign in link was sent to <strong style="font-family:var(--font-sans);font-weight:600">{{ emailShown }}</strong>. Open the email on this device and select the link. It works once and expires after 15 minutes.</p>
+      <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">If the email has not arrived after 2 minutes, check your spam or junk folder.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <button onClick="{{ go.dashboard }}" style="min-height:48px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Open the link (prototype)</button>
+      <button onClick="{{ resend }}" style="min-height:48px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Send the link again</button>
+      <button onClick="{{ changeEmail }}" style="min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-weight:600;font-size:0.9375rem;cursor:pointer;align-self:flex-start" style-hover="color:var(--ink)">Use a different email address</button>
+    </div>
+  </sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.join }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="08 Join via invite" style="display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Invite from Aoife Byrne</x-import>
+    <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em;text-wrap:balance">Join Media Law group 4 for Assignment 2</h1>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite);max-width:60ch">The brief below was read from the assignment document the group uploaded. After you join, you can take tasks on the group board and your completed work is recorded in the contribution log.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;align-items:start">
+    <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Project</x-import>
+      <dl style="margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 16px;font-size:0.9375rem">
+        <dt style="color:var(--graphite)">Module</dt><dd style="margin:0;font-weight:600">MDIA7012 Media Law and Ethics</dd>
+        <dt style="color:var(--graphite)">Assignment</dt><dd style="margin:0;font-weight:600">Assignment 2 · Case study report</dd>
+        <dt style="color:var(--graphite)">Final deadline</dt><dd style="margin:0;font-weight:600">14/11/2026 17:00</dd>
+        <dt style="color:var(--graphite)">Tasks</dt><dd style="margin:0;font-weight:600">10 tasks, 36 estimated hours</dd>
+      </dl>
+      <div style="display:flex;flex-direction:column;gap:8px;border-top:0.5pt solid var(--sage);padding-top:16px">
+        <span style="font-size:0.875rem;color:var(--graphite)">4 members</span>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ members }}" as="m" hint-placeholder-count="4">
+            <li style="display:flex;align-items:center;gap:12px;font-size:0.9375rem"><span aria-hidden="true" style="width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.75rem">{{ m.ini }}</span>{{ m.name }}<span style="color:var(--graphite);font-size:0.8125rem">{{ m.role }}</span></li>
+          </sc-for>
+        </ul>
+      </div>
+    </div>
+    <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:24px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Extracted brief</x-import>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <h2 style="margin:0;font-size:1.0625rem;font-weight:700">Deliverables</h2>
+        <sc-for list="{{ brief.deliverables }}" as="d" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:0.5pt solid var(--sage);font-size:0.9375rem"><span>{{ d.name }}</span><span style="color:var(--graphite);text-align:right">{{ d.detail }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <h2 style="margin:0;font-size:1.0625rem;font-weight:700">Deadlines</h2>
+        <sc-for list="{{ brief.deadlines }}" as="d" hint-placeholder-count="2">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:0.5pt solid var(--sage);font-size:0.9375rem"><span>{{ d.item }}</span><span style="font-variant-numeric:tabular-nums;text-align:right">{{ d.date }} {{ d.time }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <h2 style="margin:0;font-size:1.0625rem;font-weight:700">Marking criteria</h2>
+        <sc-for list="{{ brief.criteria }}" as="c" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:0.5pt solid var(--sage);font-size:0.9375rem"><span>{{ c.name }}</span><span style="font-variant-numeric:tabular-nums">{{ c.weight }}%</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <sc-if value="{{ joinInline }}">
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+      <button onClick="{{ joinNow }}" style="min-height:48px;padding:0 24px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Join with email</button>
+      <button onClick="{{ joinNow }}" style="min-height:48px;padding:0 24px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Join with Google</button>
+      <span style="font-size:0.875rem;color:var(--graphite)">Invite link expires on 01/10/2026.</span>
+    </div>
+  </sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.legal }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="17 Legal" style="display:grid;grid-template-columns:{{ legalCols }};gap:48px;align-items:start">
+  <sc-if value="{{ legalToc }}">
+    <nav aria-label="Contents" style="position:sticky;top:0;display:flex;flex-direction:column;gap:4px;padding-top:8px">
+      <div style="padding-bottom:8px"><x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Contents</x-import></div>
+      <sc-for list="{{ legal.sections }}" as="s" hint-placeholder-count="8">
+        <a href="#{{ s.id }}" style="min-height:32px;display:flex;align-items:center;font-size:0.875rem;color:var(--ink);text-decoration:none;border-bottom:0.5pt solid var(--sage)" style-hover="text-decoration:underline"><span>{{ s.n }} {{ s.h }}</span></a>
+      </sc-for>
+    </nav>
+  </sc-if>
+  <article style="max-width:68ch;display:flex;flex-direction:column;gap:32px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">{{ legal.label }}</x-import>
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">{{ legal.title }}</h1>
+      <p style="margin:0;font-size:0.875rem;color:var(--graphite)">Last updated 01/09/2026 · Version 1.0</p>
+      <div style="display:flex;gap:16px">
+        <button onClick="{{ legal.switchTo }}" style="min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-size:0.9375rem;font-weight:600;cursor:pointer" style-hover="color:var(--ink)">→ {{ legal.otherTitle }}</button>
+      </div>
+    </div>
+    <sc-for list="{{ legal.sections }}" as="s" hint-placeholder-count="8">
+      <section id="{{ s.id }}" style="display:flex;flex-direction:column;gap:12px;border-top:0.5pt solid var(--sage);padding-top:24px">
+        <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;display:flex;gap:12px"><span style="color:var(--slate);font-variant-numeric:tabular-nums">{{ s.n }}</span>{{ s.h }}</h2>
+        <sc-for list="{{ s.ps }}" as="p">
+          <p style="margin:0;font-family:var(--font-serif);font-size:1.0625rem;line-height:1.6;color:var(--ink);text-wrap:pretty">{{ p }}</p>
+        </sc-for>
+      </section>
+    </sc-for>
+  </article>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.dashboard }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="03 Dashboard" style="display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Saturday 26/09/2026</x-import>
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Your projects</h1>
+    </div>
+    <sc-if value="{{ notDesktop }}">
+      <button onClick="{{ go.create }}" style="min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer">New group and project</button>
+    </sc-if>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;align-items:start">
+    <div style="background:var(--ink);color:var(--paper);padding:24px;display:flex;flex-direction:column;gap:12px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="sage" hint-size="auto,14px">Next deadline</x-import>
+      <p style="margin:0;font-weight:600;font-size:3rem;letter-spacing:-0.03em;line-height:1">49 days</p>
+      <p style="margin:0;font-size:1rem;line-height:1.5">Report and contribution statement · Media Law group 4</p>
+      <p style="margin:0;font-size:0.9375rem;color:var(--sage);font-variant-numeric:tabular-nums">Saturday 14/11/2026 17:00</p>
+    </div>
+    <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:8px">
+        <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Your open tasks</x-import>
+        <span style="font-size:0.875rem;color:var(--graphite)">{{ myTaskCount }} tasks</span>
+      </div>
+      <sc-for list="{{ myTasks }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.onOpen }}" style="text-align:left;min-height:56px;padding:8px 0;background:none;border:none;border-bottom:0.5pt solid var(--sage);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer" style-hover="background:var(--paper)">
+          <span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:0.9375rem;color:var(--ink)">{{ t.title }}</span><span style="font-size:0.8125rem;color:var(--graphite)">Due {{ t.due }} · {{ t.hours }} h</span></span>
+          <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;background:{{ t.badge.bg }};color:{{ t.badge.fg }};border:1px solid {{ t.badge.bd }};white-space:nowrap">{{ t.badge.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em">Groups and projects</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="2">
+        <button onClick="{{ p.onOpen }}" style="text-align:left;background:var(--white);border:none;border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px;cursor:pointer;color:var(--ink)" style-hover="background:var(--mist)">
+          <span style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--graphite)">{{ p.module }} · {{ p.members }} members</span>
+            <span style="font-weight:600;font-size:1.25rem;letter-spacing:-0.01em">{{ p.group }}</span>
+            <span style="font-family:var(--font-serif);font-size:1rem;color:var(--graphite)">{{ p.title }}</span>
+          </span>
+          <span style="display:flex;flex-direction:column;gap:8px;width:100%">
+            <span style="display:flex;justify-content:space-between;font-size:0.875rem"><span>{{ p.progressText }}</span><span style="font-variant-numeric:tabular-nums">{{ p.pct }}%</span></span>
+            <span aria-hidden="true" style="display:block;height:8px;background:var(--mist)"><span style="display:block;height:8px;width:{{ p.pct }}%;background:var(--ink)"></span></span>
+          </span>
+          <span style="font-size:0.875rem;color:var(--graphite);border-top:0.5pt solid var(--sage);padding-top:12px;width:100%">Next: {{ p.next }} · {{ p.due }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.create }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="04 Create group and project" style="max-width:640px;display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Step 1 of 3 · Group and project</x-import>
+    <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Create a group and project</h1>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">You become the owner of the group. Next you upload the brief, then invite members.</p>
+  </div>
+  <form onSubmit="{{ submitCreate }}" style="display:flex;flex-direction:column;gap:24px">
+    <fieldset style="border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px">
+      <legend style="padding:0 0 12px;font-size:1.0625rem;font-weight:700">Group</legend>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="cg-name" style="font-weight:600;font-size:0.875rem">Group name</label>
+        <input id="cg-name" value="{{ cg.name }}" onChange="{{ cg.onName }}" aria-invalid="{{ cg.nameInvalid }}" placeholder="Media Law group 4" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:{{ cg.nameBorder }};border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+        <sc-if value="{{ cg.nameError }}"><p style="margin:0;font-size:0.875rem;color:var(--rust);font-weight:600">Error: Enter a group name.</p></sc-if>
+      </div>
+    </fieldset>
+    <fieldset style="border:none;border-top:0.5pt solid var(--sage);margin:0;padding:24px 0 0;display:flex;flex-direction:column;gap:16px">
+      <legend style="padding:0 0 12px;font-size:1.0625rem;font-weight:700;float:left;width:100%">Project</legend>
+      <div style="display:flex;flex-wrap:wrap;gap:16px">
+        <div style="flex:1 1 140px;display:flex;flex-direction:column;gap:8px">
+          <label for="cg-mod" style="font-weight:600;font-size:0.875rem">Module code</label>
+          <input id="cg-mod" placeholder="MDIA7012" defaultValue="{{ cg.module }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+        </div>
+        <div style="flex:3 1 260px;display:flex;flex-direction:column;gap:8px">
+          <label for="cg-title" style="font-weight:600;font-size:0.875rem">Assignment title</label>
+          <input id="cg-title" placeholder="Assignment 2 · Case study report" defaultValue="{{ cg.title }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:16px">
+        <div style="flex:1 1 160px;display:flex;flex-direction:column;gap:8px">
+          <label for="cg-date" style="font-weight:600;font-size:0.875rem">Final deadline date</label>
+          <input id="cg-date" inputMode="numeric" placeholder="DD/MM/YYYY" defaultValue="{{ cg.date }}" aria-describedby="cg-date-hint" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink);font-variant-numeric:tabular-nums">
+          <span id="cg-date-hint" style="font-size:0.8125rem;color:var(--graphite)">Format DD/MM/YYYY</span>
+        </div>
+        <div style="flex:1 1 120px;display:flex;flex-direction:column;gap:8px">
+          <label for="cg-time" style="font-weight:600;font-size:0.875rem">Time</label>
+          <input id="cg-time" inputMode="numeric" placeholder="HH:MM" defaultValue="{{ cg.time }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink);font-variant-numeric:tabular-nums">
+          <span style="font-size:0.8125rem;color:var(--graphite)">24 hour, Irish time</span>
+        </div>
+      </div>
+      <p style="margin:0;font-size:0.875rem;color:var(--graphite);line-height:1.5">The brief can change these details. You review everything before tasks are created.</p>
+    </fieldset>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;border-top:0.5pt solid var(--sage);padding-top:24px">
+      <button type="submit" style="min-height:48px;padding:0 24px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Create and continue</button>
+      <button type="button" onClick="{{ go.dashboard }}" style="min-height:48px;padding:0 24px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Cancel</button>
+    </div>
+  </form>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.brief }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="05 Brief upload" style="display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
+    <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Step 2 of 3 · Brief</x-import>
+    <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">{{ briefTitle }}</h1>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">{{ briefIntro }}</p>
+  </div>
+
+  <sc-if value="{{ bs.upload }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:24px;align-items:stretch">
+      <div onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="background:{{ dropBg }};border:1pt solid var(--ink);padding:32px 24px;display:flex;flex-direction:column;gap:16px;justify-content:center;min-height:240px">
+        <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Upload a file</x-import>
+        <p style="margin:0;font-weight:600;font-size:1.25rem;letter-spacing:-0.01em">{{ dropText }}</p>
+        <p style="margin:0;font-size:0.9375rem;color:var(--graphite)">PDF only, maximum 10 MB.</p>
+        <label style="align-self:flex-start;min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Choose file<input type="file" accept="application/pdf" onChange="{{ onFile }}" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden"></label>
+      </div>
+      <div style="background:var(--white);padding:24px;display:flex;flex-direction:column;gap:12px">
+        <label for="brief-text" style="font-weight:600;font-size:0.875rem">Or paste the brief text</label>
+        <textarea id="brief-text" rows="8" placeholder="Paste the full text of the assignment brief" style="flex:1;min-height:160px;box-sizing:border-box;width:100%;padding:12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-family:var(--font-serif);font-size:1rem;line-height:1.5;color:var(--ink);resize:vertical"></textarea>
+        <button onClick="{{ startProcessing }}" style="align-self:flex-start;min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">Read brief</button>
+      </div>
+    </div>
+    <p style="margin:0;font-size:0.875rem;color:var(--graphite);line-height:1.5;max-width:720px">The brief is visible to all group members. It is sent to an AI model to extract details and is not used to train models. See the <a href="#" onClick="{{ go.privacy }}">privacy policy</a>.</p>
+  </sc-if>
+
+  <sc-if value="{{ bs.processing }}">
+    <div role="status" aria-live="polite" style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px;max-width:640px">
+      <div style="display:flex;justify-content:space-between;gap:12px;font-size:0.9375rem"><span style="font-weight:600">MDIA7012 Assignment 2 brief.pdf</span><span style="color:var(--graphite)">2.4 MB</span></div>
+      <div aria-hidden="true" style="height:8px;background:var(--mist)"><div style="height:8px;width:50%;background:var(--ink)"></div></div>
+      <p style="margin:0;font-size:0.875rem;color:var(--graphite)">Step 2 of 4. This usually takes under 30 seconds. You can leave this page; the result is saved.</p>
+      <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+        <sc-for list="{{ procSteps }}" as="s" hint-placeholder-count="4">
+          <li style="display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:0.5pt solid var(--sage);font-size:0.9375rem"><span style="font-weight:{{ s.weight }}">{{ s.label }}</span><span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--graphite)">{{ s.status }}</span></li>
+        </sc-for>
+      </ol>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ bs.review }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:24px;align-items:start">
+      <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline"><h2 style="margin:0;font-size:1.125rem;font-weight:700">Deliverables</h2><span style="font-size:0.8125rem;color:var(--graphite)">Found on pages 1 and 2</span></div>
+        <sc-for list="{{ brief.deliverables }}" as="d" hint-placeholder-count="3">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;padding-bottom:12px;border-bottom:0.5pt solid var(--sage)">
+            <label style="flex:2 1 200px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)">Deliverable<input defaultValue="{{ d.name }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)"></label>
+            <label style="flex:1 1 160px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)">Length or format<input defaultValue="{{ d.detail }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)"></label>
+          </div>
+        </sc-for>
+        <button style="align-self:flex-start;min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-weight:600;font-size:0.9375rem;cursor:pointer">Add deliverable</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px">
+          <h2 style="margin:0;font-size:1.125rem;font-weight:700">Deadlines</h2>
+          <sc-for list="{{ brief.deadlines }}" as="d" hint-placeholder-count="2">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;padding-bottom:12px;border-bottom:0.5pt solid var(--sage)">
+              <label style="flex:2 1 200px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)">Item<input defaultValue="{{ d.item }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)"></label>
+              <label style="flex:1 1 120px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)">Date<input defaultValue="{{ d.date }}" placeholder="DD/MM/YYYY" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink);font-variant-numeric:tabular-nums"></label>
+              <label style="flex:0 1 88px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)">Time<input defaultValue="{{ d.time }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink);font-variant-numeric:tabular-nums"></label>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline"><h2 style="margin:0;font-size:1.125rem;font-weight:700">Marking criteria</h2><span style="font-size:0.8125rem;color:var(--graphite)">Total 100%</span></div>
+          <sc-for list="{{ brief.criteria }}" as="c" hint-placeholder-count="5">
+            <div style="display:flex;gap:8px;align-items:center">
+              <input aria-label="Criterion" defaultValue="{{ c.name }}" style="flex:1;min-width:0;min-height:44px;box-sizing:border-box;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+              <input aria-label="Weight in percent" defaultValue="{{ c.weight }}" inputMode="numeric" style="width:64px;min-height:44px;box-sizing:border-box;padding:10px 8px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums"><span style="font-size:0.9375rem">%</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;border-top:0.5pt solid var(--sage);padding-top:24px">
+      <button onClick="{{ go.proposal }}" style="min-height:48px;padding:0 24px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Save and propose tasks</button>
+      <button onClick="{{ resetBrief }}" style="min-height:48px;padding:0 24px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Upload a different brief</button>
+    </div>
+  </sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.proposal }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="06 AI task proposal" style="display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
+    <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Step 3 of 3 · Tasks</x-import>
+    <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Proposed tasks and split</h1>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">{{ proposalIntro }}</p>
+  </div>
+  <div style="display:grid;grid-template-columns:{{ propCols }};gap:24px;align-items:start">
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ proposal }}" as="t" hint-placeholder-count="10">
+        <li style="background:var(--white);padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:end">
+          <label style="flex:1 1 240px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)"><span>Task {{ t.n }}</span><input value="{{ t.title }}" onChange="{{ t.onTitle }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)"></label>
+          <label style="flex:1 1 160px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)">Owner<select value="{{ t.owner }}" onChange="{{ t.onOwner }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 8px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)"><sc-for list="{{ members }}" as="m"><option value="{{ m.id }}">{{ m.name }}</option></sc-for></select></label>
+          <label style="flex:0 0 88px;display:flex;flex-direction:column;gap:4px;font-size:0.8125rem;color:var(--graphite)">Hours<input type="number" min="0" step="0.5" value="{{ t.hours }}" onChange="{{ t.onHours }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 8px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums"></label>
+          <button onClick="{{ t.onRemove }}" aria-label="Remove task {{ t.n }}" style="min-height:44px;padding:0 8px;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-size:0.875rem;font-weight:600;cursor:pointer">Remove</button>
+        </li>
+      </sc-for>
+      <li><button onClick="{{ addTask }}" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Add task</button></li>
+    </ol>
+    <aside style="position:{{ propSticky }};top:0;background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Split by estimated hours</x-import>
+      <sc-for list="{{ split }}" as="s" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;gap:8px;font-size:0.9375rem"><span>{{ s.name }}</span><span style="font-variant-numeric:tabular-nums;font-weight:600">{{ s.hours }} h · {{ s.pct }}%</span></div>
+          <div aria-hidden="true" style="height:8px;background:var(--mist)"><div style="height:8px;width:{{ s.pct }}%;background:var(--slate)"></div></div>
+        </div>
+      </sc-for>
+      <p style="margin:0;font-size:0.875rem;line-height:1.5;color:var(--graphite);border-top:0.5pt solid var(--sage);padding-top:12px">{{ splitNote }}</p>
+      <button onClick="{{ confirmTasks }}" style="min-height:48px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Create {{ proposalCount }} tasks</button>
+      <button onClick="{{ rebalance }}" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Suggest a new split</button>
+    </aside>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.invite }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="07 Invite" style="display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
+    <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Invite members</h1>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Anyone with the link can see the project summary and join the group. The link expires on 01/10/2026. Groups can have up to 8 members.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:24px;align-items:start">
+    <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px">
+      <label for="inv-link" style="font-weight:600;font-size:0.875rem">Invite link</label>
+      <input id="inv-link" readOnly value="https://nexa.app/join/K7Q2M9XA" onFocus="{{ selectAll }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--paper);font-size:1rem;color:var(--ink)">
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <button onClick="{{ copyInvite }}" style="flex:1 1 140px;min-height:48px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">{{ copyLabel }}</button>
+        <button onClick="{{ shareInvite }}" style="flex:1 1 140px;min-height:48px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Share</button>
+        <button onClick="{{ toggleQr }}" aria-expanded="{{ qrOpen }}" style="flex:1 1 140px;min-height:48px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">{{ qrLabel }}</button>
+      </div>
+      <sc-if value="{{ qrOpen }}">
+        <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;border-top:0.5pt solid var(--sage);padding-top:16px">
+          <div style="width:176px;height:176px;background:var(--white);padding:8px;border:0.5pt solid var(--sage)">{{ qr }}</div>
+          <p style="margin:0;flex:1 1 160px;font-size:0.875rem;line-height:1.5;color:var(--graphite)">Scan with a phone camera to open the invite. Show this on screen in a tutorial or meeting.</p>
+        </div>
+      </sc-if>
+      <form onSubmit="{{ sendInvite }}" style="display:flex;flex-direction:column;gap:8px;border-top:0.5pt solid var(--sage);padding-top:16px">
+        <label for="inv-email" style="font-weight:600;font-size:0.875rem">Or send the link by email</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <input id="inv-email" type="email" placeholder="name@mymtu.ie" style="flex:1 1 200px;min-height:44px;box-sizing:border-box;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+          <button type="submit" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Send</button>
+        </div>
+      </form>
+    </div>
+    <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding-bottom:8px"><h2 style="margin:0;font-size:1.125rem;font-weight:700">Pending invites</h2><span style="font-size:0.875rem;color:var(--graphite)">{{ inviteCount }} pending</span></div>
+      <sc-if value="{{ noInvites }}">
+        <p style="margin:0;padding:16px 0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite);border-top:0.5pt solid var(--sage)">No pending invites. Invites sent by email appear here until the person joins or the invite expires.</p>
+      </sc-if>
+      <sc-for list="{{ invites }}" as="i" hint-placeholder-count="2">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:0.5pt solid var(--sage)">
+          <div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:600;font-size:0.9375rem;overflow-wrap:anywhere">{{ i.email }}</span><span style="font-size:0.8125rem;color:var(--graphite)">Sent {{ i.sent }} · Expires {{ i.expires }}</span></div>
+          <button onClick="{{ i.onRevoke }}" aria-label="Revoke invite for {{ i.email }}" style="min-height:44px;padding:0 16px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.875rem;cursor:pointer" style-hover="background:var(--mist)">Revoke</button>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.board }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="09 Task board" style="display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">MDIA7012 · Due 14/11/2026 17:00</x-import>
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Task board</h1>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button onClick="{{ go.calendar }}" style="min-height:44px;padding:0 16px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Calendar feed</button>
+      <button onClick="{{ newTask }}" style="min-height:44px;padding:0 16px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">New task</button>
+    </div>
+  </div>
+  <div role="group" aria-label="Filter by member" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+    <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+      <button onClick="{{ f.onClick }}" aria-pressed="{{ f.pressed }}" style="flex:none;min-height:44px;padding:0 14px;background:{{ f.bg }};color:{{ f.fg }};border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.875rem;cursor:pointer;white-space:nowrap">{{ f.label }}</button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ boardTabs }}">
+    <div role="tablist" aria-label="Status" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:0.5pt solid var(--sage)">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button role="tab" onClick="{{ t.onClick }}" aria-selected="{{ t.selected }}" style="min-height:48px;padding:0 4px;background:none;border:none;border-bottom:2px solid {{ t.line }};font-weight:{{ t.weight }};font-size:0.9375rem;color:var(--ink);cursor:pointer">{{ t.label }} ({{ t.count }})</button>
+      </sc-for>
+    </div>
+    <div role="tabpanel" style="display:flex;flex-direction:column;gap:12px">
+      <sc-if value="{{ tabEmpty }}"><p style="margin:0;padding:24px;background:var(--white);font-family:var(--font-serif);font-size:1rem;color:var(--graphite)">No tasks with this status for the selected member.</p></sc-if>
+      <sc-for list="{{ tabTasks }}" as="t" hint-placeholder-count="4">
+        <button onClick="{{ t.onOpen }}" style="text-align:left;width:100%;background:var(--white);border:none;border-top:1pt solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:12px;cursor:pointer;color:var(--ink)" style-hover="background:var(--mist)">
+          <span style="display:flex;justify-content:space-between;gap:12px;align-items:start"><span style="font-weight:600;font-size:1rem;line-height:1.35">{{ t.title }}</span><span style="flex:none;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;background:{{ t.badge.bg }};color:{{ t.badge.fg }};border:1px solid {{ t.badge.bd }}">{{ t.badge.label }}</span></span>
+          <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;font-size:0.8125rem;color:var(--graphite)"><span style="display:flex;align-items:center;gap:8px;color:var(--ink)"><span aria-hidden="true" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.6875rem">{{ t.ini }}</span>{{ t.ownerName }}</span><span>Due {{ t.due }}</span><span>{{ t.hours }} h</span><span>{{ t.meta }}</span></span>
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ boardCols }}">
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start">
+      <sc-for list="{{ columns }}" as="c" hint-placeholder-count="3">
+        <div role="region" aria-label="{{ c.label }}" style="background:var(--mist);padding:12px;display:flex;flex-direction:column;gap:12px;min-height:240px">
+          <h2 style="margin:0;padding:4px 4px 0;display:flex;justify-content:space-between;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase"><span>{{ c.label }}</span><span style="font-variant-numeric:tabular-nums;color:var(--graphite)">{{ c.count }}</span></h2>
+          <sc-if value="{{ c.empty }}"><p style="margin:0;padding:12px 4px;font-size:0.875rem;color:var(--graphite)">No tasks.</p></sc-if>
+          <sc-for list="{{ c.tasks }}" as="t">
+            <button onClick="{{ t.onOpen }}" style="text-align:left;width:100%;background:var(--white);border:none;padding:16px;display:flex;flex-direction:column;gap:12px;cursor:pointer;color:var(--ink)" style-hover="background:var(--paper)">
+              <span style="font-weight:600;font-size:0.9375rem;line-height:1.35">{{ t.title }}</span>
+              <span style="display:flex;align-items:center;gap:8px;font-size:0.8125rem"><span aria-hidden="true" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.6875rem">{{ t.ini }}</span>{{ t.ownerName }}</span>
+              <span style="display:flex;flex-wrap:wrap;gap:4px 12px;font-size:0.8125rem;color:var(--graphite);border-top:0.5pt solid var(--sage);padding-top:8px;width:100%"><span>Due {{ t.due }}</span><span>{{ t.hours }} h</span><span>{{ t.meta }}</span></span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.task }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="10 Task detail" style="display:grid;grid-template-columns:{{ taskCols }};gap:32px;align-items:start">
+  <div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+    <sc-if value="{{ showSidebar }}"><button onClick="{{ go.board }}" style="align-self:flex-start;min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-weight:600;font-size:0.9375rem;cursor:pointer">← Task board</button></sc-if>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Task {{ task.id }} · {{ task.deliverable }}</x-import>
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em;text-wrap:balance">{{ task.title }}</h1>
+    </div>
+    <div role="group" aria-label="Status" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--ink)">
+      <sc-for list="{{ statusBtns }}" as="s" hint-placeholder-count="3">
+        <button onClick="{{ s.onClick }}" aria-pressed="{{ s.pressed }}" style="min-height:44px;padding:0 8px;background:{{ s.bg }};color:{{ s.fg }};border:none;border-right:{{ s.divider }};font-weight:600;font-size:0.875rem;cursor:pointer">{{ s.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h2 style="margin:0;font-size:1.0625rem;font-weight:700">Description</h2>
+      <p style="margin:0;font-family:var(--font-serif);font-size:1.0625rem;line-height:1.6;color:var(--ink);max-width:68ch">{{ task.desc }}</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h2 style="margin:0;font-size:1.0625rem;font-weight:700">Attached file links</h2>
+      <sc-if value="{{ noFiles }}"><p style="margin:0;font-size:0.9375rem;color:var(--graphite);padding:12px 0;border-top:0.5pt solid var(--sage)">No file links yet. Add a link to a shared document so teammates can check the work.</p></sc-if>
+      <sc-for list="{{ taskFiles }}" as="f" hint-placeholder-count="1">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:12px 0;border-top:0.5pt solid var(--sage);font-size:0.9375rem"><a href="#" style="font-weight:600;overflow-wrap:anywhere">{{ f.name }}</a><span style="color:var(--graphite);font-size:0.8125rem">{{ f.host }} · Added by {{ f.by }} {{ f.at }}</span></div>
+      </sc-for>
+      <form onSubmit="{{ addFile }}" style="display:flex;flex-wrap:wrap;gap:8px;padding-top:8px">
+        <label for="file-url" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">File link</label>
+        <input id="file-url" type="url" placeholder="Paste a link to Google Drive, OneDrive or SharePoint" style="flex:1 1 240px;min-height:44px;box-sizing:border-box;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+        <button type="submit" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Add link</button>
+      </form>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;background:var(--white);border-top:1pt solid var(--ink);padding:24px">
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Teammate review</x-import>
+      <sc-if value="{{ review.canAct }}">
+        <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55">{{ review.prompt }}</p>
+        <sc-if value="{{ review.flagClosed }}">
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <button onClick="{{ confirmTask }}" style="flex:1 1 160px;min-height:48px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Confirm work was done</button>
+            <button onClick="{{ openFlag }}" style="flex:1 1 160px;min-height:48px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Flag an issue</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ review.flagOpen }}">
+          <form onSubmit="{{ submitFlag }}" style="display:flex;flex-direction:column;gap:8px">
+            <label for="flag-reason" style="font-weight:600;font-size:0.875rem">What is the issue?</label>
+            <textarea id="flag-reason" rows="3" required placeholder="Describe what is missing or incorrect. The task owner and the group can see this." style="box-sizing:border-box;width:100%;padding:12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-family:var(--font-serif);font-size:1rem;line-height:1.5;color:var(--ink)"></textarea>
+            <div style="display:flex;flex-wrap:wrap;gap:12px">
+              <button type="submit" style="min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer">Submit flag</button>
+              <button type="button" onClick="{{ closeFlag }}" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer">Cancel</button>
+            </div>
+          </form>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{ review.note }}"><p style="margin:0;font-size:0.9375rem;line-height:1.5;color:var(--graphite)">{{ review.note }}</p></sc-if>
+      <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+        <sc-for list="{{ review.items }}" as="r" hint-placeholder-count="2">
+          <li style="display:flex;flex-direction:column;gap:4px;padding:12px 0;border-top:0.5pt solid var(--sage)">
+            <span style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:0.9375rem"><span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--ink);background:{{ r.bg }};color:{{ r.fg }}">{{ r.kind }}</span><strong style="font-weight:600">{{ r.who }}</strong><span style="color:var(--graphite);font-size:0.8125rem">{{ r.at }}</span></span>
+            <sc-if value="{{ r.text }}"><span style="font-family:var(--font-serif);font-size:1rem;line-height:1.5">{{ r.text }}</span></sc-if>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </div>
+  <aside style="background:var(--white);border-top:1pt solid var(--ink);padding:24px">
+    <dl style="margin:0;display:flex;flex-direction:column">
+      <sc-for list="{{ taskFields }}" as="f" hint-placeholder-count="5">
+        <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:0.5pt solid var(--sage);font-size:0.9375rem"><dt style="color:var(--graphite)">{{ f.k }}</dt><dd style="margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums">{{ f.v }}</dd></div>
+      </sc-for>
+    </dl>
+  </aside>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.log }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="11 Contribution log" style="display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:640px">
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Contribution log</h1>
+      <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Entries are added automatically and cannot be edited or deleted by any member.</p>
+    </div>
+    <button onClick="{{ go.statement }}" style="min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">Draft contribution statement</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em">Summary per member</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px">
+      <sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
+        <div style="background:var(--white);border-top:1pt solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:12px"><span aria-hidden="true" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.75rem">{{ s.ini }}</span><span style="font-weight:600;font-size:0.9375rem">{{ s.name }}</span></div>
+          <dl style="margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;font-size:0.875rem">
+            <dt style="color:var(--graphite)">Tasks completed</dt><dd style="margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums">{{ s.done }} of {{ s.total }}</dd>
+            <dt style="color:var(--graphite)">Hours estimated</dt><dd style="margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums">{{ s.hours }} h</dd>
+            <dt style="color:var(--graphite)">Confirmations received</dt><dd style="margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums">{{ s.conf }}</dd>
+            <dt style="color:var(--graphite)">Flags received</dt><dd style="margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;color:{{ s.flagColor }}">{{ s.flags }}</dd>
+          </dl>
+        </div>
+      </sc-for>
+    </div>
+    <figure style="margin:0;background:var(--white);padding:24px;display:flex;flex-direction:column;gap:16px">
+      <figcaption style="display:flex;flex-direction:column;gap:4px"><span style="font-size:0.8125rem;font-weight:600;color:var(--slate)">Figure 1.</span><span style="font-weight:600;font-size:1rem">Cian Murphy has completed the most estimated hours so far</span></figcaption>
+      <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.BarChart" data="{{ chartData }}" highlight="{{ chartHi }}" max="{{ 9 }}" unit=" h" category-label="Member" value-label="Estimated hours of completed tasks, of 9 assigned" hint-size="100%,180px"></x-import>
+      <p style="margin:0;font-size:0.8125rem;color:var(--graphite)">Source: Nexa contribution log, 26/09/2026.</p>
+    </figure>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px">
+      <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em">Timeline</h2>
+      <label style="display:flex;align-items:center;gap:8px;font-size:0.875rem;font-weight:600">Member<select value="{{ logFilter }}" onChange="{{ onLogFilter }}" style="min-height:44px;padding:0 8px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:0.9375rem;color:var(--ink)"><option value="all">All members</option><sc-for list="{{ members }}" as="m"><option value="{{ m.id }}">{{ m.name }}</option></sc-for></select></label>
+    </div>
+    <sc-for list="{{ logDays }}" as="d" hint-placeholder-count="3">
+      <div style="display:flex;flex-direction:column">
+        <h3 style="margin:0;padding:8px 0;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--graphite);border-bottom:1pt solid var(--ink)">{{ d.date }}</h3>
+        <ol style="list-style:none;margin:0;padding:0">
+          <sc-for list="{{ d.items }}" as="e">
+            <li style="display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:0.5pt solid var(--sage);font-size:0.9375rem;line-height:1.45">
+              <span style="font-variant-numeric:tabular-nums;color:var(--graphite)">{{ e.time }}</span>
+              <span style="display:flex;flex-direction:column;gap:4px"><span><strong style="font-weight:600">{{ e.who }}</strong> {{ e.text }}</span><sc-if value="{{ e.note }}"><span style="font-family:var(--font-serif);color:var(--graphite)">{{ e.note }}</span></sc-if></span>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+    </sc-for>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.statement }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="12 Contribution statement" style="display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:640px">
+      <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Contribution statement</h1>
+      <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Drafted by AI from the contribution log on 26/09/2026 10:30. Check every statement against the log before you export it.</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button onClick="{{ toggleEdit }}" aria-pressed="{{ editing }}" style="min-height:44px;padding:0 16px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">{{ editLabel }}</button>
+      <button onClick="{{ copyStatement }}" style="min-height:44px;padding:0 16px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Copy text</button>
+      <button onClick="{{ exportPdf }}" style="min-height:44px;padding:0 16px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">Export PDF</button>
+    </div>
+  </div>
+  <div style="background:var(--mist);padding:{{ docPad }};display:flex;justify-content:center">
+    <article style="width:100%;max-width:720px;box-sizing:border-box;background:var(--white);padding:{{ docInner }};display:flex;flex-direction:column;gap:24px">
+      <header style="display:flex;flex-direction:column;gap:8px;border-bottom:1pt solid var(--ink);padding-bottom:16px">
+        <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--graphite)">MDIA7012 Media Law and Ethics · Assignment 2</span>
+        <h2 style="margin:0;font-size:1.75rem;font-weight:600;letter-spacing:-0.02em;line-height:1.15">Contribution statement, Media Law group 4</h2>
+        <span style="font-size:0.875rem;color:var(--graphite)">Period covered 20/09/2026 to 26/09/2026 · 4 members</span>
+      </header>
+      <sc-for list="{{ statement }}" as="s" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <h3 style="margin:0;font-size:1.0625rem;font-weight:700">{{ s.h }}</h3>
+          <sc-if value="{{ s.view }}"><p style="margin:0;font-family:var(--font-serif);font-size:1.0625rem;line-height:1.6;color:var(--ink);text-wrap:pretty">{{ s.p }}</p></sc-if>
+          <sc-if value="{{ s.edit }}"><textarea aria-label="{{ s.h }}" value="{{ s.p }}" onChange="{{ s.onChange }}" rows="5" style="box-sizing:border-box;width:100%;padding:12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-family:var(--font-serif);font-size:1.0625rem;line-height:1.6;color:var(--ink);resize:vertical"></textarea></sc-if>
+        </div>
+      </sc-for>
+      <footer style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:24px;border-top:0.5pt solid var(--sage);padding-top:24px">
+        <sc-for list="{{ members }}" as="m" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:0.8125rem"><span style="height:32px;border-bottom:1pt solid var(--ink)"></span><span style="font-weight:600">{{ m.name }}</span><span style="color:var(--graphite)">Signature and date</span></div>
+        </sc-for>
+      </footer>
+    </article>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.groupSettings }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="15 Group settings" style="max-width:720px;display:flex;flex-direction:column;gap:32px">
+  <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Group settings</h1>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <label for="gs-name" style="font-weight:600;font-size:0.875rem">Group name</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <input id="gs-name" defaultValue="Media Law group 4" style="flex:1 1 240px;min-height:44px;box-sizing:border-box;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+      <button onClick="{{ saveGroup }}" style="min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">Save</button>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:1pt solid var(--ink)"><h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em">Members</h2><span style="font-size:0.875rem;color:var(--graphite)">{{ memberCount }} of 8</span></div>
+    <sc-for list="{{ gsMembers }}" as="m" hint-placeholder-count="4">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 0;border-bottom:0.5pt solid var(--sage)">
+        <span aria-hidden="true" style="width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.8125rem">{{ m.ini }}</span>
+        <span style="flex:1 1 160px;display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:600;font-size:0.9375rem">{{ m.name }}{{ m.you }}</span><span style="font-size:0.8125rem;color:var(--graphite);overflow-wrap:anywhere">{{ m.email }}</span></span>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--graphite)">Role<select defaultValue="{{ m.roleKey }}" disabled="{{ m.isYou }}" onChange="{{ m.onRole }}" style="min-height:44px;padding:0 8px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:0.9375rem;color:var(--ink)"><option value="owner">Owner</option><option value="member">Member</option></select></label>
+        <sc-if value="{{ m.canRemove }}"><button onClick="{{ m.onRemove }}" aria-label="Remove {{ m.name }}" style="min-height:44px;padding:0 16px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.875rem;cursor:pointer" style-hover="background:var(--mist)">Remove</button></sc-if>
+      </div>
+    </sc-for>
+    <sc-if value="{{ soloGroup }}"><p style="margin:0;padding:16px 0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">You are the only member. <a href="#" onClick="{{ go.invite }}">Invite members</a> to split the tasks.</p></sc-if>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;border-top:1pt solid var(--ink);padding-top:16px">
+    <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em">Leave or delete</h2>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;border-bottom:0.5pt solid var(--sage)">
+      <p style="margin:0;flex:1 1 280px;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Leave the group. Your open tasks become unassigned and your log entries stay in the record.</p>
+      <button onClick="{{ ask.leaveGroup }}" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Leave group</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px">
+      <p style="margin:0;flex:1 1 280px;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Delete the group, its project, tasks, brief and contribution log for all members. Only owners can do this.</p>
+      <button onClick="{{ ask.deleteGroup }}" style="min-height:44px;padding:0 20px;background:var(--white);color:var(--rust);border:1px solid var(--rust);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Delete group</button>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.account }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="16 Account settings" style="max-width:720px;display:flex;flex-direction:column;gap:32px">
+  <h1 style="margin:0;font-weight:600;font-size:{{ L.h1 }};line-height:1.1;letter-spacing:-0.02em">Account settings</h1>
+  <form onSubmit="{{ saveProfile }}" style="display:flex;flex-direction:column;gap:16px">
+    <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;padding-bottom:12px;border-bottom:1pt solid var(--ink)">Profile</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:16px">
+      <label style="flex:1 1 240px;display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:0.875rem">Full name<input defaultValue="Aoife Byrne" autoComplete="name" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-weight:400;font-size:1rem;color:var(--ink)"></label>
+      <label style="flex:1 1 240px;display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:0.875rem">Student number<input defaultValue="R00214365" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-weight:400;font-size:1rem;color:var(--ink)"></label>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-weight:600;font-size:0.875rem">Email address</span>
+      <span style="font-size:1rem">aoife.byrne@mymtu.ie</span>
+      <span style="font-size:0.8125rem;color:var(--graphite)">Used for sign in links. Signed in with email link.</span>
+    </div>
+    <button type="submit" style="align-self:flex-start;min-height:44px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">Save profile</button>
+  </form>
+  <div style="display:flex;flex-direction:column">
+    <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;padding-bottom:12px;border-bottom:1pt solid var(--ink)">Calendar links</h2>
+    <sc-if value="{{ noCal }}"><p style="margin:0;padding:16px 0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">No calendar links. Create one from a project's task board with Calendar feed.</p></sc-if>
+    <sc-for list="{{ calLinks }}" as="c" hint-placeholder-count="2">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:0.5pt solid var(--sage)">
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:0.9375rem">{{ c.project }}</span><span style="font-size:0.8125rem;color:var(--graphite)">Created {{ c.created }} · Last read by a calendar {{ c.last }}</span></span>
+        <button onClick="{{ c.onRevoke }}" aria-label="Revoke calendar link for {{ c.project }}" style="min-height:44px;padding:0 16px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.875rem;cursor:pointer" style-hover="background:var(--mist)">Revoke</button>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;padding-bottom:12px;border-bottom:1pt solid var(--ink)">Your data</h2>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Download a ZIP file with your profile, tasks, file links, confirmations, flags and log entries as JSON and CSV.</p>
+    <button onClick="{{ downloadData }}" style="align-self:flex-start;min-height:44px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Download my data</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:1.25rem;font-weight:600;letter-spacing:-0.01em;padding-bottom:12px;border-bottom:1pt solid var(--ink)">Delete account</h2>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">Your profile and sign in details are deleted. Your entries in group logs stay under the name Former member so group records stay accurate.</p>
+    <button onClick="{{ ask.deleteAccount }}" style="align-self:flex-start;min-height:44px;padding:0 20px;background:var(--white);color:var(--rust);border:1px solid var(--rust);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Delete my account</button>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:24px;border-top:0.5pt solid var(--sage);padding-top:16px">
+    <button onClick="{{ go.privacy }}" style="min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-size:0.9375rem;cursor:pointer">Privacy policy</button>
+    <button onClick="{{ go.terms }}" style="min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-size:0.9375rem;cursor:pointer">Terms of use</button>
+    <button onClick="{{ go.landing }}" style="min-height:44px;padding:0;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-size:0.9375rem;cursor:pointer">Sign out</button>
+  </div>
+</section>
+</sc-if>
+
+</div>
+</main>
+
+<sc-if value="{{ joinBar }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;padding:12px 16px;background:var(--white);border-top:0.5pt solid var(--sage);display:flex;flex-direction:column;gap:8px">
+  <button onClick="{{ joinNow }}" style="min-height:48px;padding:0 20px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer">Join Media Law group 4</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ showBottomNav }}" hint-placeholder-val="{{ false }}">
+<nav aria-label="Main" style="flex:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--white);border-top:0.5pt solid var(--sage);padding-bottom:env(safe-area-inset-bottom)">
+  <sc-for list="{{ bottomNav }}" as="n" hint-placeholder-count="4">
+    <button onClick="{{ n.onClick }}" aria-current="{{ n.current }}" style="min-height:56px;padding:0 4px;background:none;border:none;border-top:2px solid {{ n.line }};font-weight:{{ n.weight }};font-size:0.8125rem;color:{{ n.color }};cursor:pointer">{{ n.label }}</button>
+  </sc-for>
+</nav>
+</sc-if>
+
+<sc-if value="{{ toast.show }}" hint-placeholder-val="{{ false }}">
+<div role="status" aria-live="polite" style="position:absolute;z-index:30;left:{{ toast.left }};right:16px;bottom:{{ toast.bottom }};max-width:420px;margin-left:auto;background:var(--ink);color:var(--paper);display:flex;align-items:center;gap:12px;padding:4px 4px 4px 16px">
+  <span style="flex:1;font-size:0.9375rem;line-height:1.4;padding:10px 0">{{ toast.msg }}</span>
+  <button onClick="{{ toast.dismiss }}" style="min-height:44px;padding:0 12px;background:none;border:none;color:var(--paper);font-weight:600;font-size:0.875rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer">Dismiss</button>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ cal.open }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:40;background:var(--sage);display:flex;align-items:{{ ov.align }};justify-content:center;padding:{{ ov.pad }}">
+  <div role="dialog" aria-modal="true" aria-labelledby="cal-title" data-screen-label="13 Calendar subscription" style="width:100%;max-width:560px;max-height:{{ ov.maxH }};overflow:auto;box-sizing:border-box;background:var(--white);border-top:1pt solid var(--ink);display:flex;flex-direction:column">
+    <sc-if value="{{ isMobile }}"><div aria-hidden="true" style="align-self:center;width:40px;height:4px;background:var(--sage);margin-top:8px"></div></sc-if>
+    <div style="display:flex;justify-content:space-between;align-items:start;gap:12px;padding:16px 16px 0 24px">
+      <div style="display:flex;flex-direction:column;gap:4px;padding-top:8px"><x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Media Law group 4</x-import><h2 id="cal-title" style="margin:0;font-size:1.375rem;font-weight:600;letter-spacing:-0.01em">Subscribe to group deadlines</h2></div>
+      <button onClick="{{ cal.close }}" style="min-height:44px;min-width:44px;padding:0 8px;background:none;border:none;font-weight:600;font-size:0.9375rem;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer">Close</button>
+    </div>
+    <div style="padding:16px 24px 24px;display:flex;flex-direction:column;gap:20px">
+      <sc-if value="{{ cal.empty }}">
+        <p style="margin:0;padding:16px;background:var(--mist);font-size:0.9375rem;line-height:1.5">The feed has no deadlines yet. Deadlines appear after the brief is reviewed and tasks have due dates.</p>
+      </sc-if>
+      <p style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--graphite)">{{ cal.intro }}</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="cal-url" style="font-weight:600;font-size:0.875rem">Calendar link</label>
+        <input id="cal-url" readOnly value="{{ cal.url }}" onFocus="{{ selectAll }}" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--paper);font-size:0.9375rem;color:var(--ink)">
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button onClick="{{ cal.copy }}" style="flex:1 1 140px;min-height:44px;padding:0 16px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--graphite)">{{ cal.copyLabel }}</button>
+          <button onClick="{{ ask.regenerate }}" style="flex:1 1 140px;min-height:44px;padding:0 16px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="background:var(--mist)">Regenerate link</button>
+        </div>
+      </div>
+      <div role="tablist" aria-label="Calendar app" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:0.5pt solid var(--sage)">
+        <sc-for list="{{ cal.tabs }}" as="t" hint-placeholder-count="3">
+          <button role="tab" aria-selected="{{ t.selected }}" onClick="{{ t.onClick }}" style="min-height:44px;padding:0 4px;background:none;border:none;border-bottom:2px solid {{ t.line }};font-weight:{{ t.weight }};font-size:0.875rem;color:var(--ink);cursor:pointer">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <ol role="tabpanel" style="margin:0;padding:0 0 0 20px;display:flex;flex-direction:column;gap:8px;font-family:var(--font-serif);font-size:1rem;line-height:1.5">
+        <sc-for list="{{ cal.steps }}" as="s" hint-placeholder-count="4"><li>{{ s }}</li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:0.8125rem;line-height:1.5;color:var(--graphite)">{{ cal.note }}</p>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ dlg.open }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:50;background:var(--sage);display:flex;align-items:{{ ov.align }};justify-content:center;padding:{{ ov.pad }}">
+  <div role="alertdialog" aria-modal="true" aria-labelledby="dlg-title" aria-describedby="dlg-body" style="width:100%;max-width:480px;box-sizing:border-box;background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:16px">
+    <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">{{ dlg.label }}</x-import>
+    <h2 id="dlg-title" style="margin:0;font-size:1.375rem;font-weight:600;letter-spacing:-0.01em;line-height:1.2">{{ dlg.title }}</h2>
+    <p id="dlg-body" style="margin:0;font-family:var(--font-serif);font-size:1rem;line-height:1.55;color:var(--ink)">{{ dlg.body }}</p>
+    <sc-if value="{{ dlg.needsText }}">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="dlg-input" style="font-weight:600;font-size:0.875rem">Type {{ dlg.require }} to confirm</label>
+        <input id="dlg-input" value="{{ dlg.text }}" onChange="{{ dlg.onText }}" autoComplete="off" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)">
+      </div>
+    </sc-if>
+    <div style="display:flex;flex-direction:{{ ov.btnDir }};gap:12px;padding-top:8px">
+      <button onClick="{{ dlg.confirm }}" disabled="{{ dlg.disabled }}" style="flex:1;min-height:48px;padding:0 20px;background:{{ dlg.btnBg }};color:var(--white);border:1px solid {{ dlg.btnBg }};border-radius:0;font-weight:600;font-size:1rem;cursor:pointer">{{ dlg.confirmLabel }}</button>
+      <button onClick="{{ dlg.cancel }}" style="flex:1;min-height:48px;padding:0 20px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Cancel</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;landing&quot;,&quot;signin&quot;,&quot;dashboard&quot;,&quot;create&quot;,&quot;brief&quot;,&quot;proposal&quot;,&quot;invite&quot;,&quot;join&quot;,&quot;board&quot;,&quot;task&quot;,&quot;log&quot;,&quot;statement&quot;,&quot;calendar&quot;,&quot;groupSettings&quot;,&quot;account&quot;,&quot;privacy&quot;,&quot;terms&quot;],&quot;default&quot;:&quot;landing&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;viewState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;default&quot;,&quot;empty&quot;,&quot;loading&quot;,&quot;error&quot;,&quot;success&quot;],&quot;default&quot;:&quot;default&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;frameWidth&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;number&quot;},&quot;embedded&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  static MEMBERS = [
+    { id: 'ab', name: 'Aoife Byrne', first: 'Aoife', ini: 'AB', role: 'Owner', roleKey: 'owner', email: 'aoife.byrne@mymtu.ie' },
+    { id: 'cm', name: 'Cian Murphy', first: 'Cian', ini: 'CM', role: 'Member', roleKey: 'member', email: 'cian.murphy@mymtu.ie' },
+    { id: 'no', name: "Niamh O'Sullivan", first: 'Niamh', ini: 'NO', role: 'Member', roleKey: 'member', email: 'niamh.osullivan@mymtu.ie' },
+    { id: 'tw', name: 'Tomás Walsh', first: 'Tomás', ini: 'TW', role: 'Member', roleKey: 'member', email: 'tomas.walsh@mymtu.ie' }
+  ];
+  static TASKS = [
+    { id: 1, title: 'Research online defamation case law', owner: 'cm', due: '10/10/2026', hours: 6, status: 'done', deliverable: 'Written report',
+      desc: 'Collect at least six Irish and UK cases on online defamation decided since 2015. Summarise each case in about 100 words with a Harvard citation, for use in the case study analysis.',
+      files: [{ name: 'Case law summary.docx', host: 'docs.google.com', by: 'Cian Murphy', at: '23/09/2026 17:55' }],
+      reviews: [{ kind: 'Confirmed', who: "Niamh O'Sullivan", at: '24/09/2026 15:20' }, { kind: 'Flagged', who: 'Tomás Walsh', at: '24/09/2026 16:05', text: 'Two of the six cases are from 2012 and 2013. The brief asks for cases from 2015 onwards.' }] },
+    { id: 2, title: 'Introduction and scope (500 words)', owner: 'ab', due: '17/10/2026', hours: 3, status: 'done', deliverable: 'Written report',
+      desc: 'Introduce the case, state the research question and set out the structure of the report.',
+      files: [{ name: 'Introduction draft v2.docx', host: 'onedrive.live.com', by: 'Aoife Byrne', at: '25/09/2026 21:38' }],
+      reviews: [{ kind: 'Confirmed', who: "Niamh O'Sullivan", at: '26/09/2026 10:14' }] },
+    { id: 3, title: 'Case study analysis (1,200 words)', owner: 'no', due: '31/10/2026', hours: 8, status: 'progress', deliverable: 'Written report', desc: 'Apply the case law to the chosen case. Cover liability, defences and the role of the platform.', files: [], reviews: [] },
+    { id: 4, title: 'Ethics discussion (800 words)', owner: 'tw', due: '31/10/2026', hours: 6, status: 'progress', deliverable: 'Written report', desc: 'Discuss the ethical questions raised by the case with reference to at least two codes of practice.', files: [], reviews: [] },
+    { id: 5, title: 'Executive summary (300 words)', owner: 'ab', due: '07/11/2026', hours: 3, status: 'todo', deliverable: 'Written report', desc: 'Summarise the findings and recommendations once the analysis and ethics sections are drafted.', files: [], reviews: [] },
+    { id: 6, title: 'Figures and tables', owner: 'tw', due: '07/11/2026', hours: 3, status: 'todo', deliverable: 'Written report', desc: 'Prepare a timeline of the case and a table comparing the cases. Number and source every figure.', files: [], reviews: [] },
+    { id: 7, title: 'Conclusion and recommendations (500 words)', owner: 'cm', due: '07/11/2026', hours: 3, status: 'todo', deliverable: 'Written report', desc: 'Draw conclusions from the analysis and give three recommendations for the platform.', files: [], reviews: [] },
+    { id: 8, title: 'Reference list, Harvard style', owner: 'ab', due: '12/11/2026', hours: 2, status: 'todo', deliverable: 'Written report', desc: 'Compile and check all references in Harvard style as required by the marking criteria.', files: [], reviews: [] },
+    { id: 9, title: 'Proofread and format to brief', owner: 'no', due: '13/11/2026', hours: 1, status: 'todo', deliverable: 'Written report', desc: 'Check the word count, headings, page numbers and cover sheet against the brief.', files: [], reviews: [] },
+    { id: 10, title: 'Submit report and statement on Canvas', owner: 'ab', due: '14/11/2026', hours: 1, status: 'todo', deliverable: 'Submission', desc: 'Upload the final report and the signed contribution statement before 17:00.', files: [], reviews: [] }
+  ];
+  static BRIEF = {
+    deliverables: [{ name: 'Written case study report', detail: '3,000 words, 10% tolerance' }, { name: 'Individual reflection', detail: '500 words per member' }, { name: 'Contribution statement', detail: 'Signed by all members' }],
+    deadlines: [{ item: 'Report and contribution statement', date: '14/11/2026', time: '17:00' }, { item: 'Individual reflection', date: '21/11/2026', time: '17:00' }],
+    criteria: [{ name: 'Legal analysis', weight: 30 }, { name: 'Ethical reasoning', weight: 25 }, { name: 'Use of sources', weight: 20 }, { name: 'Structure and presentation', weight: 15 }, { name: 'Referencing (Harvard)', weight: 10 }]
+  };
+  static LOG = [
+    ['26/09/2026', '10:14', 'no', 'confirmed "Introduction and scope (500 words)".'],
+    ['25/09/2026', '21:40', 'ab', 'marked "Introduction and scope (500 words)" as done.'],
+    ['25/09/2026', '21:38', 'ab', 'attached a file link to "Introduction and scope (500 words)".', 'Introduction draft v2.docx'],
+    ['24/09/2026', '16:05', 'tw', 'flagged "Research online defamation case law".', 'Two of the six cases are from 2012 and 2013. The brief asks for cases from 2015 onwards.'],
+    ['24/09/2026', '15:20', 'no', 'confirmed "Research online defamation case law".'],
+    ['23/09/2026', '18:02', 'cm', 'marked "Research online defamation case law" as done.'],
+    ['23/09/2026', '17:55', 'cm', 'attached a file link to "Research online defamation case law".', 'Case law summary.docx'],
+    ['22/09/2026', '11:30', 'no', 'moved "Case study analysis (1,200 words)" to In progress.'],
+    ['22/09/2026', '09:05', 'tw', 'moved "Ethics discussion (800 words)" to In progress.'],
+    ['21/09/2026', '09:12', 'ab', 'created 10 tasks from the brief with 9 estimated hours for each member.'],
+    ['20/09/2026', '20:45', 'tw', 'joined the group.'],
+    ['20/09/2026', '19:30', 'no', 'joined the group.'],
+    ['20/09/2026', '19:10', 'cm', 'joined the group.'],
+    ['20/09/2026', '19:02', 'ab', 'uploaded the brief.', 'MDIA7012 Assignment 2 brief.pdf']
+  ];
+  static STATEMENT = [
+    { h: 'Aoife Byrne, group owner', p: 'Aoife Byrne created the group on 20/09/2026, uploaded the brief and created 10 tasks from it on 21/09/2026. Aoife completed "Introduction and scope (500 words)" on 25/09/2026 and attached a draft. Niamh O\'Sullivan confirmed the task. Three further tasks are assigned to Aoife, estimated at 6 hours.' },
+    { h: 'Cian Murphy', p: 'Cian Murphy completed "Research online defamation case law" on 23/09/2026 and attached a case law summary. Niamh O\'Sullivan confirmed the task. Tomás Walsh flagged it on 24/09/2026 because two of the six cases are from before 2015. The flag is open. One further task is assigned to Cian, estimated at 3 hours.' },
+    { h: "Niamh O'Sullivan", p: 'Niamh O\'Sullivan started "Case study analysis (1,200 words)" on 22/09/2026 and confirmed two tasks completed by other members. No tasks assigned to Niamh are complete yet.' },
+    { h: 'Tomás Walsh', p: 'Tomás Walsh started "Ethics discussion (800 words)" on 22/09/2026 and reviewed one completed task. No tasks assigned to Tomás are complete yet.' },
+    { h: 'Summary', p: '2 of 10 tasks are complete, representing 9 of 36 estimated hours. Estimated hours were split evenly at 9 hours per member when the tasks were created. All members agree that this statement reflects the contribution log.' }
+  ];
+  static LEGAL = {
+    privacy: { label: 'Legal', title: 'Privacy policy', other: 'terms', otherTitle: 'Terms of use', sections: [
+      ['Who is responsible', ['Nexa is operated by [Operator name], [Address], Cork, Ireland. You can contact the operator about privacy at privacy@nexa.app.', 'This policy explains which personal data Nexa processes, why it is processed, and which rights you have under the General Data Protection Regulation (GDPR).']],
+      ['Data Nexa collects', ['Account data: your name, email address, optional student number and, if you sign in with Google, your Google account ID.', 'Project data: assignment briefs you upload or paste, tasks, due dates, estimated hours, file links, confirmations, flags and contribution statements.', 'Technical data: device type, browser version, IP address and error logs. Technical data is kept for 30 days.']],
+      ['Why the data is processed', ['To provide the service you signed up for (Article 6(1)(b) GDPR). To keep an accurate contribution record for your group (legitimate interest, Article 6(1)(f)). To fix errors and prevent misuse of the service (legitimate interest, Article 6(1)(f)).']],
+      ['AI processing', ['Briefs and contribution logs are sent to an AI model provider to extract deliverables, deadlines, word counts and marking criteria, to propose tasks and to draft contribution statements.', 'The provider processes the text on behalf of Nexa under a data processing agreement, within the European Economic Area, and does not use it to train models. AI output is a suggestion. Group members review and edit it before it is used.']],
+      ['Who can see your data', ['Members of the same group can see your name, email address, tasks, file links, confirmations, flags and log entries. Nexa does not sell personal data and does not show advertising.', 'Nexa uses processors for hosting (servers in Ireland), email delivery and AI processing. A current list of processors is available on request.']],
+      ['How long data is kept', ['A project is kept until the group is deleted or 12 months after its final deadline, whichever is earlier. Account data is deleted within 30 days after you delete your account.', 'Log entries you created stay in the group record under the name Former member, so that the contribution statements of other members stay accurate.']],
+      ['Your rights', ['You have the right to access, correct, delete and restrict the processing of your data, to data portability and to object to processing. Use Download my data in account settings for a copy of your data, or email privacy@nexa.app.', 'You can complain to the Data Protection Commission, 21 Fitzwilliam Square South, Dublin 2, D02 RD28, Ireland, www.dataprotection.ie.']],
+      ['Cookies', ['Nexa sets one essential cookie that keeps you signed in. Nexa does not use analytics or advertising cookies.']],
+      ['Changes to this policy', ['If this policy changes, account holders are told by email at least 30 days before the change takes effect.']]
+    ] },
+    terms: { label: 'Legal', title: 'Terms of use', other: 'privacy', otherTitle: 'Privacy policy', sections: [
+      ['The service', ['Nexa helps student groups plan group assignments and record who contributed each part. Nexa is free to use. The price is €0.00 and no payment details are collected.']],
+      ['Who can use Nexa', ['You must be 16 or older and enrolled at a university or college to create an account.']],
+      ['Your account', ['Keep access to your email account secure. Sign in links work once and expire after 15 minutes. Tell support@nexa.app if you think someone else has used your account.']],
+      ['Your content', ['You keep ownership of briefs, files and text you add. You give Nexa permission to store and process that content only to run the service for your group.', 'Upload only material you have the right to share with your group, such as a brief issued to you by your lecturer.']],
+      ['AI output', ['Extracted details, proposed tasks, estimated hours and drafted statements can contain errors. Check them against the original brief and the contribution log. Nexa is not responsible for marks or academic decisions based on AI output.']],
+      ['Academic integrity', ['Nexa records contributions. It does not write assignments. Follow the rules of your institution on group work and on the use of AI tools.']],
+      ['Acceptable use', ['Do not upload unlawful content, harass other members, or try to access groups you have not been invited to. Nexa can suspend accounts that break these terms and tells the account holder by email where possible.']],
+      ['Ending your use', ['You can delete your account at any time in account settings. Group owners can delete a group at any time.']],
+      ['Liability and law', ['Nexa is provided as it is. To the extent permitted by Irish law, Nexa is not liable for indirect loss or for loss of data you did not export. These terms are governed by the law of Ireland and the courts of Ireland have jurisdiction.']],
+      ['Contact', ['[Operator name], [Address], Cork, Ireland. support@nexa.app.']]
+    ] }
+  };
+  static COPY = {
+    landing: { loading: 'Loading', errorTitle: 'The page could not load', errorBody: 'Check your internet connection and try again.' },
+    signin: { loading: 'Sending the sign in link', errorTitle: 'The sign in link has expired', errorBody: 'Sign in links work once and expire after 15 minutes. Request a new link to sign in.' },
+    dashboard: { loading: 'Loading your projects', errorTitle: 'Your projects could not be loaded', errorBody: 'Nexa could not reach the server. Your data is not affected. Check your connection and try again.', toast: 'You joined Media Law group 4.',
+      empty: ['No projects', 'You are not in a group yet', 'Create a group and project, then upload the assignment brief. If a teammate already created the group, open the invite link they sent you.', 'Create group and project', 'create'] },
+    create: { loading: 'Loading', errorTitle: 'The group was not created', errorBody: 'A connection error stopped the group from saving. Your entries are kept. Try again.', toast: 'Group created. Next, upload the brief.' },
+    brief: { loading: 'Reading the brief', errorTitle: 'The brief could not be read', errorBody: 'The file is 14.2 MB. Upload a PDF of 10 MB or less, or paste the text of the brief instead.', toast: 'Brief read. 3 deliverables, 2 deadlines and 5 marking criteria found. Check them below.' },
+    proposal: { loading: 'Proposing tasks from the brief', errorTitle: 'Tasks could not be proposed', errorBody: 'The AI service did not respond within 60 seconds. Try again, or add tasks by hand on the task board.', toast: 'Split updated. Each member has 9 estimated hours.',
+      empty: ['No tasks proposed', 'The brief has no deliverables', 'Tasks are proposed from the deliverables in the brief. Review the brief and add at least one deliverable.', 'Review the brief', 'brief'] },
+    invite: { loading: 'Loading invites', errorTitle: 'The invite link could not be created', errorBody: 'Try again. If this keeps happening, contact support@nexa.app.', toast: 'Invite link copied.' },
+    join: { loading: 'Loading the invite', errorTitle: 'This invite link no longer works', errorBody: 'The link expired on 01/10/2026 or the group owner revoked it. Ask the group owner to send a new link.', toast: 'Invite accepted. You are now a member of Media Law group 4.' },
+    board: { loading: 'Loading the task board', errorTitle: 'The task board could not be loaded', errorBody: 'Nexa could not reach the server. Changes you made before the error are saved. Try again.', toast: 'Task moved to Done and recorded in the contribution log.',
+      empty: ['No tasks', 'The board is empty', 'Tasks appear here after the brief is reviewed and the proposed tasks are created. You can also add tasks by hand.', 'Upload the brief', 'brief'] },
+    task: { loading: 'Loading the task', errorTitle: 'This task could not be loaded', errorBody: 'The group owner may have deleted it. Return to the task board to see current tasks.', toast: 'Confirmation recorded in the contribution log.' },
+    log: { loading: 'Loading the contribution log', errorTitle: 'The contribution log could not be loaded', errorBody: 'Nexa could not reach the server. No entries are lost. Try again.', toast: 'Log exported as CSV.',
+      empty: ['No activity', 'Nothing recorded yet', 'The log records completed tasks, file links, confirmations and flags as they happen. Entries appear after the first task is updated.', 'Open the task board', 'board'] },
+    statement: { loading: 'Drafting the statement from the contribution log', errorTitle: 'The statement could not be drafted', errorBody: 'The AI service did not respond. The contribution log is unchanged. Try again in a few minutes.', toast: 'PDF exported: Contribution statement, Media Law group 4.pdf',
+      empty: ['No statement', 'Nothing to draft yet', 'A statement needs at least one completed task in the contribution log.', 'Open the task board', 'board'] },
+    calendar: { loading: 'Loading the calendar feed', errorTitle: 'The calendar link could not be created', errorBody: 'Try again. Existing subscriptions keep working.', toast: 'Calendar link copied.' },
+    groupSettings: { loading: 'Loading group settings', errorTitle: 'Group settings could not be loaded', errorBody: 'Check your connection and try again.', toast: 'Group settings saved.' },
+    account: { loading: 'Loading account settings', errorTitle: 'Account settings could not be loaded', errorBody: 'Check your connection and try again.', toast: 'Profile saved.' },
+    privacy: { loading: 'Loading', errorTitle: 'The page could not load', errorBody: 'Check your internet connection and try again.' },
+    terms: { loading: 'Loading', errorTitle: 'The page could not load', errorBody: 'Check your internet connection and try again.' }
+  };
+  static CAL = {
+    google: ['Copy the calendar link above.', 'On a computer, open Google Calendar.', 'Next to Other calendars, select Add, then From URL.', 'Paste the link and select Add calendar.'],
+    apple: ['Copy the calendar link above.', 'On iPhone or iPad, open Settings, then Apps, then Calendar, then Calendar Accounts, then Add Account, then Other.', 'Select Add Subscribed Calendar, paste the link and select Next.', 'On a Mac, open Calendar and choose File, then New Calendar Subscription.'],
+    outlook: ['Copy the calendar link above.', 'Open Outlook on the web or the new Outlook app.', 'Select Add calendar, then Subscribe from web.', 'Paste the link, name the calendar and select Import.']
+  };
+  static CALNOTE = {
+    google: 'Google Calendar reads the feed about every 12 hours, so a change can take up to a day to appear. The feed cannot be added in the Google Calendar phone app.',
+    apple: 'Apple Calendar lets you choose how often to refresh. Every hour is recommended.',
+    outlook: 'Outlook reads subscribed calendars every few hours.'
+  };
+
+  state = {
+    w: null, screen: null, vs: null, signStep: null, email: 'aoife.byrne@mymtu.ie', emailError: null,
+    briefStep: null, drag: false, boardTab: 'todo', filter: 'all', taskId: null,
+    tasks: Component.TASKS.map(t => ({ ...t, reviews: [...t.reviews], files: [...t.files] })),
+    invites: [{ email: 'sean.kelly@mymtu.ie', sent: '24/09/2026 14:10', expires: '01/10/2026' }, { email: 'r00231876@mymtu.ie', sent: '25/09/2026 09:45', expires: '02/10/2026' }],
+    log: Component.LOG, logFilter: 'all', toast: null, dlg: null, dlgText: '', flagOpen: false,
+    calTab: 'google', calKey: '7f3c9a21e8', copied: null, qrOpen: true, editing: false,
+    statement: Component.STATEMENT.map(s => ({ ...s })), removed: [], calLinks: [{ project: 'Media Law group 4', created: '21/09/2026', last: '26/09/2026 08:00' }, { project: 'Interaction Design group B', created: '14/09/2026', last: '26/09/2026 07:40' }],
+    cgName: ''
+  };
+  rootRef = React.createRef();
+  mainRef = React.createRef();
+
+  componentDidMount() {
+    if (this.props.openDialog) this.setState({ dlg: { kind: this.props.openDialog, m: this.props.openDialog === 'removeMember' ? Component.MEMBERS[3] : null }, dlgText: '' });
+    const el = this.rootRef.current;
+    if (el && window.ResizeObserver) {
+      this.ro = new ResizeObserver(e => { const w = Math.round(e[0].contentRect.width); if (w && w !== this.state.w) this.setState({ w }); });
+      this.ro.observe(el);
+    }
+  }
+  componentWillUnmount() { this.ro && this.ro.disconnect(); clearTimeout(this.tt); clearTimeout(this.bt); clearTimeout(this.ct); }
+  componentDidUpdate(pp) {
+    if (pp.screen !== this.props.screen || pp.viewState !== this.props.viewState)
+      this.setState({ screen: null, vs: null, signStep: null, briefStep: null, dlg: null, toast: null, taskId: null, flagOpen: false });
+  }
+  go(s) {
+    this.setState({ screen: s, vs: 'default', dlg: null, flagOpen: false, briefStep: null, signStep: null, editing: false });
+    if (this.mainRef.current) this.mainRef.current.scrollTop = 0;
+  }
+  showToast(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 5000); }
+  copy(text, key, msg) {
+    try { navigator.clipboard && navigator.clipboard.writeText(text); } catch (e) {}
+    this.setState({ copied: key }); clearTimeout(this.ct); this.ct = setTimeout(() => this.setState({ copied: null }), 2000);
+    this.showToast(msg);
+  }
+  now() { const d = new Date(); const p = n => String(n).padStart(2, '0'); return '26/09/2026 ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
+  updTask(id, patch) { this.setState(s => ({ tasks: s.tasks.map(t => t.id === id ? { ...t, ...(typeof patch === 'function' ? patch(t) : patch) } : t) })); }
+  addLog(who, text, note) { const [d, t] = this.now().split(' '); this.setState(s => ({ log: [[d, t, who, text, note], ...s.log] })); }
+
+  qrSvg() {
+    const N = 25; let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    const finder = (x, y) => { for (const [fx, fy] of [[0, 0], [18, 0], [0, 18]]) { const dx = x - fx, dy = y - fy; if (dx >= -1 && dx <= 7 && dy >= -1 && dy <= 7) { if (dx < 0 || dy < 0 || dx > 6 || dy > 6) return 0; if (dx === 0 || dy === 0 || dx === 6 || dy === 6) return 1; if (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4) return 1; return 0; } } return -1; };
+    let d = '';
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const f = finder(x, y); const on = f === -1 ? (y === 6 ? x % 2 === 0 : x === 6 ? y % 2 === 0 : rnd() > 0.52) : f === 1; if (on) d += `M${x} ${y}h1v1h-1z`; }
+    return React.createElement('svg', { viewBox: '0 0 25 25', width: '100%', height: '100%', role: 'img', 'aria-label': 'QR code for the invite link https://nexa.app/join/K7Q2M9XA', shapeRendering: 'crispEdges' }, React.createElement('path', { d, fill: '#141414' }));
+  }
+
+  dialogs(m) {
+    return {
+      deleteGroup: { label: 'Delete group', title: 'Delete Media Law group 4?', body: 'This permanently deletes the project, 10 tasks, the brief and the contribution log for all 4 members. Exported statements are not affected. This cannot be undone.', require: 'Media Law group 4', confirmLabel: 'Delete group', destructive: true, done: () => { this.go('dashboard'); this.showToast('Media Law group 4 was deleted.'); } },
+      leaveGroup: { label: 'Leave group', title: 'Leave Media Law group 4?', body: 'Your 4 open tasks become unassigned. Your log entries stay in the group record. You are the only owner, so Cian Murphy becomes owner. To join again you need a new invite link.', confirmLabel: 'Leave group', destructive: true, done: () => { this.go('dashboard'); this.showToast('You left Media Law group 4.'); } },
+      deleteAccount: { label: 'Delete account', title: 'Delete your account?', body: 'Your profile and sign in details are deleted within 30 days. Your log entries stay in group records under the name Former member. Ownership of Media Law group 4 passes to Cian Murphy. This cannot be undone.', require: 'DELETE', confirmLabel: 'Delete my account', destructive: true, done: () => { this.go('landing'); this.showToast('Your account is scheduled for deletion. A confirmation email was sent.'); } },
+      removeMember: m && { label: 'Remove member', title: `Remove ${m.name} from the group?`, body: `${m.first} loses access to the board and the log. Tasks assigned to ${m.first} become unassigned. Log entries by ${m.first} stay in the record.`, confirmLabel: 'Remove member', destructive: true, done: () => { this.setState(s => ({ removed: [...s.removed, m.id], dlg: null })); this.showToast(`${m.name} was removed from the group.`); } },
+      regenerate: { label: 'Calendar feed', title: 'Regenerate the calendar link?', body: 'The current link stops working. Calendars subscribed with it stop updating and need to be subscribed again with the new link.', confirmLabel: 'Regenerate link', destructive: false, done: () => { this.setState({ calKey: Math.random().toString(16).slice(2, 12), dlg: null }); this.showToast('New calendar link created. The old link no longer works.'); } },
+      revokeCal: m && { label: 'Calendar link', title: `Revoke the calendar link for ${m.project}?`, body: 'Calendars subscribed with this link stop updating. Deadlines already in those calendars are removed at the next refresh.', confirmLabel: 'Revoke link', destructive: true, done: () => { this.setState(s => ({ calLinks: s.calLinks.filter(c => c.project !== m.project), dlg: null })); this.showToast('Calendar link revoked.'); } }
+    };
+  }
+  ask(kind, m) { this.setState({ dlg: { kind, m }, dlgText: '' }); }
+
+  renderVals() {
+    const C = Component, s = this.state, p = this.props;
+    const SCREENS = ['landing', 'signin', 'dashboard', 'create', 'brief', 'proposal', 'invite', 'join', 'board', 'task', 'log', 'statement', 'calendar', 'groupSettings', 'account', 'privacy', 'terms'];
+    let screen = s.screen || p.screen || 'landing'; if (!SCREENS.includes(screen)) screen = 'landing';
+    const vs = s.vs || p.viewState || 'default';
+    const w = s.w || p.frameWidth || (typeof window !== 'undefined' ? window.innerWidth : 1280);
+    const isMobile = w < 600, isDesktop = w >= 1024;
+    const cw = isDesktop ? w - 248 : w;
+    const PROJECT = ['brief', 'proposal', 'invite', 'board', 'task', 'log', 'statement', 'calendar', 'groupSettings'];
+    const authed = PROJECT.includes(screen) || ['dashboard', 'create', 'account'].includes(screen);
+    const isProject = PROJECT.includes(screen);
+    const go = Object.fromEntries(SCREENS.map(k => [k, e => { if (e && e.preventDefault) e.preventDefault(); this.go(k); }]));
+    const mem = Object.fromEntries(C.MEMBERS.map(m => [m.id, m]));
+    const cp = C.COPY[screen] || {};
+    const genericEmpty = ['dashboard', 'board', 'log', 'statement', 'proposal'].includes(screen);
+    const isEmpty = vs === 'empty';
+    const st = {
+      loading: vs === 'loading' && screen !== 'brief',
+      error: vs === 'error',
+      empty: isEmpty && genericEmpty
+    };
+    st.content = !st.loading && !st.error && !st.empty;
+    const show = {}; SCREENS.forEach(k => show[k] = st.content && screen === k);
+    show.board = st.content && (screen === 'board' || screen === 'calendar');
+    show.legal = st.content && (screen === 'privacy' || screen === 'terms');
+    const em = cp.empty || [];
+    const copy = { loading: cp.loading, errorTitle: cp.errorTitle, errorBody: cp.errorBody, emptyLabel: em[0], emptyTitle: em[1], emptyBody: em[2], emptyActionLabel: em[3], emptyAction: em[4] ? go[em[4]] : null };
+
+    const L = {
+      pad: isMobile ? '16px' : isDesktop ? '48px' : '24px',
+      padY: isMobile ? '24px' : isDesktop ? '48px' : '32px',
+      maxW: screen === 'landing' ? '1120px' : '1200px',
+      h1: isMobile ? '1.75rem' : isDesktop ? '2.5rem' : '2rem',
+      hero: isMobile ? '2.25rem' : isDesktop ? '4rem' : '3rem'
+    };
+
+    const NAV = [['board', 'Task board', 'Board'], ['brief', 'Brief', 'Brief'], ['proposal', 'Task proposal', 'Proposal'], ['log', 'Contribution log', 'Log'], ['statement', 'Contribution statement', 'Statement'], ['invite', 'Invite members', 'Invite'], ['calendar', 'Calendar feed', 'Calendar'], ['groupSettings', 'Group settings', 'Settings']];
+    const navActive = screen === 'task' ? 'board' : screen;
+    const sideNav = NAV.map(([k, label]) => ({ label, onClick: go[k], current: navActive === k ? 'page' : undefined, bg: navActive === k ? 'var(--mist)' : 'transparent', weight: navActive === k ? 600 : 400 }));
+    const subNav = NAV.map(([k, , short]) => ({ short, onClick: go[k], current: navActive === k ? 'page' : undefined, line: navActive === k ? 'var(--ink)' : 'transparent', weight: navActive === k ? 600 : 400 }));
+    const sideProjects = [
+      { group: 'Media Law group 4', module: 'MDIA7012', onClick: go.board, on: isProject },
+      { group: 'Interaction Design group B', module: 'DGTL8003', onClick: go.brief, on: false }
+    ].map(x => ({ ...x, current: x.on ? 'true' : undefined, bg: x.on ? 'var(--mist)' : 'transparent', weight: x.on ? 600 : 400 }));
+    const tabOf = { dashboard: 'dashboard', create: 'dashboard', account: 'account', log: 'log', statement: 'log' };
+    const activeTab = tabOf[screen] || 'board';
+    const bottomNav = [['dashboard', 'Projects'], ['board', 'Board'], ['log', 'Log'], ['account', 'Account']].map(([k, label]) => ({ label, onClick: go[k], current: activeTab === k ? 'page' : undefined, line: activeTab === k ? 'var(--ink)' : 'transparent', weight: activeTab === k ? 600 : 400, color: activeTab === k ? 'var(--ink)' : 'var(--graphite)' }));
+    const TITLES = { dashboard: 'Projects', create: 'New project', brief: 'Brief', proposal: 'Task proposal', invite: 'Invite', board: 'Media Law group 4', task: 'Task', log: 'Contribution log', statement: 'Statement', calendar: 'Media Law group 4', groupSettings: 'Group settings', account: 'Account' };
+    const BACK = { task: ['board', 'Board'], create: ['dashboard', 'Projects'], proposal: ['brief', 'Brief'], statement: ['log', 'Log'] };
+    const b = BACK[screen];
+    const back = { show: !!b, hide: !b, onClick: b ? go[b[0]] : null, label: b ? b[1] : '' };
+
+    // tasks
+    const BADGE = { todo: { label: 'To do', bg: 'var(--white)', fg: 'var(--ink)', bd: 'var(--ink)' }, progress: { label: 'In progress', bg: 'var(--mist)', fg: 'var(--ink)', bd: 'var(--graphite)' }, done: { label: 'Done', bg: 'var(--ink)', fg: 'var(--paper)', bd: 'var(--ink)' } };
+    const tasks = s.tasks;
+    const openTask = id => () => { this.setState({ screen: 'task', vs: 'default', taskId: id, flagOpen: false }); if (this.mainRef.current) this.mainRef.current.scrollTop = 0; };
+    const card = t => {
+      const o = mem[t.owner] || { name: 'Unassigned', ini: '?' };
+      const conf = t.reviews.filter(r => r.kind === 'Confirmed').length, fl = t.reviews.filter(r => r.kind === 'Flagged').length;
+      return { id: t.id, title: t.title, ownerName: o.name, ini: o.ini, due: t.due, hours: t.hours, badge: BADGE[t.status], onOpen: openTask(t.id),
+        meta: t.status === 'done' ? `${conf} confirmed · ${fl} flagged` : '' };
+    };
+    const myTasks = tasks.filter(t => t.owner === 'ab' && t.status !== 'done').map(card);
+    const ft = tasks.filter(t => s.filter === 'all' || t.owner === s.filter);
+    const COLS = [['todo', 'To do'], ['progress', 'In progress'], ['done', 'Done']];
+    const columns = COLS.map(([k, label]) => { const list = ft.filter(t => t.status === k).map(card); return { label, count: list.length, empty: list.length === 0, tasks: list }; });
+    const tabs = COLS.map(([k, label], i) => ({ label, count: columns[i].count, selected: s.boardTab === k, line: s.boardTab === k ? 'var(--ink)' : 'transparent', weight: s.boardTab === k ? 600 : 400, onClick: () => this.setState({ boardTab: k }) }));
+    const tabTasks = columns[COLS.findIndex(c => c[0] === s.boardTab)].tasks;
+    const filters = [{ id: 'all', label: 'All members' }, ...C.MEMBERS.map(m => ({ id: m.id, label: m.id === 'ab' ? 'My tasks' : m.first }))].map(f => ({ label: f.label, pressed: s.filter === f.id, bg: s.filter === f.id ? 'var(--ink)' : 'var(--white)', fg: s.filter === f.id ? 'var(--paper)' : 'var(--ink)', onClick: () => this.setState({ filter: f.id }) }));
+
+    // task detail
+    const tid = s.taskId || (isEmpty ? 5 : 1);
+    const t = tasks.find(x => x.id === tid) || tasks[0];
+    const owner = mem[t.owner] || { name: 'Unassigned', first: 'the owner' };
+    const mine = t.reviews.find(r => r.who === 'Aoife Byrne');
+    const canAct = t.status === 'done' && t.owner !== 'ab' && !mine;
+    const review = {
+      canAct, flagOpen: canAct && s.flagOpen, flagClosed: canAct && !s.flagOpen,
+      prompt: `${owner.name} marked this task as done. Check the attached work, then confirm it or flag an issue. Your response is recorded in the contribution log.`,
+      note: canAct ? '' : mine ? `You ${mine.kind.toLowerCase()} this task on ${mine.at}.` : t.owner === 'ab' ? (t.status === 'done' ? 'Teammates can now confirm or flag this task.' : 'Teammates can confirm or flag this task after you mark it as done.') : 'Review opens when the owner marks the task as done.',
+      items: (isEmpty ? [] : t.reviews).map(r => ({ ...r, bg: r.kind === 'Flagged' ? 'var(--ink)' : 'var(--white)', fg: r.kind === 'Flagged' ? 'var(--paper)' : 'var(--ink)' }))
+    };
+    const statusBtns = COLS.map(([k, label], i) => ({ label, pressed: t.status === k, bg: t.status === k ? 'var(--ink)' : 'var(--white)', fg: t.status === k ? 'var(--paper)' : 'var(--ink)', divider: i < 2 ? '1px solid var(--ink)' : 'none',
+      onClick: () => { if (t.status === k) return; this.updTask(t.id, { status: k }); this.addLog('ab', k === 'done' ? `marked "${t.title}" as done.` : `moved "${t.title}" to ${label}.`); this.showToast(`Status changed to ${label}. Recorded in the contribution log.`); } }));
+    const taskFiles = isEmpty ? [] : t.files;
+    const taskFields = [{ k: 'Owner', v: owner.name }, { k: 'Due date', v: t.due }, { k: 'Estimated hours', v: t.hours + ' h' }, { k: 'Status', v: BADGE[t.status].label }, { k: 'Deliverable', v: t.deliverable }];
+
+    // proposal
+    const proposal = tasks.map((x, i) => ({ n: i + 1, title: x.title, owner: x.owner, hours: x.hours,
+      onTitle: e => this.updTask(x.id, { title: e.target.value }), onOwner: e => this.updTask(x.id, { owner: e.target.value }),
+      onHours: e => this.updTask(x.id, { hours: Math.max(0, parseFloat(e.target.value) || 0) }),
+      onRemove: () => this.setState(st2 => ({ tasks: st2.tasks.filter(y => y.id !== x.id) })) }));
+    const total = tasks.reduce((a, x) => a + x.hours, 0);
+    const split = C.MEMBERS.map(m => { const h = tasks.filter(x => x.owner === m.id).reduce((a, x) => a + x.hours, 0); return { name: m.name, hours: h, pct: total ? Math.round(h / total * 100) : 0 }; });
+    const hs = split.map(x => x.hours), diff = Math.max(...hs) - Math.min(...hs);
+    const splitNote = `Total ${total} h across ${tasks.length} tasks. Difference between the highest and lowest share: ${diff} h.` + (diff === 0 ? ' The split is even.' : '');
+
+    // log
+    const logSrc = s.log.filter(e => s.logFilter === 'all' || e[2] === s.logFilter);
+    const days = []; logSrc.forEach(e => { let d = days.find(x => x.date === e[0]); if (!d) days.push(d = { date: e[0], items: [] }); d.items.push({ time: e[1], who: mem[e[2]].name, text: e[3], note: e[4] || '' }); });
+    const summary = C.MEMBERS.map(m => { const own = tasks.filter(x => x.owner === m.id); const rv = own.flatMap(x => x.reviews); const fl = rv.filter(r => r.kind === 'Flagged').length;
+      return { ini: m.ini, name: m.name, done: own.filter(x => x.status === 'done').length, total: own.length, hours: own.reduce((a, x) => a + x.hours, 0), conf: rv.filter(r => r.kind === 'Confirmed').length, flags: fl, flagColor: 'var(--ink)' }; });
+    const chartData = C.MEMBERS.map(m => ({ label: m.first, value: tasks.filter(x => x.owner === m.id && x.status === 'done').reduce((a, x) => a + x.hours, 0) }));
+    const chartHi = chartData.reduce((bi, d, i, a) => d.value > a[bi].value ? i : bi, 0);
+
+    // group settings
+    const gsList = (isEmpty ? C.MEMBERS.slice(0, 1) : C.MEMBERS.filter(m => !s.removed.includes(m.id)));
+    const gsMembers = gsList.map(m => ({ ...m, you: m.id === 'ab' ? ' (you)' : '', isYou: m.id === 'ab', canRemove: m.id !== 'ab', onRemove: () => this.ask('removeMember', m), onRole: () => this.showToast(`Role for ${m.name} changed.`) }));
+
+    // dialog
+    let dlg = { open: false };
+    if (s.dlg) {
+      const d = this.dialogs(s.dlg.m)[s.dlg.kind];
+      if (d) { const ok = !d.require || s.dlgText.trim() === d.require;
+        dlg = { open: true, label: d.label, title: d.title, body: d.body, needsText: !!d.require, require: d.require, text: s.dlgText, onText: e => this.setState({ dlgText: e.target.value }),
+          confirmLabel: d.confirmLabel, disabled: !ok, btnBg: !ok ? 'var(--stone)' : d.destructive ? 'var(--rust)' : 'var(--ink)', confirm: () => ok && d.done(), cancel: () => this.setState({ dlg: null }) }; }
+    }
+    const ask = { deleteGroup: () => this.ask('deleteGroup'), leaveGroup: () => this.ask('leaveGroup'), deleteAccount: () => this.ask('deleteAccount'), regenerate: () => this.ask('regenerate') };
+
+    // calendar
+    const calUrl = `webcal://nexa.app/cal/g4-${s.calKey}.ics`;
+    const cal = { open: screen === 'calendar' && st.content, close: go.board, empty: isEmpty, url: calUrl,
+      intro: 'The feed contains the 2 deadlines from the brief and the due dates of your 4 tasks. It updates when a due date changes. The link is personal. Anyone who has it can see the deadlines, so do not share it.',
+      copy: () => this.copy(calUrl, 'cal', 'Calendar link copied.'), copyLabel: s.copied === 'cal' ? 'Copied' : 'Copy link',
+      tabs: [['google', 'Google'], ['apple', 'Apple'], ['outlook', 'Outlook']].map(([k, label]) => ({ label, selected: s.calTab === k, line: s.calTab === k ? 'var(--ink)' : 'transparent', weight: s.calTab === k ? 600 : 400, onClick: () => this.setState({ calTab: k }) })),
+      steps: C.CAL[s.calTab], note: C.CALNOTE[s.calTab] };
+    const ov = isMobile ? { align: 'flex-end', pad: '0', maxH: '92%', btnDir: 'column' } : { align: 'center', pad: '24px', maxH: '90%', btnDir: 'row' };
+
+    // brief
+    const bStep = s.briefStep || (vs === 'loading' ? 'processing' : vs === 'success' ? 'review' : 'upload');
+    const bs = { upload: bStep === 'upload', processing: bStep === 'processing', review: bStep === 'review' };
+    const startProcessing = () => { this.setState({ briefStep: 'processing' }); clearTimeout(this.bt); this.bt = setTimeout(() => { this.setState({ briefStep: 'review' }); this.showToast(C.COPY.brief.toast); }, 2600); };
+
+    // legal
+    const lg = C.LEGAL[screen === 'terms' ? 'terms' : 'privacy'];
+    const legal = { label: lg.label, title: lg.title, otherTitle: lg.otherTitle, switchTo: go[lg.other],
+      sections: lg.sections.map(([h, ps], i) => ({ id: `${screen}-${i + 1}`, n: String(i + 1).padStart(2, '0'), h, ps })) };
+
+    const signStep = s.signStep || (vs === 'success' ? 'sent' : 'form');
+    const toastMsg = s.toast || (vs === 'success' && screen !== 'signin' ? cp.toast : null);
+    const showBottomNav = authed && !isDesktop;
+    const joinBar = show.join && isMobile;
+    const qr = s.qrOpen ? this.qrSvg() : null;
+    const invites = isEmpty ? [] : s.invites;
+    const calLinks = isEmpty ? [] : s.calLinks;
+
+    return {
+      rootRef: this.rootRef, mainRef: this.mainRef, rootH: p.embedded ? '100%' : '100vh', isMobile, notDesktop: !isDesktop,
+      go, L, st, show, copy, retry: () => this.setState({ vs: 'default' }),
+      showSidebar: authed && isDesktop, showTopBar: authed && !isDesktop, showSubNav: isProject && !isDesktop, showPublicBar: !authed,
+      publicSignIn: ['landing', 'privacy', 'terms', 'join'].includes(screen),
+      sideNav, subNav, sideProjects, bottomNav, showBottomNav, back, topTitle: TITLES[screen] || '', topTitleAlign: 'left',
+      accountCurrent: screen === 'account' ? 'page' : undefined, accountBg: screen === 'account' ? 'var(--mist)' : 'transparent',
+      toast: { show: !!toastMsg, msg: toastMsg, dismiss: () => this.setState({ toast: null, vs: 'default' }), left: isMobile ? '16px' : 'auto', bottom: showBottomNav ? '72px' : joinBar ? '88px' : '24px' },
+      steps: [
+        { n: '01', title: 'Upload the brief', body: 'One member uploads the assignment brief as a PDF or pastes the text. Nexa extracts the deliverables, deadlines, word counts and marking criteria. You check and correct them.' },
+        { n: '02', title: 'Split the tasks', body: 'Nexa proposes tasks with estimated hours and an even split. Members join with an invite link, take tasks on a shared board and attach links to their work.' },
+        { n: '03', title: 'Export the statement', body: 'Completed tasks, file links and teammate confirmations are recorded in a contribution log. At the end the group exports a contribution statement for peer assessment.' }
+      ],
+      // sign in
+      signForm: signStep === 'form', signSent: signStep === 'sent', email: s.email, emailShown: s.email || 'aoife.byrne@mymtu.ie',
+      onEmail: e => this.setState({ email: e.target.value, emailError: null }), emailError: s.emailError, emailInvalid: s.emailError ? 'true' : 'false',
+      emailBorder: s.emailError ? '2px solid var(--rust)' : '1px solid var(--graphite)',
+      sendLink: e => { e.preventDefault(); if (!/^\S+@\S+\.\S+$/.test(s.email)) return this.setState({ emailError: 'Enter an email address in the format name@example.ie.' }); this.setState({ signStep: 'sent' }); },
+      resend: () => this.showToast('A new sign in link was sent. Earlier links no longer work.'), changeEmail: () => this.setState({ signStep: 'form', vs: 'default' }),
+      // join
+      members: C.MEMBERS, brief: C.BRIEF, joinInline: !isMobile,
+      joinNow: () => { this.go('board'); this.showToast('You joined Media Law group 4.'); },
+      // legal
+      legal, legalToc: isDesktop, legalCols: isDesktop ? '220px minmax(0,1fr)' : 'minmax(0,1fr)',
+      // dashboard
+      myTasks, myTaskCount: myTasks.length,
+      projects: [
+        { group: 'Media Law group 4', module: 'MDIA7012', title: 'Assignment 2 · Case study report', members: 4, progressText: `${tasks.filter(x => x.status === 'done').length} of ${tasks.length} tasks done`, pct: Math.round(tasks.filter(x => x.status === 'done').length / Math.max(1, tasks.length) * 100), next: 'Report and contribution statement', due: '14/11/2026 17:00', onOpen: go.board },
+        { group: 'Interaction Design group B', module: 'DGTL8003', title: 'Prototype and design report', members: 5, progressText: 'Brief not uploaded yet', pct: 0, next: 'Final submission', due: '05/12/2026 12:00', onOpen: go.brief }
+      ],
+      // create
+      cg: { name: s.cgName, onName: e => this.setState({ cgName: e.target.value, cgErr: false }), nameError: !!s.cgErr, nameInvalid: s.cgErr ? 'true' : 'false', nameBorder: s.cgErr ? '2px solid var(--rust)' : '1px solid var(--graphite)', module: '', title: '', date: '', time: '17:00' },
+      submitCreate: e => { e.preventDefault(); if (!s.cgName.trim()) return this.setState({ cgErr: true }); this.go('brief'); this.showToast(C.COPY.create.toast); },
+      // brief
+      bs, startProcessing, onFile: startProcessing, resetBrief: () => this.setState({ briefStep: 'upload' }),
+      onDragOver: e => { e.preventDefault(); if (!s.drag) this.setState({ drag: true }); }, onDragLeave: () => this.setState({ drag: false }),
+      onDrop: e => { e.preventDefault(); this.setState({ drag: false }); startProcessing(); },
+      dropBg: s.drag ? 'var(--sage)' : 'var(--mist)', dropText: s.drag ? 'Release to upload' : 'Drop the brief here',
+      briefTitle: bs.upload ? 'Upload the assignment brief' : bs.processing ? 'Reading the brief' : 'Check the extracted brief',
+      briefIntro: bs.upload ? 'Nexa extracts the deliverables, deadlines, word counts and marking criteria. You can correct everything before tasks are created.' : bs.processing ? 'Nexa is extracting deliverables, deadlines, word counts and marking criteria.' : 'Compare these details with the brief and correct anything that is wrong. Tasks are proposed from this information.',
+      procSteps: [['Uploading file', 'Done'], ['Reading text from 6 pages', 'In progress'], ['Finding deliverables, deadlines and criteria', 'Waiting'], ['Checking word counts', 'Waiting']].map(([label, status]) => ({ label, status, weight: status === 'In progress' ? 600 : 400 })),
+      // proposal
+      proposal, proposalCount: proposal.length, split, splitNote, propCols: cw >= 900 ? 'minmax(0,1fr) 320px' : 'minmax(0,1fr)', propSticky: cw >= 900 ? 'sticky' : 'static',
+      proposalIntro: 'The AI proposed 10 tasks from 3 deliverables and 5 marking criteria. Estimated hours follow the word counts in the brief. Change titles, owners or hours before you create the tasks.',
+      addTask: () => this.setState(st2 => ({ tasks: [...st2.tasks, { id: Date.now(), title: 'New task', owner: 'ab', due: '14/11/2026', hours: 1, status: 'todo', deliverable: 'Written report', desc: '', files: [], reviews: [] }] })),
+      rebalance: () => { this.setState({ tasks: C.TASKS.map(x => ({ ...x, reviews: [...x.reviews], files: [...x.files] })) }); this.showToast(C.COPY.proposal.toast); },
+      confirmTasks: () => { this.go('board'); this.showToast(`${tasks.length} tasks created and added to the board.`); },
+      // invite
+      selectAll: e => e.target.select(), qr, qrOpen: s.qrOpen, qrLabel: s.qrOpen ? 'Hide QR code' : 'Show QR code', toggleQr: () => this.setState({ qrOpen: !s.qrOpen }),
+      copyInvite: () => this.copy('https://nexa.app/join/K7Q2M9XA', 'inv', 'Invite link copied.'), copyLabel: s.copied === 'inv' ? 'Copied' : 'Copy link',
+      shareInvite: () => { if (navigator.share) navigator.share({ title: 'Join Media Law group 4 on Nexa', url: 'https://nexa.app/join/K7Q2M9XA' }).catch(() => {}); else this.copy('https://nexa.app/join/K7Q2M9XA', 'inv', 'Sharing is not available in this browser. The link was copied instead.'); },
+      sendInvite: e => { e.preventDefault(); const v = (e.target.elements[0].value || '').trim(); if (!/^\S+@\S+\.\S+$/.test(v)) return this.showToast('Error: enter a valid email address.'); e.target.reset(); this.setState(st2 => ({ invites: [{ email: v, sent: this.now(), expires: '03/10/2026' }, ...st2.invites] })); this.showToast(`Invite sent to ${v}.`); },
+      invites: invites.map(i => ({ ...i, onRevoke: () => { this.setState(st2 => ({ invites: st2.invites.filter(x => x.email !== i.email) })); this.showToast(`Invite for ${i.email} revoked.`); } })), inviteCount: invites.length, noInvites: invites.length === 0,
+      // board
+      filters, columns, tabs, tabTasks, tabEmpty: tabTasks.length === 0, boardTabs: isMobile, boardCols: !isMobile,
+      newTask: () => { const id = Date.now(); this.setState(st2 => ({ tasks: [...st2.tasks, { id, title: 'New task', owner: 'ab', due: '14/11/2026', hours: 1, status: 'todo', deliverable: 'Written report', desc: 'Add a description.', files: [], reviews: [] }] })); openTask(id)(); },
+      // task
+      task: { id: tasks.indexOf(t) + 1, title: t.title, desc: t.desc || 'No description.', deliverable: t.deliverable }, taskCols: cw >= 900 ? 'minmax(0,1fr) 300px' : 'minmax(0,1fr)',
+      statusBtns, taskFiles, noFiles: taskFiles.length === 0, taskFields, review,
+      addFile: e => { e.preventDefault(); const v = (e.target.elements[0].value || '').trim(); if (!v) return; e.target.reset(); let host = v; try { host = new URL(v).hostname; } catch (x) {} this.updTask(t.id, x => ({ files: [...x.files, { name: v.split('/').pop() || v, host, by: 'Aoife Byrne', at: this.now() }] })); this.addLog('ab', `attached a file link to "${t.title}".`); this.showToast('File link added and recorded in the contribution log.'); },
+      confirmTask: () => { this.updTask(t.id, x => ({ reviews: [...x.reviews, { kind: 'Confirmed', who: 'Aoife Byrne', at: this.now() }] })); this.addLog('ab', `confirmed "${t.title}".`); this.showToast(C.COPY.task.toast); },
+      openFlag: () => this.setState({ flagOpen: true }), closeFlag: () => this.setState({ flagOpen: false }),
+      submitFlag: e => { e.preventDefault(); const v = e.target.elements[0].value.trim(); if (!v) return; this.updTask(t.id, x => ({ reviews: [...x.reviews, { kind: 'Flagged', who: 'Aoife Byrne', at: this.now(), text: v }] })); this.addLog('ab', `flagged "${t.title}".`, v); this.setState({ flagOpen: false }); this.showToast(`Flag recorded. ${owner.first} was notified.`); },
+      // log
+      summary, chartData, chartHi, logDays: days, logFilter: s.logFilter, onLogFilter: e => this.setState({ logFilter: e.target.value }),
+      // statement
+      editing: s.editing, editLabel: s.editing ? 'Done editing' : 'Edit text', toggleEdit: () => this.setState({ editing: !s.editing }),
+      statement: s.statement.map((x, i) => ({ h: x.h, p: x.p, view: !s.editing, edit: s.editing, onChange: e => { const v = e.target.value; this.setState(st2 => ({ statement: st2.statement.map((y, j) => j === i ? { ...y, p: v } : y) })); } })),
+      copyStatement: () => this.copy(s.statement.map(x => x.h + '\n' + x.p).join('\n\n'), 'st', 'Statement copied as plain text.'),
+      exportPdf: () => this.showToast(C.COPY.statement.toast),
+      docPad: isMobile ? '0' : '32px', docInner: isMobile ? '24px 16px' : '48px',
+      // settings
+      gsMembers, memberCount: gsMembers.length, soloGroup: gsMembers.length === 1, saveGroup: () => this.showToast(C.COPY.groupSettings.toast),
+      saveProfile: e => { e.preventDefault(); this.showToast(C.COPY.account.toast); },
+      downloadData: () => this.showToast('Your data export is being prepared. A download link will be emailed to aoife.byrne@mymtu.ie within 24 hours.'),
+      calLinks: calLinks.map(c => ({ ...c, onRevoke: () => this.ask('revokeCal', c) })), noCal: calLinks.length === 0,
+      ask, dlg, cal, ov
+    };
+  }
+}
+</script>
+</body>
+</html>

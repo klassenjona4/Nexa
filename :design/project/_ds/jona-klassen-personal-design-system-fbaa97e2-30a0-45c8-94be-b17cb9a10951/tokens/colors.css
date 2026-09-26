@@ -1,0 +1,47 @@
+:root{
+/* Primary */
+--ink:#141414;
+/* Secondary */
+--slate:#34566A;
+/* Neutral */
+--white:#FFFFFF;
+--paper:#F7F7F5;
+--mist:#E6E8E4;
+--sage:#B7BFB5;
+--stone:#8A8F89;
+--graphite:#4A4D4A;
+/* Accent (max one use per page or slide) */
+--rust:#B4441C;
+/* Chart-only */
+--slate-light:#9DB4C2;
+--sage-dark:#6E7B6B;
+
+/* Semantic: text */
+--text-primary:var(--ink);
+--text-secondary:var(--graphite);
+--text-link:var(--slate);
+--text-accent:var(--rust);
+--text-on-inverse:var(--paper);
+--text-on-inverse-muted:var(--sage);
+/* Semantic: surfaces */
+--surface-page:var(--white);
+--surface-slide:var(--paper);
+--surface-panel:var(--mist);
+--surface-panel-alt:var(--sage);
+--surface-inverse:var(--ink);
+--surface-desk:var(--sage);
+/* Semantic: rules */
+--rule-strong-color:var(--ink);
+--rule-hairline-color:var(--sage);
+--rule-row-color:var(--mist);
+/* Charts, in order */
+--chart-1:var(--slate);
+--chart-2:var(--slate-light);
+--chart-3:var(--sage-dark);
+--chart-4:var(--sage);
+--chart-5:var(--graphite);
+--chart-muted:var(--stone);
+--chart-highlight:var(--rust);
+--chart-grid:var(--sage);
+--chart-baseline:var(--ink);
+}

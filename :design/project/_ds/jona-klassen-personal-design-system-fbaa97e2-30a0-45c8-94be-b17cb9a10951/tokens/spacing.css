@@ -1,0 +1,36 @@
+:root{
+/* Base unit 4 pt. No other values. */
+--s1:4pt; /* @kind spacing */
+--s2:8pt; /* @kind spacing */
+--s3:12pt; /* @kind spacing */
+--s4:16pt; /* @kind spacing */
+--s5:24pt; /* @kind spacing */
+--s6:32pt; /* @kind spacing */
+--s7:48pt; /* @kind spacing */
+--s8:64pt; /* @kind spacing */
+--s9:96pt; /* @kind spacing */
+/* A4 document grid */
+--doc-w:210mm; /* @kind spacing */
+--doc-h:297mm; /* @kind spacing */
+--doc-margin-top:25mm; /* @kind spacing */
+--doc-margin-bottom:25mm; /* @kind spacing */
+--doc-margin-x:30mm; /* @kind spacing */
+--doc-text-width:150mm; /* @kind spacing */
+--doc-column:20mm; /* @kind spacing */
+--doc-gutter:6mm; /* @kind spacing */
+--doc-running-offset:12.5mm; /* @kind spacing */
+--doc-quote-indent:12mm; /* @kind spacing */
+--doc-hanging-indent:10mm; /* @kind spacing */
+--doc-toc-indent:8mm; /* @kind spacing */
+--doc-footnote-rule:40mm; /* @kind spacing */
+--doc-caption-max:100mm; /* @kind spacing */
+/* 16:9 slide grid (960 x 540 pt = 1280 x 720 px) */
+--slide-w:960pt; /* @kind spacing */
+--slide-h:540pt; /* @kind spacing */
+--slide-margin:48pt; /* @kind spacing */
+--slide-column:50pt; /* @kind spacing */
+--slide-gutter:24pt; /* @kind spacing */
+--slide-meta-offset:24pt; /* @kind spacing */
+--slide-content-top:96pt; /* @kind spacing */
+--slide-half:480pt; /* @kind spacing */
+}

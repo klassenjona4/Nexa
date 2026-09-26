@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/colors.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/typography.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/styles.css">
+<script src="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/_ds_bundle.js"></script>
+<style>
+html,body{margin:0;background:#B7BFB5}
+*:focus-visible{outline:2px solid #34566A;outline-offset:2px}
+a{color:#34566A}
+a:hover{color:#141414}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:96px;font-family:var(--font-sans);color:var(--ink);width:max-content">
+  <header style="display:flex;flex-direction:column;gap:24px;max-width:1280px">
+    <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink)">Nexa · Screen inventory · 26/09/2026</span>
+    <h1 style="margin:0;font-weight:600;font-size:4rem;line-height:1;letter-spacing:-0.03em">Every screen at 375, 768 and 1280 px</h1>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1.125rem;line-height:1.55;max-width:70ch">Each frame is the live app from NexaApp.dc.html. Choose a state below to switch every frame at once. Empty, loading, error and success are designed for every screen. Screens without a meaningful empty state show their default content.</p>
+    <div role="group" aria-label="State" style="display:flex;gap:0;border:1px solid var(--ink);align-self:flex-start;background:var(--white)">
+      <sc-for list="{{ states }}" as="s" hint-placeholder-count="5">
+        <button onClick="{{ s.onClick }}" aria-pressed="{{ s.pressed }}" style="min-height:48px;padding:0 24px;background:{{ s.bg }};color:{{ s.fg }};border:none;border-right:1px solid var(--ink);font-weight:600;font-size:1rem;cursor:pointer">{{ s.label }}</button>
+      </sc-for>
+    </div>
+    <nav style="display:flex;flex-wrap:wrap;gap:8px 24px;font-size:0.9375rem">
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="17"><a href="#{{ r.id }}">{{ r.n }} {{ r.label }}</a></sc-for>
+      <a href="#patterns">Patterns</a>
+      <a href="NexaComponents.dc.html">Component sheet</a>
+    </nav>
+  </header>
+
+  <sc-for list="{{ rows }}" as="r" hint-placeholder-count="3">
+    <section id="{{ r.id }}" data-screen-label="{{ r.n }} {{ r.label }}" style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1pt solid var(--ink);padding-bottom:12px;max-width:2519px">
+        <span style="font-weight:600;font-size:2.5rem;letter-spacing:-0.03em">{{ r.n }}</span>
+        <h2 style="margin:0;font-weight:600;font-size:2rem;letter-spacing:-0.02em">{{ r.label }}</h2>
+        <span style="font-size:1rem;color:var(--ink)">{{ r.note }}</span>
+      </div>
+      <div style="display:flex;gap:48px;align-items:flex-start">
+        <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:0.875rem;font-weight:600">Mobile · 375 px</span><div style="width:375px;height:780px;background:var(--paper);overflow:hidden;position:relative"><dc-import name="NexaApp" screen="{{ r.screen }}" view-state="{{ vs }}" frame-width="{{ 375 }}" embedded="{{ true }}" hint-size="375px,780px"></dc-import></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:0.875rem;font-weight:600">Tablet · 768 px</span><div style="width:768px;height:1024px;background:var(--paper);overflow:hidden;position:relative"><dc-import name="NexaApp" screen="{{ r.screen }}" view-state="{{ vs }}" frame-width="{{ 768 }}" embedded="{{ true }}" hint-size="768px,1024px"></dc-import></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:0.875rem;font-weight:600">Desktop · 1280 px</span><div style="width:1280px;height:820px;background:var(--paper);overflow:hidden;position:relative"><dc-import name="NexaApp" screen="{{ r.screen }}" view-state="{{ vs }}" frame-width="{{ 1280 }}" embedded="{{ true }}" hint-size="1280px,820px"></dc-import></div></div>
+      </div>
+    </section>
+  </sc-for>
+
+  <section id="patterns" data-screen-label="Patterns" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1pt solid var(--ink);padding-bottom:12px">
+      <h2 style="margin:0;font-weight:600;font-size:2rem;letter-spacing:-0.02em">Destructive confirmation and notifications</h2>
+      <span style="font-size:1rem">Bottom sheet on mobile, centred dialog from 600 px. The confirm button stays disabled until the name is typed.</span>
+    </div>
+    <div style="display:flex;gap:48px;align-items:flex-start">
+      <sc-for list="{{ patterns }}" as="pt" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:0.875rem;font-weight:600">{{ pt.label }}</span><div style="width:{{ pt.w }}px;height:{{ pt.h }}px;background:var(--paper);overflow:hidden;position:relative"><dc-import name="NexaApp" screen="{{ pt.screen }}" view-state="{{ pt.vs }}" open-dialog="{{ pt.dialog }}" frame-width="{{ pt.w }}" embedded="{{ true }}" hint-size="375px,780px"></dc-import></div></div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;viewState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;default&quot;,&quot;empty&quot;,&quot;loading&quot;,&quot;error&quot;,&quot;success&quot;],&quot;default&quot;:&quot;default&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { vs: null };
+  renderVals() {
+    const vs = this.state.vs || this.props.viewState || 'default';
+    const ROWS = [
+      ['01', 'Landing page', 'landing', ''], ['02', 'Sign in', 'signin', 'Success shows the check your email state.'],
+      ['03', 'Dashboard', 'dashboard', ''], ['04', 'Create group and project', 'create', ''],
+      ['05', 'Brief upload and review', 'brief', 'Loading shows processing. Success shows the review screen.'], ['06', 'AI task proposal', 'proposal', ''],
+      ['07', 'Invite', 'invite', ''], ['08', 'Join via invite', 'join', 'Public page. Error shows an expired link.'],
+      ['09', 'Task board', 'board', 'Columns from 600 px, status tabs below.'], ['10', 'Task detail', 'task', 'Viewed by Aoife on a task Cian completed.'],
+      ['11', 'Contribution log', 'log', ''], ['12', 'Contribution statement', 'statement', ''],
+      ['13', 'Calendar subscription', 'calendar', 'Modal on desktop, bottom sheet on mobile.'], ['15', 'Group settings', 'groupSettings', ''],
+      ['16', 'Account settings', 'account', ''], ['17a', 'Privacy policy', 'privacy', ''], ['17b', 'Terms of use', 'terms', '']
+    ];
+    return {
+      vs,
+      states: ['default', 'empty', 'loading', 'error', 'success'].map(k => ({ label: k[0].toUpperCase() + k.slice(1), pressed: vs === k, bg: vs === k ? 'var(--ink)' : 'var(--white)', fg: vs === k ? 'var(--paper)' : 'var(--ink)', onClick: () => this.setState({ vs: k }) })),
+      rows: ROWS.map(([n, label, screen, note]) => ({ id: 's' + n, n, label, screen, note })),
+      patterns: [
+        { label: 'Delete group · mobile sheet', screen: 'groupSettings', dialog: 'deleteGroup', vs: 'default', w: 375, h: 780 },
+        { label: 'Delete account · desktop dialog', screen: 'account', dialog: 'deleteAccount', vs: 'default', w: 1280, h: 820 },
+        { label: 'Toast · mobile', screen: 'task', dialog: '', vs: 'success', w: 375, h: 780 }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/colors.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/tokens/typography.css">
+<link rel="stylesheet" href="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/styles.css">
+<script src="_ds/jona-klassen-personal-design-system-fbaa97e2-30a0-45c8-94be-b17cb9a10951/_ds_bundle.js"></script>
+<style>
+html,body{margin:0;background:#F7F7F5}
+*:focus-visible{outline:2px solid #34566A;outline-offset:2px}
+a{color:#34566A}
+a:hover{color:#141414}
+</style>
+</helmet>
+<div style="max-width:1200px;margin:0 auto;padding:48px 24px 96px;display:flex;flex-direction:column;gap:64px;font-family:var(--font-sans);color:var(--ink)">
+  <header style="display:flex;flex-direction:column;gap:16px">
+    <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Nexa · Components and tokens · v1.0</x-import>
+    <h1 style="margin:0;font-weight:600;font-size:2.5rem;line-height:1.1;letter-spacing:-0.02em">Component set for handoff</h1>
+    <p style="margin:0;font-family:var(--font-serif);font-size:1.0625rem;line-height:1.55;max-width:68ch">All values come from the Jona Klassen design system. The system was written for print, so screen components are derived from its rules: square corners, flat fills, hairline and strong rules, no icons, no shadows. Names match HANDOFF.md. See <a href="NexaScreens.dc.html">every screen</a> or <a href="NexaApp.dc.html">the working prototype</a>.</p>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:24px">
+    <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Colour tokens</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px">
+      <sc-for list="{{ colors }}" as="c" hint-placeholder-count="11">
+        <div style="display:flex;flex-direction:column;gap:8px;background:var(--white);padding:8px">
+          <div style="height:64px;background:{{ c.v }};border:0.5pt solid var(--sage)"></div>
+          <span style="font-weight:600;font-size:0.875rem">{{ c.name }}</span>
+          <span style="font-size:0.8125rem;color:var(--graphite)">{{ c.token }} · {{ c.hex }}</span>
+          <span style="font-size:0.8125rem;color:var(--graphite)">{{ c.use }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:48px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Type scale (rem)</h2>
+      <sc-for list="{{ type }}" as="t" hint-placeholder-count="8">
+        <div style="display:flex;flex-direction:column;gap:4px;border-bottom:0.5pt solid var(--sage);padding-bottom:8px">
+          <span style="font-size:0.75rem;color:var(--graphite)">{{ t.name }} · {{ t.spec }}</span>
+          <span style="font-family:{{ t.family }};font-size:{{ t.size }};font-weight:{{ t.weight }};letter-spacing:{{ t.track }};text-transform:{{ t.tt }};line-height:1.2">{{ t.sample }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Spacing, rules, layout</h2>
+      <sc-for list="{{ space }}" as="s" hint-placeholder-count="9">
+        <div style="display:flex;align-items:center;gap:16px;font-size:0.875rem"><span style="width:80px;color:var(--graphite)">{{ s.token }}</span><span style="height:12px;width:{{ s.v }};background:var(--slate)"></span><span>{{ s.v }}</span></div>
+      </sc-for>
+      <dl style="margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:0.875rem;border-top:0.5pt solid var(--sage);padding-top:16px">
+        <dt style="color:var(--graphite)">rule.hairline</dt><dd style="margin:0">0.5pt Sage · rows, dividers</dd>
+        <dt style="color:var(--graphite)">rule.strong</dt><dd style="margin:0">1pt Ink · card top, section heads</dd>
+        <dt style="color:var(--graphite)">radius</dt><dd style="margin:0">0 everywhere</dd>
+        <dt style="color:var(--graphite)">shadow</dt><dd style="margin:0">none</dd>
+        <dt style="color:var(--graphite)">focus</dt><dd style="margin:0">2px Slate outline, 2px offset</dd>
+        <dt style="color:var(--graphite)">breakpoints</dt><dd style="margin:0">mobile under 600 · tablet 600 to 1023 · desktop 1024 and up</dd>
+        <dt style="color:var(--graphite)">target</dt><dd style="margin:0">44 × 44 px minimum, primary actions 48 px</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:24px">
+    <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Button</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+      <button style="min-height:48px;padding:0 24px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--graphite)">Primary</button>
+      <button style="min-height:48px;padding:0 24px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer" style-hover="background:var(--mist)">Secondary</button>
+      <button style="min-height:44px;padding:0 4px;background:none;border:none;color:var(--slate);text-decoration:underline;text-underline-offset:3px;font-weight:600;font-size:0.9375rem;cursor:pointer" style-hover="color:var(--ink)">Text link button</button>
+      <button style="min-height:48px;padding:0 24px;background:var(--white);color:var(--rust);border:1px solid var(--rust);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer">Destructive trigger</button>
+      <button style="min-height:48px;padding:0 24px;background:var(--rust);color:var(--white);border:1px solid var(--rust);border-radius:0;font-weight:600;font-size:1rem;cursor:pointer">Destructive confirm</button>
+      <button disabled="{{ true }}" style="min-height:48px;padding:0 24px;background:var(--stone);color:var(--white);border:1px solid var(--stone);border-radius:0;font-weight:600;font-size:1rem">Disabled</button>
+      <button style="min-height:48px;padding:0 24px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:1rem;outline:2px solid var(--slate);outline-offset:2px">Focus</button>
+    </div>
+    <p style="margin:0;font-size:0.875rem;color:var(--graphite)">Sizes: 48 px (primary action in a view), 44 px (inline and toolbar). Hover: Primary to Graphite, Secondary to Mist, Text to Ink. Rust appears once per view at most.</p>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:48px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Input, select, textarea</h2>
+      <label style="display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:0.875rem">Default<input placeholder="name@mymtu.ie" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;font-weight:400;color:var(--ink)"></label>
+      <div style="display:flex;flex-direction:column;gap:8px"><label style="font-weight:600;font-size:0.875rem" for="c-err">Error</label><input id="c-err" defaultValue="aoife.byrne" aria-invalid="true" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:2px solid var(--rust);border-radius:0;background:var(--white);font-size:1rem;color:var(--ink)"><span style="font-size:0.875rem;color:var(--rust);font-weight:600">Error: Enter an email address in the format name@example.ie.</span></div>
+      <label style="display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:0.875rem">Read only (copy fields)<input readOnly value="https://nexa.app/join/K7Q2M9XA" style="min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;border:1px solid var(--graphite);border-radius:0;background:var(--paper);font-size:1rem;font-weight:400;color:var(--ink)"></label>
+      <label style="display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:0.875rem">Select<select style="min-height:44px;padding:0 8px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-size:1rem;font-weight:400;color:var(--ink)"><option>Aoife Byrne</option><option>Cian Murphy</option></select></label>
+      <label style="display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:0.875rem">Textarea<textarea rows="3" style="box-sizing:border-box;width:100%;padding:12px;border:1px solid var(--graphite);border-radius:0;background:var(--white);font-family:var(--font-serif);font-size:1rem;font-weight:400;color:var(--ink)">Body text in Source Serif 4.</textarea></label>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Badge, avatar, chip, tabs</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;background:var(--white);border:1px solid var(--ink)">To do</span>
+        <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;background:var(--mist);border:1px solid var(--graphite)">In progress</span>
+        <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;background:var(--ink);color:var(--paper);border:1px solid var(--ink)">Done</span>
+        <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;background:var(--white);border:1px solid var(--ink)">Confirmed</span>
+        <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;background:var(--ink);color:var(--paper);border:1px solid var(--ink)">Flagged</span>
+      </div>
+      <p style="margin:0;font-size:0.8125rem;color:var(--graphite)">Status is always written out. Fill differences are secondary.</p>
+      <div style="display:flex;gap:12px;align-items:center">
+        <span style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.6875rem">AB</span>
+        <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.75rem">CM</span>
+        <span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.8125rem">NO</span>
+        <span style="font-size:0.8125rem;color:var(--graphite)">Avatar 28 / 32 / 40, square initials, always next to the name</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button aria-pressed="true" style="min-height:44px;padding:0 14px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.875rem">All members</button>
+        <button aria-pressed="false" style="min-height:44px;padding:0 14px;background:var(--white);color:var(--ink);border:1px solid var(--ink);border-radius:0;font-weight:600;font-size:0.875rem">Cian</button>
+      </div>
+      <div role="tablist" style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:0.5pt solid var(--sage)">
+        <button role="tab" aria-selected="true" style="min-height:48px;background:none;border:none;border-bottom:2px solid var(--ink);font-weight:600;font-size:0.9375rem">To do (6)</button>
+        <button role="tab" aria-selected="false" style="min-height:48px;background:none;border:none;border-bottom:2px solid transparent;font-size:0.9375rem">In progress (2)</button>
+        <button role="tab" aria-selected="false" style="min-height:48px;background:none;border:none;border-bottom:2px solid transparent;font-size:0.9375rem">Done (2)</button>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:48px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Card and task card</h2>
+      <div style="background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:8px">
+        <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="graphite" hint-size="auto,14px">Card label</x-import>
+        <span style="font-weight:600;font-size:1.25rem">Card title</span>
+        <span style="font-family:var(--font-serif);color:var(--graphite)">White panel on Paper, 1pt Ink top rule, 24 px padding.</span>
+      </div>
+      <div style="background:var(--mist);padding:12px">
+        <div style="background:var(--white);padding:16px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-weight:600;font-size:0.9375rem">Research online defamation case law</span>
+          <span style="display:flex;align-items:center;gap:8px;font-size:0.8125rem"><span style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--mist);font-weight:600;font-size:0.6875rem">CM</span>Cian Murphy</span>
+          <span style="display:flex;flex-wrap:wrap;gap:4px 12px;font-size:0.8125rem;color:var(--graphite);border-top:0.5pt solid var(--sage);padding-top:8px"><span>Due 10/10/2026</span><span>6 h</span><span>1 confirmed · 1 flagged</span></span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Toast and inline notice</h2>
+      <div role="status" style="background:var(--ink);color:var(--paper);display:flex;align-items:center;gap:12px;padding:4px 4px 4px 16px"><span style="flex:1;font-size:0.9375rem;padding:10px 0">Invite link copied.</span><button style="min-height:44px;padding:0 12px;background:none;border:none;color:var(--paper);font-weight:600;font-size:0.875rem;text-decoration:underline">Dismiss</button></div>
+      <p style="margin:0;font-size:0.8125rem;color:var(--graphite)">Toast: bottom right on desktop, above the bottom nav on mobile, 5 s, role status.</p>
+      <div role="alert" style="background:var(--white);border-top:1pt solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:8px">
+        <x-import component-from-global-scope="JonaKlassenPersonalDesignSystem_fbaa97.Label" size="screen" color="rust" hint-size="auto,14px">Error</x-import>
+        <span style="font-weight:600">The brief could not be read</span>
+        <span style="font-family:var(--font-serif);color:var(--graphite)">The file is 14.2 MB. Upload a PDF of 10 MB or less.</span>
+      </div>
+      <div style="background:var(--mist);padding:16px;font-size:0.9375rem;line-height:1.5">Inline notice on Mist for neutral information inside a view.</div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:24px">
+    <h2 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.01em;border-bottom:1pt solid var(--ink);padding-bottom:12px">Modal, bottom sheet, navigation</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end">
+      <div style="width:360px;height:420px;background:var(--sage);display:flex;align-items:flex-end">
+        <div style="width:100%;background:var(--white);border-top:1pt solid var(--ink);padding:8px 24px 24px;display:flex;flex-direction:column;gap:12px">
+          <div style="align-self:center;width:40px;height:4px;background:var(--sage)"></div>
+          <span style="font-weight:600;font-size:1.25rem">Bottom sheet</span>
+          <span style="font-family:var(--font-serif);font-size:0.9375rem;color:var(--graphite)">Mobile modals rise from the bottom. Backdrop is flat Sage, no transparency.</span>
+          <button style="min-height:48px;background:var(--ink);color:var(--paper);border:none;font-weight:600">Primary</button>
+          <button style="min-height:48px;background:var(--white);color:var(--ink);border:1px solid var(--ink);font-weight:600">Cancel</button>
+        </div>
+      </div>
+      <div style="width:480px;height:420px;background:var(--sage);display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box">
+        <div style="width:100%;background:var(--white);border-top:1pt solid var(--ink);padding:24px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-weight:600;font-size:1.25rem">Modal dialog</span>
+          <span style="font-family:var(--font-serif);font-size:0.9375rem;color:var(--graphite)">Centred from 600 px, max 480 px wide (560 px for content modals).</span>
+          <div style="display:flex;gap:12px"><button style="flex:1;min-height:48px;background:var(--ink);color:var(--paper);border:none;font-weight:600">Confirm</button><button style="flex:1;min-height:48px;background:var(--white);color:var(--ink);border:1px solid var(--ink);font-weight:600">Cancel</button></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="width:375px;display:grid;grid-template-columns:repeat(4,1fr);background:var(--white);border-top:0.5pt solid var(--sage)">
+          <button aria-current="page" style="min-height:56px;background:none;border:none;border-top:2px solid var(--ink);font-weight:600;font-size:0.8125rem">Projects</button>
+          <button style="min-height:56px;background:none;border:none;border-top:2px solid transparent;font-size:0.8125rem;color:var(--graphite)">Board</button>
+          <button style="min-height:56px;background:none;border:none;border-top:2px solid transparent;font-size:0.8125rem;color:var(--graphite)">Log</button>
+          <button style="min-height:56px;background:none;border:none;border-top:2px solid transparent;font-size:0.8125rem;color:var(--graphite)">Account</button>
+        </div>
+        <span style="font-size:0.8125rem;color:var(--graphite)">Bottom nav, under 1024 px. Text only, active has rule and weight.</span>
+        <div style="width:248px;background:var(--white);padding:8px;display:flex;flex-direction:column;gap:2px">
+          <button aria-current="page" style="text-align:left;min-height:44px;padding:0 12px;background:var(--mist);border:none;font-weight:600;font-size:0.9375rem">Task board</button>
+          <button style="text-align:left;min-height:44px;padding:0 12px;background:transparent;border:none;font-size:0.9375rem">Contribution log</button>
+        </div>
+        <span style="font-size:0.8125rem;color:var(--graphite)">Sidebar item, 1024 px and up.</span>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      colors: [
+        ['Ink', '--ink', '#141414', 'Text, primary buttons, strong rules'], ['White', '--white', '#FFFFFF', 'Cards, inputs, bars'], ['Paper', '--paper', '#F7F7F5', 'App background'],
+        ['Mist', '--mist', '#E6E8E4', 'Columns, avatars, hover'], ['Sage', '--sage', '#B7BFB5', 'Hairlines, modal backdrop'], ['Stone', '--stone', '#8A8F89', 'Disabled, chart bars. Not for text'],
+        ['Graphite', '--graphite', '#4A4D4A', 'Secondary text, input borders'], ['Slate', '--slate', '#34566A', 'Links, focus ring, split bars'], ['Rust', '--rust', '#B4441C', 'Errors, destructive, one highlight']
+      ].map(([name, token, hex, use]) => ({ name, token, hex, use, v: `var(${token})` })),
+      type: [
+        ['Hero', 'Sans 600 · 4 / 3 / 2.25 rem · −3%', '4rem', 600, '-0.03em', 'none', 'var(--font-sans)', 'Plan a group assignment'],
+        ['H1', 'Sans 600 · 2.5 / 2 / 1.75 rem · −2%', '2.5rem', 600, '-0.02em', 'none', 'var(--font-sans)', 'Task board'],
+        ['H2', 'Sans 600 · 1.25 rem · −1%', '1.25rem', 600, '-0.01em', 'none', 'var(--font-sans)', 'Pending invites'],
+        ['H3', 'Sans 700 · 1.0625 rem', '1.0625rem', 700, '0', 'none', 'var(--font-sans)', 'Deliverables'],
+        ['Body', 'Serif 400 · 1 rem / 1.55', '1rem', 400, '0', 'none', 'var(--font-serif)', 'Entries are added automatically.'],
+        ['UI', 'Sans 400 or 600 · 0.9375 rem', '0.9375rem', 400, '0', 'none', 'var(--font-sans)', 'Due 10/10/2026 · 6 h'],
+        ['Caption', 'Sans 400 · 0.8125 rem', '0.8125rem', 400, '0', 'none', 'var(--font-sans)', 'Sent 24/09/2026 14:10'],
+        ['Label', 'Sans 600 · 0.75 rem · +8% caps', '0.75rem', 600, '0.08em', 'uppercase', 'var(--font-sans)', 'Next deadline']
+      ].map(([name, spec, size, weight, track, tt, family, sample]) => ({ name, spec, size, weight, track, tt, family, sample })),
+      space: [['space.1', '4px'], ['space.2', '8px'], ['space.3', '12px'], ['space.4', '16px'], ['space.5', '24px'], ['space.6', '32px'], ['space.7', '48px'], ['space.8', '64px'], ['space.9', '96px']].map(([token, v]) => ({ token, v }))
+    };
+  }
+}
+</script>
+</body>
+</html>
