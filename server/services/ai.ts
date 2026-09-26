@@ -86,8 +86,8 @@ export function clean(value: string, max: number): string {
   return value
     // eslint-disable-next-line no-control-regex -- removing control characters is the point
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
-    .replace(/\s*—\s*/g, ', ')
-    .replace(/\s*–\s*/g, ' to ')
+    .replace(/\s*\u2014\s*/g, ', ')
+    .replace(/\s*\u2013\s*/g, ' to ')
     .replace(/\p{Extended_Pictographic}/gu, '')
     .trim()
     .slice(0, max);

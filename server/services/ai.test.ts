@@ -4,7 +4,7 @@ import { isPdf } from './storage.js';
 
 describe('AI output handling', () => {
   it('removes dashes, emoji and control characters from model text', () => {
-    expect(clean('Week 1–Week 3 — draft \u{1F600}\u0007', 100)).toBe('Week 1 to Week 3, draft');
+    expect(clean('Week 1\u2013Week 3 \u2014 draft \u{1F600}\u0007', 100)).toBe('Week 1 to Week 3, draft');
   });
 
   it('normalises dates to UTC, hours to half hours and member numbers to the group size', () => {
