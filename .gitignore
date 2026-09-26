@@ -1,0 +1,15 @@
+node_modules
+dist
+dev-dist
+.vercel
+.env
+.env.*
+!.env.example
+coverage
+playwright-report
+test-results
+blob-report
+*.log
+.DS_Store
+supabase/.temp
+supabase/.branches

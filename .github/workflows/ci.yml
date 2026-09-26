@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - name: Build (includes the client secret check)
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: https://fauotybbzqlerctitcsc.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: ci-placeholder
+
+  database:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Postgres and pgTAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-16 postgresql-16-pgtap
+      - name: RLS and database tests
+        run: sudo PGBIN=/usr/lib/postgresql/16/bin bash scripts/db-test.sh

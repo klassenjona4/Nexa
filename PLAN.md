@@ -1,10 +1,10 @@
 # Nexa build plan
 
-Status: draft for review. No application code has been written yet.
+Status: approved 26/09/2026.
 
 ## 1. Sources and decisions
 
-Design source: `:design/project/NexaApp.dc.html` (all screens, copy and logic), `NexaScreens.dc.html` (375, 768 and 1280 px frames, states), `NexaComponents.dc.html` (component sheet), `HANDOFF.md` (tokens, breakpoints, accessibility, content rules) and the Jona Klassen design system tokens.
+Design source: `design/project/NexaApp.dc.html` (moved from `:design/`) (all screens, copy and logic), `NexaScreens.dc.html` (375, 768 and 1280 px frames, states), `NexaComponents.dc.html` (component sheet), `HANDOFF.md` (tokens, breakpoints, accessibility, content rules) and the Jona Klassen design system tokens.
 
 The folder is named `:design` (leading colon). A colon in a path breaks Windows checkouts and some tools, so the first commit moves it to `design/` with `git mv`. Nothing inside the folder changes.
 
@@ -16,7 +16,7 @@ Infrastructure already in place:
 | Vercel | Personal account, Hobby plan. The project is created in the auth milestone. |
 | Vercel function region | `dub1` (Dublin), set in `vercel.json` |
 | Usage limits | 5 brief breakdowns and 5 statement generations per project |
-| Retention | 30 days after last activity (see open question 1) |
+| Retention | 30 days after last activity or after the final deadline, whichever is later |
 
 ## 2. Stack
 
@@ -40,8 +40,7 @@ Infrastructure already in place:
 All tables live in `public`, have RLS enabled and forced, and have no policy granting `anon` anything. Timestamps are `timestamptz`, stored in UTC and shown in Europe/Dublin time as DD/MM/YYYY HH:MM.
 
 ```
-profiles            id (= auth.users.id, cascade), full_name, student_number (nullable, see question 3),
-                    created_at, updated_at
+profiles            id (= auth.users.id, cascade), full_name, created_at, updated_at
 
 groups              id, name (1..80), created_by -> profiles (set null), created_at
 
@@ -240,7 +239,7 @@ legal/            privacy.md, terms.md (marked DRAFT, rendered at /privacy and /
 ## 8. Data protection
 
 - **Minimisation:**
-  - The only profile fields are name and email, plus the optional student number (question 3).
+  - The only profile fields are name and email.
   - No analytics, and no cookies apart from the Supabase session.
   - The Supabase session lives in `localStorage`, which counts as strictly necessary.
   - The service worker caches only static assets.
@@ -251,7 +250,7 @@ legal/            privacy.md, terms.md (marked DRAFT, rendered at /privacy and /
   - Resend: EU region.
   - Anthropic processes in the US under its DPA with SCCs, and API data is not used for training.
   - The design's privacy text claims AI processing "within the European Economic Area". That is not accurate for the Anthropic API, and I will correct it.
-- **Retention:** projects are deleted 30 days after `last_activity_at`, with a warning email before deletion (question 1). `last_activity_at` is updated by the same triggers that write the log. Rate limit rows are kept for 24 hours. Brief PDFs are deleted with their project.
+- **Retention:** projects are deleted 30 days after `greatest(last_activity_at, final_deadline)`, with a warning email 7 days before. `last_activity_at` is updated by the same triggers that write the log. Rate limit rows are kept for 24 hours. Brief PDFs are deleted with their project.
 - **Export:** an immediate JSON download containing the profile, memberships, assigned and created tasks, file links added, own log entries (including reviews), statements generated or edited, and calendar feed metadata. The design shows a ZIP with CSV emailed within 24 hours. I will change that copy to match the immediate JSON download.
 - **Deletion:** immediate. In one server transaction:
   - ownership passes to the longest-standing member, and a group where the user is the only member is deleted;
@@ -270,7 +269,7 @@ Each milestone ends with a type check, lint, the relevant tests and a commit pus
 3. **Groups and invites:** create group, dashboard, group settings, invite create, revoke and email, the public join page, accept, and QR code.
 4. **Task board with realtime:** board columns and tabs, task detail, status control, file links, filters and the realtime hooks.
 5. **Brief breakdown:** signed upload, PDF signature check, the Haiku call with schema, the processing state, the review screen, the proposal screen with a client-side "Suggest a new split" (no AI call), and accept.
-6. **Usage limits:** plan limits, atomic reservation, and display in the interface (see question 4).
+6. **Usage limits:** plan limits, atomic reservation, and display in the interface.
 7. **Contribution log and statement:** log timeline and summary with BarChart, confirm and flag, the Sonnet statement, editing, PDF and plain text export.
 8. **Email:** Resend templates for sign in, invite, 48 hour reminder and retention warning; `pg_cron` jobs.
 9. **Calendar feed:** token routes, the `.ics` generator (RFC 5545, with a unit test), the modal and bottom sheet, and revoke and regenerate from account settings.
@@ -292,10 +291,10 @@ Each milestone ends with a type check, lint, the relevant tests and a commit pus
 | "Open the link (prototype)" button | Removed | Prototype only |
 | Title "Terms of use" | Kept as "Terms of use" at `/terms` | Matches the design. It covers everything the Terms of Service need. |
 
-## 11. Open questions
+## 11. Decisions (confirmed 26/09/2026)
 
-1. **Retention and warning timing.** You chose deletion 30 days after last activity. A warning 30 days before deletion would then go out at the moment of last activity, which makes no sense. My proposal: send the warning 7 days before deletion (after 23 days without activity) and let any member keep the project with one click, which counts as activity. Also, a group that pauses for a month mid-semester would lose its project. Do you want "30 days after last activity **or** 30 days after the final deadline, whichever is later"?
-2. **Invites.** Should only owners create invites (my proposal), or any member?
-3. **Student number.** The design has an optional student number field. For data minimisation I suggest dropping it, since nothing in v1 uses it. Keep it or drop it?
-4. **Usage limit display.** Is the InlineNotice wording above acceptable, for example "Brief breakdowns used: 2 of 5. The limit resets only if the group creates a new project."?
-5. **Domain.** Which domain will the app run on? Until you tell me, I use the Vercel URL and read it from `APP_URL`. Resend also needs a verified sending domain.
+1. Retention: a project is deleted 30 days after its last activity or 30 days after its final deadline, whichever is later. A warning email goes to all members 7 days before deletion, with a link to keep the project, which counts as activity.
+2. Invites: owners only.
+3. Student number: dropped. Profiles hold name and email only.
+4. Usage display: InlineNotice wording approved, for example "Brief breakdowns used: 2 of 5".
+5. Domain: the Vercel URL for now, read from `APP_URL`. A custom domain and the Resend sending domain follow after the build.
