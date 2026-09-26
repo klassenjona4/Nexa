@@ -7,6 +7,8 @@ import { HttpError } from './http.js';
 import { log, routeTemplate } from './logger.js';
 import { authRoutes } from './routes/auth.js';
 import { profileRoutes } from './routes/profile.js';
+import { groupRoutes } from './routes/groups.js';
+import { inviteRoutes, projectInviteRoutes } from './routes/invites.js';
 import { readOutbox } from './services/email.js';
 
 export const app = new Hono<AppEnv>();
@@ -56,6 +58,9 @@ app.notFound((c) => c.json({ error: 'not_found' }, 404));
 app.get('/api/health', (c) => c.json({ ok: true }));
 app.route('/api/auth', authRoutes);
 app.route('/api/profile', profileRoutes);
+app.route('/api/groups', groupRoutes);
+app.route('/api/projects/:projectId/invites', projectInviteRoutes);
+app.route('/api/invites', inviteRoutes);
 
 // Test support: only when EMAIL_MOCK=1 outside production.
 if (flags.emailMock && !flags.production) {

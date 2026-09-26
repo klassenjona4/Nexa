@@ -25,7 +25,7 @@ trap cleanup EXIT
 
 PSQL=(psql -h /tmp -p "$PORT" -U postgres -v ON_ERROR_STOP=1 -q -X)
 "${PSQL[@]}" -c "create database nexa_test" postgres
-"${PSQL[@]}" -d nexa_test -f "$ROOT/supabase/tests/local/supabase_shim.sql" >/dev/null
+"${PSQL[@]}" -d nexa_test -f "$ROOT/scripts/db-test-shim.sql" >/dev/null
 
 for f in "$ROOT"/supabase/migrations/*.sql; do
   "${PSQL[@]}" -d nexa_test -f "$f" >/dev/null

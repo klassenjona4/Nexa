@@ -1,4 +1,5 @@
 import type { Context } from 'hono';
+import { flags } from './env.js';
 import { HttpError } from './http.js';
 import { adminClient } from './supabase.js';
 import { bucketKey } from './tokens.js';
@@ -11,12 +12,20 @@ export function clientIp(c: Context): string {
   return c.req.header('x-real-ip') ?? first ?? 'unknown';
 }
 
+// Local end to end tests create many accounts from one IP address. RATE_LIMIT_MULTIPLIER raises
+// the limits there. It is ignored in production.
+function multiplier(): number {
+  if (flags.production) return 1;
+  const m = Number(process.env.RATE_LIMIT_MULTIPLIER ?? '1');
+  return Number.isFinite(m) && m >= 1 ? Math.min(m, 1000) : 1;
+}
+
 // Consumes one request from each bucket. Throws 429 when any limit is exceeded.
 export async function rateLimit(checks: Array<{ limit: Limit; key: string }>): Promise<void> {
   for (const { limit, key } of checks) {
     const { data, error } = await adminClient().rpc('rate_limit_hit', {
       p_bucket: bucketKey([limit.name, key]),
-      p_max: limit.max,
+      p_max: limit.max * multiplier(),
       p_window_seconds: limit.windowSeconds,
     });
     if (error) throw new HttpError(500, 'server_error');

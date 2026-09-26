@@ -13,3 +13,20 @@ export function signInEmail(to: string, link: string): EmailMessage {
   });
   return { to, subject: 'Your Nexa sign in link', html, text };
 }
+
+export function inviteEmail(opts: { to: string; inviterName: string; groupName: string; projectTitle: string; link: string; expires: string }): EmailMessage {
+  const { html, text } = renderEmail({
+    label: 'Invite',
+    heading: `Join ${opts.groupName} on Nexa`,
+    blocks: [
+      {
+        kind: 'p',
+        text: `${opts.inviterName || 'A group owner'} invited you to join ${opts.groupName} for ${opts.projectTitle}. Nexa is used to plan the group assignment and record who completed each part.`,
+      },
+      { kind: 'button', label: 'Open the invite', href: opts.link },
+      { kind: 'small', text: `The invite link expires on ${opts.expires}. It shows the project summary before you sign in.` },
+      { kind: 'small', text: 'If you do not know the sender, you can ignore this email.' },
+    ],
+  });
+  return { to: opts.to, subject: `Invite to join ${opts.groupName} on Nexa`, html, text };
+}

@@ -33,10 +33,10 @@ export function initials(name: string | null | undefined): string {
 const AVATAR_FONT = { 28: '0.6875rem', 32: '0.75rem', 40: '0.8125rem' } as const;
 
 // Square initials. Always shown next to the name, so hidden from assistive technology.
-export function Avatar({ name, size = 32 }: { name: string | null | undefined; size?: 28 | 32 | 40 }) {
+export function Avatar({ name, text, size = 32 }: { name: string | null | undefined; text?: string; size?: 28 | 32 | 40 }) {
   return (
     <span aria-hidden="true" className={s.avatar} style={{ width: size, height: size, fontSize: AVATAR_FONT[size] }}>
-      {initials(name)}
+      {text ?? initials(name)}
     </span>
   );
 }

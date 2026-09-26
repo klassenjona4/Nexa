@@ -5,6 +5,12 @@ import { AuthCallback, AuthConfirm } from '../screens/auth/AuthConfirm';
 import { SignIn } from '../screens/auth/SignIn';
 import { Welcome } from '../screens/auth/Welcome';
 import { Placeholder } from '../screens/Placeholder';
+import { CreateProject } from '../screens/projects/CreateProject';
+import { Dashboard } from '../screens/projects/Dashboard';
+import { GroupSettings } from '../screens/projects/GroupSettings';
+import { Invite } from '../screens/projects/Invite';
+import { ProjectLayout } from '../screens/projects/ProjectLayout';
+import { Join, JoinAccept, JoinEntry } from '../screens/public/Join';
 import { Landing } from '../screens/public/Landing';
 import { AuthProvider } from './AuthProvider';
 import { RequireAuth } from './RequireAuth';
@@ -24,11 +30,16 @@ const router = createBrowserRouter([
       { path: '/sign-in', element: <SignIn /> },
       { path: '/auth/confirm', element: <AuthConfirm /> },
       { path: '/auth/callback', element: <AuthCallback /> },
+      { path: '/join', element: <JoinEntry /> },
+      { path: '/join/:code', element: <Join /> },
     ],
   },
   {
     element: <PublicShell showSignIn={false} />,
-    children: [{ element: <RequireAuth allowWithoutName />, children: [{ path: '/welcome', element: <Welcome /> }] }],
+    children: [
+      { element: <RequireAuth allowWithoutName />, children: [{ path: '/welcome', element: <Welcome /> }] },
+      { element: <RequireAuth />, children: [{ path: '/join/:code/accept', element: <JoinAccept /> }] },
+    ],
   },
   {
     element: <RequireAuth />,
@@ -36,7 +47,24 @@ const router = createBrowserRouter([
       {
         element: <AppShell />,
         children: [
-          { path: '/projects', element: <Placeholder title="Your projects" /> },
+          { path: '/projects', element: <Dashboard /> },
+          { path: '/projects/new', element: <CreateProject /> },
+          {
+            path: '/p/:projectId',
+            element: <ProjectLayout />,
+            children: [
+              { index: true, element: <Navigate to="board" replace /> },
+              { path: 'board', element: <Placeholder title="Task board" /> },
+              { path: 'tasks/:taskId', element: <Placeholder title="Task" /> },
+              { path: 'brief', element: <Placeholder title="Brief" /> },
+              { path: 'proposal', element: <Placeholder title="Task proposal" /> },
+              { path: 'log', element: <Placeholder title="Contribution log" /> },
+              { path: 'statement', element: <Placeholder title="Contribution statement" /> },
+              { path: 'invite', element: <Invite /> },
+              { path: 'calendar', element: <Placeholder title="Calendar feed" /> },
+              { path: 'settings', element: <GroupSettings /> },
+            ],
+          },
           { path: '/account', element: <Placeholder title="Account settings" /> },
         ],
       },

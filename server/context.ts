@@ -1,14 +1,13 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import { createMiddleware } from 'hono/factory';
 import { unauthorised } from './http.js';
-import { type AuthUser, userClient, verifyAccessToken } from './supabase.js';
+import { type AuthUser, type Db, userClient, verifyAccessToken } from './supabase.js';
 
 export type AppEnv = {
   Variables: {
     requestId: string;
     user: AuthUser;
     token: string;
-    db: SupabaseClient;
+    db: Db;
   };
 };
 

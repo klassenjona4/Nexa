@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../shared/database.types.js';
 import { requireEnv } from './env.js';
 import { HttpError, unauthorised } from './http.js';
 
@@ -6,20 +7,22 @@ const clientOptions = {
   auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
 } as const;
 
-let admin: SupabaseClient | null = null;
+export type Db = SupabaseClient<Database>;
+
+let admin: Db | null = null;
 
 // Service role client. Bypasses RLS: use only for server-only tables and flows that are
 // authorised explicitly in the route before the call.
-export function adminClient(): SupabaseClient {
+export function adminClient(): Db {
   if (!admin) {
-    admin = createClient(requireEnv('SUPABASE_URL'), requireEnv('SUPABASE_SERVICE_ROLE_KEY'), clientOptions);
+    admin = createClient<Database>(requireEnv('SUPABASE_URL'), requireEnv('SUPABASE_SERVICE_ROLE_KEY'), clientOptions);
   }
   return admin;
 }
 
 // Client that acts as the signed-in user, so every query is subject to RLS.
-export function userClient(accessToken: string): SupabaseClient {
-  return createClient(requireEnv('SUPABASE_URL'), requireEnv('VITE_SUPABASE_PUBLISHABLE_KEY'), {
+export function userClient(accessToken: string): Db {
+  return createClient<Database>(requireEnv('SUPABASE_URL'), requireEnv('VITE_SUPABASE_PUBLISHABLE_KEY'), {
     ...clientOptions,
     global: { headers: { Authorization: `Bearer ${accessToken}` } },
   });

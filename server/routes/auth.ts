@@ -23,11 +23,11 @@ authRoutes.post('/magic-link', async (c) => {
   ]);
 
   const admin = adminClient();
-  let type: 'magiclink' | 'signup' = 'magiclink';
+  // For an address without an account, Supabase creates the user and returns a signup token.
   let result = await admin.auth.admin.generateLink({ type: 'magiclink', email: body.email });
   if (result.error) {
-    // No account yet: create one. The random password is never used or shown.
-    type = 'signup';
+    // Older Auth versions refuse magic links for new addresses: create the account instead.
+    // The random password is never used or shown.
     result = await admin.auth.admin.generateLink({
       type: 'signup',
       email: body.email,
@@ -35,6 +35,8 @@ authRoutes.post('/magic-link', async (c) => {
     });
   }
   const hashed = result.data?.properties?.hashed_token;
+  const verification = result.data?.properties?.verification_type;
+  const type = verification === 'signup' ? 'signup' : 'magiclink';
   if (result.error || !hashed) throw new HttpError(502, 'sign_in_unavailable');
 
   const params = new URLSearchParams({ token_hash: hashed, type });
