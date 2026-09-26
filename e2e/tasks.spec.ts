@@ -41,4 +41,24 @@ test('a member completes a task, the owner sees it live and confirms it', async 
   // The member cannot review their own task.
   await member.reload();
   await expect(member.getByRole('button', { name: 'Confirm work was done' })).toHaveCount(0);
+
+  // The log records the completion and the confirmation with the right people.
+  await page.goto(`/p/${projectId}/log`);
+  await expect(page.getByText('marked "Research online defamation case law" as done.')).toBeVisible();
+  await expect(page.getByRole('listitem').filter({ hasText: 'confirmed "Research online defamation case law".' })).toContainText('Aoife Byrne');
+  await expect(page.getByText('Cian Murphy has completed the most estimated hours so far')).toBeVisible();
+
+  // Draft the statement (AI mock), edit it and export it.
+  await page.getByRole('link', { name: 'Draft contribution statement' }).click();
+  await expect(page.getByText('Statement generations used: 0 of 5.', { exact: false })).toBeVisible();
+  await page.getByRole('button', { name: 'Draft statement' }).click();
+  await expect(page.getByRole('heading', { name: 'Contribution statement, Task test group' })).toBeVisible();
+  await page.getByRole('button', { name: 'Edit text' }).click();
+  await page.getByLabel('Cian Murphy', { exact: true }).fill('Cian Murphy completed the case law research on time.');
+  await page.getByRole('button', { name: 'Done editing' }).click();
+  await expect(page.getByText('Cian Murphy completed the case law research on time.')).toBeVisible();
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export PDF' }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toBe('Contribution statement, Task test group.pdf');
 });
