@@ -4,7 +4,8 @@ import { changeRole, createGroup, deleteGroup, idParam, renameGroup } from '../.
 import { groupRole, requireOwnerRole } from '../access.js';
 import { type AppEnv, requireUser } from '../context.js';
 import { HttpError, notFound } from '../http.js';
-import { dbError } from '../supabase.js';
+import { purgeProjectFiles } from '../services/storage.js';
+import { adminClient, dbError } from '../supabase.js';
 import { parse, readJson } from '../validate.js';
 
 export const groupRoutes = new Hono<AppEnv>();
@@ -63,8 +64,12 @@ groupRoutes.delete('/:groupId/members/:userId', async (c) => {
 
 groupRoutes.post('/:groupId/leave', async (c) => {
   const groupId = parse(idParam, c.req.param('groupId'));
+  const { data: projects } = await c.var.db.from('projects').select('id').eq('group_id', groupId);
   const { error } = await c.var.db.rpc('leave_group', { p_group: groupId });
   if (error) throw dbError(error);
+  // The last member leaving deletes the group, so its files go too.
+  const { data: still } = await adminClient().from('groups').select('id').eq('id', groupId).maybeSingle();
+  if (!still) await purgeProjectFiles((projects ?? []).map((p) => p.id));
   return c.json({ ok: true });
 });
 
@@ -76,7 +81,9 @@ groupRoutes.delete('/:groupId', async (c) => {
   if (gErr) throw dbError(gErr);
   if (!group) throw notFound();
   if (group.name.trim() !== body.confirm_name.trim()) throw new HttpError(400, 'confirm_mismatch');
+  const { data: projects } = await c.var.db.from('projects').select('id').eq('group_id', groupId);
   const { error } = await c.var.db.from('groups').delete().eq('id', groupId);
   if (error) throw dbError(error);
+  await purgeProjectFiles((projects ?? []).map((p) => p.id));
   return c.json({ ok: true });
 });

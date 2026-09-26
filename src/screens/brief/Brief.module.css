@@ -1,0 +1,167 @@
+.uploadGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--s5);
+  align-items: stretch;
+}
+.drop {
+  background: var(--mist);
+  border: 1pt solid var(--ink);
+  padding: var(--s6) var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  justify-content: center;
+  min-height: 240px;
+}
+.dropActive {
+  background: var(--sage);
+}
+.dropTitle {
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+.fileButton {
+  position: relative;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 20px;
+  background: var(--white);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+.fileButton:hover {
+  background: var(--mist);
+}
+.fileButton:focus-within {
+  outline: 2px solid var(--slate);
+  outline-offset: 2px;
+}
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+.paste {
+  background: var(--white);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.paste textarea {
+  min-height: 160px;
+  flex: 1;
+}
+.start {
+  align-self: flex-start;
+}
+.processing {
+  max-width: 640px;
+}
+.fileRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  font-size: 0.9375rem;
+}
+.steps {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.step {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s3) 0;
+  border-bottom: var(--rule-hairline);
+  font-size: 0.9375rem;
+}
+.stepStatus {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.reviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: var(--s5);
+  align-items: start;
+}
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  align-items: baseline;
+}
+.editRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  padding-bottom: var(--s3);
+  border-bottom: var(--rule-hairline);
+  align-items: flex-end;
+}
+.w2 {
+  flex: 2 1 200px;
+}
+.w1 {
+  flex: 1 1 140px;
+}
+.wDate {
+  flex: 1 1 120px;
+}
+.wTime {
+  flex: 0 1 88px;
+}
+.criterion {
+  display: flex;
+  gap: var(--s2);
+  align-items: center;
+}
+.criterion > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+.weight {
+  width: 72px;
+}
+.remove {
+  min-height: 44px;
+}
+.readRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: var(--s2) 0;
+  border-bottom: var(--rule-hairline);
+  font-size: 0.9375rem;
+}
+.readRight {
+  text-align: right;
+  color: var(--graphite);
+}
+.num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.total {
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}
+.totalWarn {
+  color: var(--rust);
+  font-weight: 600;
+}

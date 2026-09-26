@@ -3,6 +3,8 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 import { ToastProvider } from '../components/Toast';
 import { AuthCallback, AuthConfirm } from '../screens/auth/AuthConfirm';
 import { Board } from '../screens/board/Board';
+import { Brief } from '../screens/brief/Brief';
+import { Proposal } from '../screens/brief/Proposal';
 import { TaskDetail } from '../screens/board/TaskDetail';
 import { SignIn } from '../screens/auth/SignIn';
 import { Welcome } from '../screens/auth/Welcome';
@@ -58,8 +60,8 @@ const router = createBrowserRouter([
               { index: true, element: <Navigate to="board" replace /> },
               { path: 'board', element: <Board /> },
               { path: 'tasks/:taskId', element: <TaskDetail /> },
-              { path: 'brief', element: <Placeholder title="Brief" /> },
-              { path: 'proposal', element: <Placeholder title="Task proposal" /> },
+              { path: 'brief', element: <Brief /> },
+              { path: 'proposal', element: <Proposal /> },
               { path: 'log', element: <Placeholder title="Contribution log" /> },
               { path: 'statement', element: <Placeholder title="Contribution statement" /> },
               { path: 'invite', element: <Invite /> },

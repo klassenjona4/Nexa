@@ -10,6 +10,7 @@ import { profileRoutes } from './routes/profile.js';
 import { groupRoutes } from './routes/groups.js';
 import { inviteRoutes, projectInviteRoutes } from './routes/invites.js';
 import { projectTaskRoutes, taskRoutes } from './routes/tasks.js';
+import { briefRoutes } from './routes/briefs.js';
 import { readOutbox } from './services/email.js';
 
 export const app = new Hono<AppEnv>();
@@ -31,16 +32,13 @@ app.use('*', async (c, next) => {
   });
 });
 
-// JSON bodies are small. Brief text has its own larger limit on its route.
-app.use(
-  '/api/*',
-  bodyLimit({
-    maxSize: 64 * 1024,
-    onError: () => {
-      throw new HttpError(413, 'payload_too_large');
-    },
-  }),
-);
+// JSON bodies are small. Pasted brief text (up to 60,000 characters) has a larger limit.
+const tooLarge = () => {
+  throw new HttpError(413, 'payload_too_large');
+};
+const smallBody = bodyLimit({ maxSize: 64 * 1024, onError: tooLarge });
+const briefBody = bodyLimit({ maxSize: 256 * 1024, onError: tooLarge });
+app.use('/api/*', (c, next) => (c.req.path.endsWith('/briefs/analyse') ? briefBody(c, next) : smallBody(c, next)));
 
 app.onError((err, c) => {
   if (err instanceof HttpError) {
@@ -64,6 +62,7 @@ app.route('/api/projects/:projectId/invites', projectInviteRoutes);
 app.route('/api/invites', inviteRoutes);
 app.route('/api/projects/:projectId/tasks', projectTaskRoutes);
 app.route('/api/tasks', taskRoutes);
+app.route('/api/projects/:projectId/briefs', briefRoutes);
 
 // Test support: only when EMAIL_MOCK=1 outside production.
 if (flags.emailMock && !flags.production) {
