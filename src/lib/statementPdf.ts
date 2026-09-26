@@ -4,8 +4,7 @@ import sansUrl from '@fontsource/hanken-grotesk/files/hanken-grotesk-latin-400-n
 import serifUrl from '@fontsource/source-serif-4/files/source-serif-4-latin-400-normal.woff?url';
 import { PDFDocument, type PDFFont, rgb } from 'pdf-lib';
 
-type Section = { heading: string; body: string };
-type Input = { label: string; title: string; period: string; sections: Section[]; members: string[] };
+import type { StatementInput as Input } from './statementText';
 
 const INK = rgb(0x14 / 255, 0x14 / 255, 0x14 / 255);
 const GRAPHITE = rgb(0x4a / 255, 0x4d / 255, 0x4a / 255);
@@ -95,8 +94,3 @@ export async function statementPdf(input: Input): Promise<Blob> {
   return new Blob([bytes as BlobPart], { type: 'application/pdf' });
 }
 
-export function statementText(input: Input): string {
-  return [input.label, input.title, input.period, '', ...input.sections.flatMap((s) => [s.heading, s.body, '']), ...input.members.map((m) => `${m}: signature and date ____________________`)].join('\n');
-}
-
-export { saveBlob as download } from './download';

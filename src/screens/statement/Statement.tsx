@@ -13,7 +13,8 @@ import { api, codeOf } from '../../lib/api';
 import { useUsage } from '../../lib/brief';
 import { errorMessage } from '../../lib/errors';
 import { useProject } from '../../lib/project';
-import { download, statementPdf, statementText } from '../../lib/statementPdf';
+import { saveBlob as download } from '../../lib/download';
+import { statementText } from '../../lib/statementText';
 import { supabase } from '../../lib/supabase';
 import { useTasks } from '../../lib/tasks';
 import s from './Statement.module.css';
@@ -123,6 +124,7 @@ export function Statement() {
         </Button>
         <Button
           onClick={async () => {
+            const { statementPdf } = await import('../../lib/statementPdf');
             download(await statementPdf(input), `${input.title}.pdf`);
             toast.show(`PDF exported: ${input.title}.pdf`);
           }}
