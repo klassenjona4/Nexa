@@ -114,11 +114,13 @@ function CalendarDialog({ projectId, groupName, onClose }: { projectId: string; 
                 value={app}
                 onChange={setApp}
               />
-              <ol role="tabpanel" id="cal-panel" aria-labelledby={`cal-tab-${app}`} className={s.steps}>
-                {STEPS[app].map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ol>
+              <div role="tabpanel" id="cal-panel" aria-labelledby={`cal-tab-${app}`}>
+                <ol className={s.steps}>
+                  {STEPS[app].map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              </div>
               <p className={p.caption} style={{ lineHeight: 1.5 }}>
                 {NOTES[app]}
               </p>

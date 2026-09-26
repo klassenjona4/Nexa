@@ -298,3 +298,14 @@ Each milestone ends with a type check, lint, the relevant tests and a commit pus
 3. Student number: dropped. Profiles hold name and email only.
 4. Usage display: InlineNotice wording approved, for example "Brief breakdowns used: 2 of 5".
 5. Domain: the Vercel URL for now, read from `APP_URL`. A custom domain and the Resend sending domain follow after the build.
+
+## 12. Changes made during the build
+
+- **Name step.** A sign in link carries no name, so new accounts enter their name once on a short screen after the first sign in. Members see it on the board, in the log and in statements.
+- **New task.** The prototype creates a task called "New task" and opens it. The app opens a New task form instead (modal from 600 px, bottom sheet below), so no placeholder entries reach the log.
+- **Calendar link.** The feed URL is shown as `https://…/cal/<token>.ics`, which Google, Apple and Outlook all accept, instead of the prototype's `webcal://`.
+- **Scheduled jobs.** Vercel Hobby cron runs only daily, so hourly reminders and the daily retention job run in Supabase pg_cron and call the API through pg_net, with the URL and secret in Supabase Vault.
+- **Sign in email.** Sign in links are generated with the Supabase admin API and sent through Resend, so Nexa controls per IP and per email rate limits and the email wording.
+- **Tests.** RLS tests use pgTAP and run both on a plain Postgres with a small Supabase shim (`npm run test:db`) and on the real Supabase stack (`npx supabase test db`). Accessibility is checked with axe-core in Playwright.
+- **Statement drafting** sends members' names and the log digest to the AI model (no email addresses or file links). This is stated in the app and the privacy policy.
+- **Usage display** appears on the brief and statement screens as an inline notice, as agreed.

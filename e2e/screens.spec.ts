@@ -32,6 +32,13 @@ test('capture screens', async ({ page, browser }) => {
     ['task', new URL(taskUrl).pathname],
     ['invite', `/p/${projectId}/invite`],
     ['settings', `/p/${projectId}/settings`],
+    ['brief', `/p/${projectId}/brief`],
+    ['log', `/p/${projectId}/log`],
+    ['statement', `/p/${projectId}/statement`],
+    ['calendar', `/p/${projectId}/calendar`],
+    ['account', '/account'],
+    ['landing', '/'],
+    ['privacy', '/privacy'],
   ];
   for (const w of WIDTHS) {
     await page.setViewportSize({ width: w, height: w === 375 ? 780 : w === 768 ? 1024 : 820 });
