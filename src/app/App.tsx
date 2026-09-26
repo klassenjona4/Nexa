@@ -5,6 +5,7 @@ import { AuthCallback, AuthConfirm } from '../screens/auth/AuthConfirm';
 import { Board } from '../screens/board/Board';
 import { Brief } from '../screens/brief/Brief';
 import { Proposal } from '../screens/brief/Proposal';
+import { CalendarRoute } from '../screens/calendar/Calendar';
 import { Log } from '../screens/log/Log';
 import { Statement } from '../screens/statement/Statement';
 import { TaskDetail } from '../screens/board/TaskDetail';
@@ -67,7 +68,7 @@ const router = createBrowserRouter([
               { path: 'log', element: <Log /> },
               { path: 'statement', element: <Statement /> },
               { path: 'invite', element: <Invite /> },
-              { path: 'calendar', element: <Placeholder title="Calendar feed" /> },
+              { path: 'calendar', element: <CalendarRoute /> },
               { path: 'settings', element: <GroupSettings /> },
             ],
           },

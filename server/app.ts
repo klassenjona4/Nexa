@@ -14,6 +14,7 @@ import { briefRoutes } from './routes/briefs.js';
 import { projectStatementRoutes, statementRoutes } from './routes/statements.js';
 import { cronRoutes } from './routes/cron.js';
 import { projectRoutes } from './routes/projects.js';
+import { calendarRoutes, icsRoutes, projectCalendarRoutes } from './routes/calendar.js';
 import { readOutbox } from './services/email.js';
 
 export const app = new Hono<AppEnv>();
@@ -68,6 +69,9 @@ app.route('/api/tasks', taskRoutes);
 app.route('/api/projects/:projectId/briefs', briefRoutes);
 app.route('/api/projects/:projectId/statements', projectStatementRoutes);
 app.route('/api/statements', statementRoutes);
+app.route('/api/projects/:projectId/calendar', projectCalendarRoutes);
+app.route('/api/calendar', calendarRoutes);
+app.route('/cal', icsRoutes);
 app.route('/api/projects', projectRoutes);
 app.route('/api/cron', cronRoutes);
 
