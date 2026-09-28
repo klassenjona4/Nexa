@@ -5,9 +5,14 @@ import { parseLegal } from './legal';
 describe('legal documents', () => {
   for (const name of ['privacy', 'terms']) {
     const doc = parseLegal(readFileSync(`legal/${name}.md`, 'utf8'));
-    it(`${name} is marked as a draft for legal review`, () => {
-      expect(doc.status).toBe('draft');
-      expect(doc.notice).toMatch(/^DRAFT\. .*legal professional/);
+    it(`${name} is either a marked draft or a completed final version`, () => {
+      expect(['draft', 'final']).toContain(doc.status);
+      if (doc.status === 'draft') {
+        expect(doc.notice).toMatch(/^DRAFT\. .*legal professional/);
+      } else {
+        expect(doc.notice).not.toMatch(/DRAFT/);
+        expect(readFileSync(`legal/${name}.md`, 'utf8')).not.toMatch(/\[(FULL NAME|ADDRESS|CONTACT EMAIL)\]/);
+      }
     });
     it(`${name} has sections and dates in DD/MM/YYYY`, () => {
       expect(doc.sections.length).toBeGreaterThan(8);
@@ -17,7 +22,7 @@ describe('legal documents', () => {
 
   it('privacy policy covers the Article 13 information', () => {
     const text = readFileSync('legal/privacy.md', 'utf8');
-    for (const phrase of ['[FULL NAME]', '[ADDRESS]', '[CONTACT EMAIL]', 'Article 6(1)(b)', 'Article 6(1)(f)', 'Supabase', 'Vercel', 'Anthropic', 'Resend', 'standard contractual clauses', 'How long data is kept', 'Data Protection Commission']) {
+    for (const phrase of ['is the controller', 'Contact for all privacy questions', 'Article 6(1)(b)', 'Article 6(1)(f)', 'Supabase', 'Vercel', 'Anthropic', 'Resend', 'standard contractual clauses', 'How long data is kept', 'Data Protection Commission']) {
       expect(text).toContain(phrase);
     }
   });
