@@ -1,0 +1,74 @@
+.desk {
+  background: var(--mist);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+@media (min-width: 600px) {
+  .desk {
+    padding: var(--s6);
+  }
+}
+.doc {
+  width: 100%;
+  max-width: 720px;
+  background: var(--white);
+  padding: var(--s5) var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+@media (min-width: 600px) {
+  .doc {
+    padding: var(--s7);
+  }
+}
+.docHead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  border-bottom: var(--rule-strong);
+  padding-bottom: var(--s4);
+}
+.docLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.docTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.body {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+  white-space: pre-wrap;
+}
+.signatures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+  gap: var(--s5);
+  border-top: var(--rule-hairline);
+  padding-top: var(--s5);
+}
+.signature {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8125rem;
+}
+.line {
+  height: 32px;
+  border-bottom: var(--rule-strong);
+}

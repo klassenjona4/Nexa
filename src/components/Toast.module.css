@@ -1,0 +1,45 @@
+.toast {
+  position: fixed;
+  z-index: 30;
+  left: 16px;
+  right: 16px;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  max-width: 420px;
+  margin-left: auto;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 4px 4px 4px 16px;
+}
+:global(html[data-bottom-nav='true']) .toast {
+  bottom: calc(72px + env(safe-area-inset-bottom));
+}
+:global(html[data-join-bar='true']) .toast {
+  bottom: calc(88px + env(safe-area-inset-bottom));
+}
+@media (min-width: 600px) {
+  .toast {
+    left: auto;
+    width: 420px;
+    right: 24px;
+  }
+}
+.message {
+  flex: 1;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  padding: 10px 0;
+}
+.dismiss {
+  min-height: 44px;
+  padding: 0 12px;
+  background: none;
+  border: none;
+  color: var(--paper);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

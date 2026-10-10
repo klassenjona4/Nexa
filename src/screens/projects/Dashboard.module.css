@@ -1,0 +1,96 @@
+.deadline {
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.deadlineNumber {
+  font-weight: 600;
+  font-size: 3rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.deadlineText {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.deadlineDate {
+  font-size: 0.9375rem;
+  color: var(--sage);
+  font-variant-numeric: tabular-nums;
+}
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s3);
+}
+.taskRow {
+  min-height: 56px;
+  padding: var(--s2) 0;
+  border-bottom: var(--rule-hairline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s3);
+  color: var(--ink);
+  text-decoration: none;
+}
+.taskRow:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+.taskText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.taskTitle {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.projectCard {
+  background: var(--white);
+  border-top: var(--rule-strong);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  color: var(--ink);
+  text-decoration: none;
+}
+.projectCard:hover {
+  background: var(--mist);
+  color: var(--ink);
+}
+.projectMeta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.projectGroup {
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+.projectTitle {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--graphite);
+}
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+.next {
+  font-size: 0.875rem;
+  color: var(--graphite);
+  border-top: var(--rule-hairline);
+  padding-top: var(--s3);
+}

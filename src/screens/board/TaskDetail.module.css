@@ -1,0 +1,127 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s6);
+  align-items: start;
+}
+@media (min-width: 1148px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+  min-width: 0;
+}
+.back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.description {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 68ch;
+  white-space: pre-wrap;
+}
+.link {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s2);
+  padding: var(--s3) 0;
+  border-top: var(--rule-hairline);
+  font-size: 0.9375rem;
+}
+.linkName {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.linkMeta {
+  color: var(--graphite);
+  font-size: 0.8125rem;
+}
+.none {
+  font-size: 0.9375rem;
+  color: var(--graphite);
+  padding: var(--s3) 0;
+  border-top: var(--rule-hairline);
+}
+.addLink {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: flex-start;
+  padding-top: var(--s2);
+}
+.grow {
+  flex: 1 1 240px;
+}
+.reviewButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+.reviewButtons > * {
+  flex: 1 1 160px;
+}
+.reviews {
+  list-style: none;
+  padding: 0;
+}
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--s3) 0;
+  border-top: var(--rule-hairline);
+}
+.reviewHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: center;
+  font-size: 0.9375rem;
+}
+.reviewNote {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.fields {
+  display: flex;
+  flex-direction: column;
+}
+.field {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: var(--s3) 0;
+  border-bottom: var(--rule-hairline);
+  font-size: 0.9375rem;
+}
+.field dt {
+  color: var(--graphite);
+}
+.field dd {
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.asideActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding-top: var(--s4);
+}

@@ -1,0 +1,83 @@
+.page {
+  padding-top: var(--s6);
+  gap: var(--s8);
+}
+.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: var(--s6);
+  align-items: end;
+}
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+.title {
+  font-weight: 600;
+  font-size: 2.25rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+@media (min-width: 600px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+@media (min-width: 1024px) {
+  .title {
+    font-size: 4rem;
+  }
+}
+.lead {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.note {
+  font-size: 0.875rem;
+  color: var(--graphite);
+}
+.steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--s5);
+}
+.step {
+  background: var(--white);
+  border-top: var(--rule-strong);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.stepNumber {
+  font-weight: 600;
+  font-size: 2.5rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.stepTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.stepBody {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--graphite);
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+.h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}

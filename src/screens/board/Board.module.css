@@ -1,0 +1,146 @@
+.filters {
+  margin-top: calc(-1 * var(--s2));
+}
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s4);
+  align-items: start;
+}
+.column {
+  background: var(--mist);
+  padding: var(--s3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  min-height: 240px;
+}
+.columnHead {
+  padding: 4px 4px 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+.count {
+  font-variant-numeric: tabular-nums;
+  color: var(--graphite);
+}
+.none {
+  padding: 12px 4px;
+  font-size: 0.875rem;
+  color: var(--graphite);
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--white);
+  color: var(--ink);
+  text-decoration: none;
+}
+.card:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+.cardRuled {
+  border-top: var(--rule-strong);
+}
+.cardRuled:hover {
+  background: var(--mist);
+}
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  align-items: flex-start;
+}
+.cardTitle {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+.cardTitleLg {
+  font-size: 1rem;
+}
+.owner {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 0.8125rem;
+  color: var(--graphite);
+  border-top: var(--rule-hairline);
+  padding-top: var(--s2);
+}
+.metaInline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s4);
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.tabEmpty {
+  padding: var(--s5);
+  background: var(--white);
+  font-family: var(--font-serif);
+  color: var(--graphite);
+}
+
+/* Task form */
+.form {
+  padding: var(--s4) var(--s5) var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.formHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.formTitle {
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s4);
+}
+.flex2 {
+  flex: 2 1 180px;
+}
+.flex1 {
+  flex: 1 1 100px;
+}
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding-top: var(--s2);
+}
+@media (min-width: 600px) {
+  .formActions {
+    flex-direction: row;
+  }
+  .formActions > * {
+    flex: 1;
+  }
+}

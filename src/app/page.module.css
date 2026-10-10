@@ -1,0 +1,140 @@
+.content {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--s5) var(--s4) var(--s8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s6);
+}
+.wide {
+  max-width: 1120px;
+}
+@media (min-width: 600px) {
+  .content {
+    padding: var(--s6) var(--s5) var(--s8);
+  }
+}
+@media (min-width: 1024px) {
+  .content {
+    padding: var(--s7) var(--s7) var(--s8);
+  }
+}
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  max-width: 720px;
+}
+.headerRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s4);
+}
+.h1 {
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+@media (min-width: 600px) {
+  .h1 {
+    font-size: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .h1 {
+    font-size: 2.5rem;
+  }
+}
+.h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.h2Rule {
+  padding-bottom: var(--s3);
+  border-bottom: var(--rule-strong);
+}
+.h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+.intro {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--graphite);
+}
+.serif {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.muted {
+  color: var(--graphite);
+}
+.small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.caption {
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.stackLg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  align-items: center;
+}
+.actionsRuled {
+  border-top: var(--rule-hairline);
+  padding-top: var(--s5);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--s5);
+  align-items: start;
+}
+.narrow {
+  width: 100%;
+  max-width: 640px;
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: var(--s2) 0;
+  border-bottom: var(--rule-hairline);
+  font-size: 0.9375rem;
+}
+.dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s3) var(--s4);
+  font-size: 0.9375rem;
+}
+.dl dt {
+  color: var(--graphite);
+}
+.dl dd {
+  font-weight: 600;
+}

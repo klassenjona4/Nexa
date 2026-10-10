@@ -1,0 +1,36 @@
+/* Design tokens from the Jona Klassen design system, as used by the Nexa handoff (design/project/HANDOFF.md).
+   No other colours or fonts are used anywhere in the app. */
+:root {
+  --ink: #141414;
+  --white: #ffffff;
+  --paper: #f7f7f5;
+  --mist: #e6e8e4;
+  --sage: #b7bfb5;
+  --stone: #8a8f89;
+  --graphite: #4a4d4a;
+  --slate: #34566a;
+  --rust: #b4441c;
+
+  --font-sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, Cambria, 'Times New Roman', serif;
+
+  --label-tracking: 0.08em;
+
+  /* Spacing: 4, 8, 12, 16, 24, 32, 48, 64, 96 px only. */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+  --s9: 96px;
+
+  --rule-hairline: 0.5pt solid var(--sage);
+  --rule-strong: 1pt solid var(--ink);
+
+  --sidebar-w: 248px;
+  --bar-h: 56px;
+  --content-max: 1200px;
+}
