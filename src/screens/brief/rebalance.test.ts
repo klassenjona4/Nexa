@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Member } from '../../lib/project';
-import { rebalance } from './Proposal';
+import { rebalance } from './rebalance';
 
 const member = (id: string): Member => ({ user_id: id, full_name: id, email: '', role: 'member', joined_at: id });
 const task = (key: number, hours: number) => ({ key, title: `T${key}`, description: '', deliverable: '', estimated_hours: hours, due_at: null, assignee_id: null });
