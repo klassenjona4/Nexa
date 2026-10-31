@@ -9,7 +9,7 @@ updated: 26/09/2026
 
 ## Who is responsible for your data
 
-Nexa is operated by [FULL NAME], [ADDRESS], Ireland. [FULL NAME] is the controller of the personal data described in this policy under the General Data Protection Regulation (GDPR).
+Nexa is operated by Jona Klassen, [ADDRESS], Ireland. Jona Klassen is the controller of the personal data described in this policy under the General Data Protection Regulation (GDPR).
 
 Contact for all privacy questions and requests: [CONTACT EMAIL].
 
