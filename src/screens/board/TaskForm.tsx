@@ -36,6 +36,7 @@ export function TaskFormDialog({
   title,
   initial,
   members,
+  ownerLocked = false,
   submitLabel,
   onSubmit,
   onClose,
@@ -44,6 +45,8 @@ export function TaskFormDialog({
   title: string;
   initial: TaskFormValues;
   members: Member[];
+  // A done task keeps its owner; the database refuses the change.
+  ownerLocked?: boolean;
   submitLabel: string;
   onSubmit: (v: TaskFormValues) => Promise<void>;
   onClose: () => void;
@@ -51,12 +54,12 @@ export function TaskFormDialog({
   const id = useId();
   return (
     <Dialog open={open} onClose={onClose} labelledBy={`${id}-t`}>
-      {open ? <TaskFormBody headingId={`${id}-t`} title={title} initial={initial} members={members} submitLabel={submitLabel} onSubmit={onSubmit} onClose={onClose} /> : null}
+      {open ? <TaskFormBody headingId={`${id}-t`} title={title} initial={initial} members={members} ownerLocked={ownerLocked} submitLabel={submitLabel} onSubmit={onSubmit} onClose={onClose} /> : null}
     </Dialog>
   );
 }
 
-function TaskFormBody({ headingId, title, initial, members, submitLabel, onSubmit, onClose }: { headingId: string; title: string; initial: TaskFormValues; members: Member[]; submitLabel: string; onSubmit: (v: TaskFormValues) => Promise<void>; onClose: () => void }) {
+function TaskFormBody({ headingId, title, initial, members, ownerLocked, submitLabel, onSubmit, onClose }: { headingId: string; title: string; initial: TaskFormValues; members: Member[]; ownerLocked: boolean; submitLabel: string; onSubmit: (v: TaskFormValues) => Promise<void>; onClose: () => void }) {
   const [v, setV] = useState(initial);
   const [errors, setErrors] = useState<Partial<Record<keyof TaskFormValues, string>>>({});
   const [busy, setBusy] = useState(false);
@@ -92,7 +95,14 @@ function TaskFormBody({ headingId, title, initial, members, submitLabel, onSubmi
       </div>
       <TextField label="Title" value={v.title} onChange={(e) => set('title', e.target.value)} error={errors.title} maxLength={200} data-autofocus />
       <div className={s.formRow}>
-        <SelectField className={s.flex2} label="Owner" value={v.assignee_id ?? ''} onChange={(e) => set('assignee_id', e.target.value || null)}>
+        <SelectField
+          className={s.flex2}
+          label="Owner"
+          value={v.assignee_id ?? ''}
+          onChange={(e) => set('assignee_id', e.target.value || null)}
+          disabled={ownerLocked}
+          hint={ownerLocked ? 'Move the task out of Done to change its owner.' : undefined}
+        >
           <option value="">Unassigned</option>
           {members.map((m) => (
             <option key={m.user_id} value={m.user_id}>

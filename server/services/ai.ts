@@ -51,7 +51,7 @@ function userContent(input: { pdf?: Buffer; text?: string }, members: number, to
 }
 
 export async function analyseBriefWithAi(input: { pdf?: Buffer; text?: string }, members: number, today: string): Promise<AiBriefOutput> {
-  if (flags.aiMock && !flags.production) return mockBrief(members);
+  if (flags.aiMock) return mockBrief(members);
   let response;
   try {
     response = await anthropic().messages.parse({
@@ -123,7 +123,7 @@ export function normaliseAnalysis(out: AiBriefOutput, members: number): Analysis
   };
 }
 
-// Fixed result for tests (AI_MOCK=1). Based on the example brief in the design.
+// Fixed result for tests (test mode with AI_MOCK=1). Based on the example brief in the design.
 function mockBrief(members: number): AiBriefOutput {
   const m = (i: number) => ((i % members) + 1);
   const tasks = [
@@ -175,8 +175,16 @@ Rules:
 - Plain, factual Irish English in the third person. No emoji. Do not use em dashes or en dashes.
 - The group reviews and edits your draft before anyone signs it.`;
 
+// Task titles, flag reasons and names are written by students. Tags that would close the <log>
+// block are removed so that text cannot pose as instructions outside it.
+export function statementPrompt(digest: string, headings: string[]): string {
+  const safe = digest.replace(/<\/?log>/gi, '');
+  const list = headings.map((h) => `- ${h.replace(/<\/?log>/gi, '')}`).join('\n');
+  return `<log>\n${safe}\n</log>\n\nWrite the contribution statement. Use these section headings in this order, then Summary:\n${list}`;
+}
+
 export async function draftStatementWithAi(digest: string, headings: string[]): Promise<{ heading: string; body: string }[]> {
-  if (flags.aiMock && !flags.production) {
+  if (flags.aiMock) {
     return [...headings.map((h) => ({ heading: h, body: `${h.split(',')[0]} contributed as recorded in the contribution log.` })), { heading: 'Summary', body: 'The log records the tasks and confirmations above.' }];
   }
   let response;
@@ -188,7 +196,7 @@ export async function draftStatementWithAi(digest: string, headings: string[]): 
       messages: [
         {
           role: 'user',
-          content: `<log>\n${digest}\n</log>\n\nWrite the contribution statement. Use these section headings in this order, then Summary:\n${headings.map((h) => `- ${h}`).join('\n')}`,
+          content: statementPrompt(digest, headings),
         },
       ],
       output_config: { format: zodOutputFormat(aiStatementOutput) },

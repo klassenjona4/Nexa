@@ -5,8 +5,8 @@ import { log } from '../logger.js';
 
 export type EmailMessage = { to: string; subject: string; text: string; html: string };
 
-// In end to end tests (EMAIL_MOCK=1, never in production) messages are kept in memory
-// so the tests can open the sign in and invite links.
+// In end to end tests (test mode with EMAIL_MOCK=1, never on a hosted platform) messages are
+// kept in memory so the tests can open the sign in and invite links.
 const outbox: EmailMessage[] = [];
 
 export function readOutbox(): EmailMessage[] {
@@ -14,7 +14,7 @@ export function readOutbox(): EmailMessage[] {
 }
 
 export async function sendEmail(message: EmailMessage): Promise<void> {
-  if (flags.emailMock && !flags.production) {
+  if (flags.emailMock) {
     outbox.push(message);
     if (outbox.length > 200) outbox.shift();
     return;

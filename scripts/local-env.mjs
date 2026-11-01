@@ -13,6 +13,8 @@ const lines = [
   'APP_URL=http://localhost:5173',
   `TOKEN_SECRET=${randomBytes(48).toString('base64')}`,
   `CRON_SECRET=${randomBytes(32).toString('base64url')}`,
+  // Test helpers need this switch and never run on a hosted platform (see server/env.ts).
+  'NEXA_TEST_MODE=1',
   'EMAIL_MOCK=1',
   'AI_MOCK=1',
   'RATE_LIMIT_MULTIPLIER=100',

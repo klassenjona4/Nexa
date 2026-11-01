@@ -17,6 +17,12 @@ export type Database = {
           { foreignKeyName: 'activity_log_project_id_fkey'; columns: ['project_id']; isOneToOne: false; referencedRelation: 'projects'; referencedColumns: ['id'] },
         ];
       };
+      ai_daily_usage: {
+        Row: { day: string; used: number };
+        Insert: { day: string; used?: number };
+        Update: { day?: string; used?: number };
+        Relationships: [];
+      };
       brief_analyses: {
         Row: { accepted_at: string | null; completed_at: string | null; created_at: string; created_by: string | null; error_code: string | null; file_name: string | null; file_size: number | null; id: string; project_id: string; result: Json | null; source: Database['public']['Enums']['brief_source']; status: Database['public']['Enums']['analysis_status']; storage_path: string | null };
         Insert: { accepted_at?: string | null; completed_at?: string | null; created_at?: string; created_by?: string | null; error_code?: string | null; file_name?: string | null; file_size?: number | null; id?: string; project_id: string; result?: Json | null; source: Database['public']['Enums']['brief_source']; status?: Database['public']['Enums']['analysis_status']; storage_path?: string | null };
@@ -90,6 +96,18 @@ export type Database = {
         Update: { bucket?: string; count?: number; window_start?: string };
         Relationships: [];
       };
+      service_limits: {
+        Row: { max_value: number; name: string };
+        Insert: { max_value: number; name: string };
+        Update: { max_value?: number; name?: string };
+        Relationships: [];
+      };
+      signup_allowances: {
+        Row: { email: string; expires_at: string };
+        Insert: { email: string; expires_at: string };
+        Update: { email?: string; expires_at?: string };
+        Relationships: [];
+      };
       statements: {
         Row: { edited_at: string | null; edited_by: string | null; generated_at: string; generated_by: string | null; id: string; period_from: string | null; period_to: string | null; project_id: string; sections: Json };
         Insert: { edited_at?: string | null; edited_by?: string | null; generated_at?: string; generated_by?: string | null; id?: string; period_from?: string | null; period_to?: string | null; project_id: string; sections: Json };
@@ -110,11 +128,12 @@ export type Database = {
         ];
       };
       tasks: {
-        Row: { assignee_id: string | null; completion_seq: number; created_at: string; created_by: string | null; deliverable: string; description: string; due_at: string | null; estimated_hours: number; id: string; position: number; project_id: string; reminder_sent_at: string | null; status: Database['public']['Enums']['task_status']; title: string; updated_at: string };
-        Insert: { assignee_id?: string | null; completion_seq?: number; created_at?: string; created_by?: string | null; deliverable?: string; description?: string; due_at?: string | null; estimated_hours?: number; id?: string; position?: number; project_id: string; reminder_sent_at?: string | null; status?: Database['public']['Enums']['task_status']; title: string; updated_at?: string };
-        Update: { assignee_id?: string | null; completion_seq?: number; created_at?: string; created_by?: string | null; deliverable?: string; description?: string; due_at?: string | null; estimated_hours?: number; id?: string; position?: number; project_id?: string; reminder_sent_at?: string | null; status?: Database['public']['Enums']['task_status']; title?: string; updated_at?: string };
+        Row: { assignee_id: string | null; completed_by: string | null; completion_seq: number; created_at: string; created_by: string | null; deliverable: string; description: string; due_at: string | null; estimated_hours: number; id: string; position: number; project_id: string; reminder_sent_at: string | null; status: Database['public']['Enums']['task_status']; title: string; updated_at: string };
+        Insert: { assignee_id?: string | null; completed_by?: string | null; completion_seq?: number; created_at?: string; created_by?: string | null; deliverable?: string; description?: string; due_at?: string | null; estimated_hours?: number; id?: string; position?: number; project_id: string; reminder_sent_at?: string | null; status?: Database['public']['Enums']['task_status']; title: string; updated_at?: string };
+        Update: { assignee_id?: string | null; completed_by?: string | null; completion_seq?: number; created_at?: string; created_by?: string | null; deliverable?: string; description?: string; due_at?: string | null; estimated_hours?: number; id?: string; position?: number; project_id?: string; reminder_sent_at?: string | null; status?: Database['public']['Enums']['task_status']; title?: string; updated_at?: string };
         Relationships: [
           { foreignKeyName: 'tasks_assignee_id_fkey'; columns: ['assignee_id']; isOneToOne: false; referencedRelation: 'profiles'; referencedColumns: ['id'] },
+          { foreignKeyName: 'tasks_completed_by_fkey'; columns: ['completed_by']; isOneToOne: false; referencedRelation: 'profiles'; referencedColumns: ['id'] },
           { foreignKeyName: 'tasks_created_by_fkey'; columns: ['created_by']; isOneToOne: false; referencedRelation: 'profiles'; referencedColumns: ['id'] },
           { foreignKeyName: 'tasks_project_id_fkey'; columns: ['project_id']; isOneToOne: false; referencedRelation: 'projects'; referencedColumns: ['id'] },
         ];
@@ -128,6 +147,7 @@ export type Database = {
       create_project: { Args: { p_final_deadline: string | null; p_group: string; p_module_code: string; p_title: string }; Returns: string };
       export_my_data: { Args: never; Returns: Json };
       group_member_list: { Args: { p_group: string }; Returns: { email: string; full_name: string; joined_at: string; role: Database['public']['Enums']['member_role']; user_id: string }[] };
+      hook_before_user_created: { Args: { event: Json }; Returns: Json };
       keep_project: { Args: { p_project: string }; Returns: undefined };
       leave_group: { Args: { p_group: string }; Returns: undefined };
       prepare_account_deletion: { Args: { p_user: string }; Returns: undefined };

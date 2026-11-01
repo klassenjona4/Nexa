@@ -43,7 +43,7 @@ npm run dev:api             # API on http://localhost:8787
 npm run dev                 # app on http://localhost:5173 (proxies /api and /cal)
 ```
 
-`.env.local` sets `EMAIL_MOCK=1` and `AI_MOCK=1`, so no email is sent and no AI call is made. Sign in links are available at `http://localhost:8787/api/test/outbox` (only when `EMAIL_MOCK=1`, never in production). To try the real Claude API locally, set `AI_MOCK=0` and add `ANTHROPIC_API_KEY` to `.env.local`.
+`.env.local` sets `NEXA_TEST_MODE=1` with `EMAIL_MOCK=1` and `AI_MOCK=1`, so no email is sent and no AI call is made. Sign in links are available at `http://localhost:8787/api/test/outbox`. The test helpers only work with `NEXA_TEST_MODE=1` and never on Vercel or Replit, and the API refuses to start on a hosted platform where any of these settings is switched on. To try the real Claude API locally, set `AI_MOCK=0` and add `ANTHROPIC_API_KEY` to `.env.local`.
 
 If your Docker setup cannot reach `public.ecr.aws`, start the stack with `SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io npx supabase start`.
 
@@ -81,13 +81,13 @@ Set these in Vercel (Project settings, Environment Variables) for Production and
 | `TOKEN_SECRET` | **Yes** | 48 random bytes, base64 | `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"` |
 | `CRON_SECRET` | **Yes** | 32 random bytes, base64url | `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"` |
 
-Only for local development and tests: `AI_MOCK`, `EMAIL_MOCK`, `RATE_LIMIT_MULTIPLIER` (all ignored in production), `API_PORT`.
+Only for local development and tests: `NEXA_TEST_MODE`, `AI_MOCK`, `EMAIL_MOCK`, `RATE_LIMIT_MULTIPLIER`, `API_PORT`. Never set the first four in Vercel: the API refuses to start on a deployment that has any of them switched on.
 
 Rotating `TOKEN_SECRET` invalidates all invite and calendar links.
 
 ## Deployment
 
-1. **Database.** The migrations in `supabase/migrations/` are already applied to the Supabase project `nexa` (`eu-west-1`). For later changes: `npx supabase link --project-ref fauotybbzqlerctitcsc` then `npx supabase db push`, or apply them with the Supabase connector. Keep every change as a migration file.
+1. **Database.** Apply the migrations in `supabase/migrations/` to the Supabase project `nexa` (`eu-west-1`). The launch hardening migration (`20261101120000`) must be applied before the matching API code is deployed, because the sign in route writes to its `signup_allowances` table. For changes: `npx supabase link --project-ref fauotybbzqlerctitcsc` then `npx supabase db push`, or apply them with the Supabase connector. Keep every change as a migration file.
 2. **Vercel project.** The project `nexa` exists in your Vercel account with the public variables set. Install the Vercel GitHub app for `klassenjona4/Nexa` (github.com/apps/vercel), then connect the repository under Project settings, Git. Set the production branch (for example `main`).
 3. **Secrets.** Add the secret variables from the table above in Vercel.
 4. **Deploy.** Push to the production branch or redeploy in Vercel. `vercel.json` sets the build, the Dublin function region, rewrites and the security headers.
@@ -108,6 +108,8 @@ Rotating `TOKEN_SECRET` invalidates all invite and calendar links.
 - URL Configuration: set Site URL to your `APP_URL`. Add redirect URLs `https://<your-app-url>/**` and `http://localhost:5173/**`.
 - Email provider: set the email OTP expiry to 900 seconds (15 minutes, as stated in the app and the terms). Sign in emails are sent by Nexa through Resend, so Supabase's own email templates are not used.
 - Keep Supabase's built in email sender and its low email rate limit, or set strict rate limits if you add custom SMTP (see `SECURITY.md`).
+- Hooks: add a Before User Created hook of type Postgres function, `public.hook_before_user_created`. It refuses email sign ups that do not come through Nexa's sign in route, so nobody can create an account with a password for someone else's address. Apply the launch hardening migration first.
+- Passwords (Attack Protection): turn on leaked password protection if your plan includes it and set the minimum password length to 12. Nexa never uses passwords, but Supabase Auth accepts them.
 - Google provider: enable it and paste the Google client ID and secret (below).
 - Delete the paused project "klassenjona4's Project TEST" if you no longer need it (Project settings, General).
 
@@ -126,9 +128,11 @@ Rotating `TOKEN_SECRET` invalidates all invite and calendar links.
 
 Create an API key, set a monthly spend limit, and set `ANTHROPIC_API_KEY` in Vercel. Review Anthropic's commercial terms and data processing addendum for the privacy policy.
 
+Nexa also stops all AI requests for the day after 500 across all projects. Change the ceiling in the Supabase SQL editor: `update public.service_limits set max_value = 300 where name = 'ai_requests_per_day';`
+
 **Legal**
 
-Complete `[FULL NAME]`, `[ADDRESS]` and `[CONTACT EMAIL]` in `legal/privacy.md`, `legal/terms.md` and `SECURITY.md`, have both documents reviewed by a legal professional, then change `status: draft` to `status: final`. The pages then show "Last updated" instead of the draft label.
+Complete `[ADDRESS]` in `legal/terms.md`, have both documents reviewed by a legal professional, then change `status: draft` to `status: final`. The pages then show "Last updated" instead of the draft label.
 
 **Custom domain (later)**
 

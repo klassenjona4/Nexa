@@ -222,7 +222,10 @@ export function JoinAccept() {
     <div className={p.content}>
       <div className={p.narrow}>
         {error ? (
-          <ErrorPanel title={error === 'group_full' ? 'The group is full' : 'This invite link no longer works'} body={errorMessage(error)}>
+          <ErrorPanel
+            title={error === 'group_full' ? 'The group is full' : error === 'invite_wrong_account' ? 'This invite is for a different email address' : 'This invite link no longer works'}
+            body={errorMessage(error)}
+          >
             <ButtonLink to="/projects">Your projects</ButtonLink>
           </ErrorPanel>
         ) : (

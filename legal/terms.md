@@ -9,7 +9,7 @@ updated: 26/09/2026
 
 ## The service
 
-Nexa is operated by [FULL NAME], [ADDRESS], Ireland ("the operator"). Nexa helps student groups plan group assignments. Members upload an assignment brief, split tasks on a shared board, record completed work in a contribution log and export a contribution statement.
+Nexa is operated by Jona Klassen, [ADDRESS], Ireland ("the operator"). Nexa helps student groups plan group assignments. Members upload an assignment brief, split tasks on a shared board, record completed work in a contribution log and export a contribution statement.
 
 These terms apply between you and the operator when you use Nexa. By creating an account you accept these terms and confirm that you have read the privacy policy.
 
@@ -25,7 +25,7 @@ You must be 16 or older to create an account. Nexa is intended for students work
 
 ## Your account
 
-You sign in with a one time link sent to your email address or with Google. Keep access to your email account secure. Tell the operator at [CONTACT EMAIL] if you think someone else has used your account.
+You sign in with a one time link sent to your email address or with Google. Keep access to your email account secure. Tell the operator at nexa.legal@web.de if you think someone else has used your account.
 
 ## Acceptable use
 
@@ -78,4 +78,4 @@ These terms are governed by the law of Ireland. The courts of Ireland have juris
 
 ## Contact
 
-[FULL NAME], [ADDRESS], Ireland. [CONTACT EMAIL].
+Jona Klassen, [ADDRESS], Ireland. nexa.legal@web.de.

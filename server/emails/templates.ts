@@ -28,7 +28,8 @@ export function inviteEmail(opts: { to: string; inviterName: string; groupName: 
       { kind: 'small', text: 'If you do not know the sender, you can ignore this email.' },
     ],
   });
-  return { to: opts.to, subject: `Invite to join ${opts.groupName} on Nexa`, html, text };
+  // The subject is fixed: group names are chosen by the sender, so they stay out of the subject line.
+  return { to: opts.to, subject: 'You have been invited to a group on Nexa', html, text };
 }
 
 export function reminderEmail(opts: { to: string; name: string; tasks: { title: string; due: string; group: string }[]; link: string }): EmailMessage {

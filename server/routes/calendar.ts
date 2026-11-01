@@ -66,10 +66,13 @@ export const icsRoutes = new Hono<AppEnv>();
 icsRoutes.get('/:file', async (c) => {
   const token = c.req.param('file').replace(/\.ics$/, '');
   if (!TOKEN_RE.test(token)) throw notFound();
-  await rateLimit([{ limit: LIMITS.calendarToken, key: token }]);
   const admin = adminClient();
+  // The token is checked before the rate limit, so unknown tokens cost one indexed read and
+  // never write a rate limit row. Calendar apps fetch from shared server addresses, so there
+  // is deliberately no per-IP limit here.
   const { data: feed } = await admin.from('calendar_feeds').select('id, user_id, project_id, revoked_at, last_read_at').eq('token_hash', toBytea(hashToken(token))).maybeSingle();
   if (!feed || feed.revoked_at) throw new HttpError(404, 'not_found');
+  await rateLimit([{ limit: LIMITS.calendarToken, key: token }]);
   // A member who left the group loses the feed.
   const { data: project } = await admin.from('projects').select('id, group_id, brief, final_deadline').eq('id', feed.project_id).maybeSingle();
   if (!project) throw notFound();

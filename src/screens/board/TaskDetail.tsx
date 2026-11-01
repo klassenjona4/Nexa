@@ -123,7 +123,8 @@ function TaskView({ task, number }: { task: Task; number: number }) {
   const reviews = reviewsFor(log.data ?? [], task);
   const mine = reviews.find((r) => r.actor_id === user?.id);
   const isAssignee = task.assignee_id === user?.id;
-  const canAct = task.status === 'done' && !isAssignee && !mine;
+  const completedByMe = task.status === 'done' && task.completed_by === user?.id;
+  const canAct = task.status === 'done' && !isAssignee && !completedByMe && !mine;
   const ownerName = task.assignee_id ? memberName(task.assignee_id) : 'Unassigned';
   const note = canAct
     ? ''
@@ -133,7 +134,9 @@ function TaskView({ task, number }: { task: Task; number: number }) {
         ? task.status === 'done'
           ? 'Teammates can now confirm or flag this task.'
           : 'Teammates can confirm or flag this task after you mark it as done.'
-        : 'Review opens when the owner marks the task as done.';
+        : completedByMe
+          ? 'You marked this task as done, so other teammates confirm or flag it.'
+          : 'Review opens when the owner marks the task as done.';
   const canDelete = isOwner || (task.created_by === user?.id && task.status === 'todo');
 
   return (
@@ -303,7 +306,7 @@ function TaskView({ task, number }: { task: Task; number: number }) {
           </div>
         </Card>
       </div>
-      <TaskFormDialog open={editing} title="Edit task" initial={taskToForm(task)} members={members} submitLabel="Save task" onSubmit={saveEdit} onClose={() => setEditing(false)} />
+      <TaskFormDialog open={editing} title="Edit task" initial={taskToForm(task)} members={members} ownerLocked={task.status === 'done'} submitLabel="Save task" onSubmit={saveEdit} onClose={() => setEditing(false)} />
       <ConfirmDialog
         open={deleting}
         label="Delete task"
