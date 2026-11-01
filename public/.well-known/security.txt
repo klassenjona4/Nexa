@@ -1,0 +1,4 @@
+Contact: mailto:nexa.legal@web.de
+Expires: 2027-10-31T23:00:00.000Z
+Preferred-Languages: en
+Canonical: https://nexa-groups.vercel.app/.well-known/security.txt

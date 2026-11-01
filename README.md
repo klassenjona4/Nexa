@@ -132,7 +132,7 @@ Nexa also stops all AI requests for the day after 500 across all projects. Chang
 
 **Legal**
 
-Complete `[FULL NAME]`, `[ADDRESS]` and `[CONTACT EMAIL]` in `legal/terms.md`, have both documents reviewed by a legal professional, then change `status: draft` to `status: final`. The pages then show "Last updated" instead of the draft label.
+Complete `[ADDRESS]` in `legal/terms.md`, have both documents reviewed by a legal professional, then change `status: draft` to `status: final`. The pages then show "Last updated" instead of the draft label.
 
 **Custom domain (later)**
 
