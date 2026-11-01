@@ -123,8 +123,11 @@ cronRoutes.post('/retention', async (c) => {
   const orphans = (folders ?? []).map((f) => f.name).filter((n) => /^[0-9a-f-]{36}$/.test(n) && !existing.has(n));
   if (orphans.length) await purgeProjectFiles(orphans);
 
-  // Rate limit windows older than a day.
+  // Rate limit windows older than a day, sign up allowances that were never used, and daily AI
+  // counters older than 90 days.
   await admin.from('rate_limits').delete().lt('window_start', new Date(now - DAY).toISOString());
+  await admin.from('signup_allowances').delete().lt('expires_at', new Date(now).toISOString());
+  await admin.from('ai_daily_usage').delete().lt('day', new Date(now - 90 * DAY).toISOString().slice(0, 10));
 
   log({ event: 'cron_retention', count: warned + deleted });
   return c.json({ warned, deleted, orphans: orphans.length, stale: stale?.length ?? 0 });

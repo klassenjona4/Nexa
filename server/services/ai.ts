@@ -51,7 +51,7 @@ function userContent(input: { pdf?: Buffer; text?: string }, members: number, to
 }
 
 export async function analyseBriefWithAi(input: { pdf?: Buffer; text?: string }, members: number, today: string): Promise<AiBriefOutput> {
-  if (flags.aiMock && !flags.production) return mockBrief(members);
+  if (flags.aiMock) return mockBrief(members);
   let response;
   try {
     response = await anthropic().messages.parse({
@@ -123,7 +123,7 @@ export function normaliseAnalysis(out: AiBriefOutput, members: number): Analysis
   };
 }
 
-// Fixed result for tests (AI_MOCK=1). Based on the example brief in the design.
+// Fixed result for tests (test mode with AI_MOCK=1). Based on the example brief in the design.
 function mockBrief(members: number): AiBriefOutput {
   const m = (i: number) => ((i % members) + 1);
   const tasks = [
@@ -176,7 +176,7 @@ Rules:
 - The group reviews and edits your draft before anyone signs it.`;
 
 export async function draftStatementWithAi(digest: string, headings: string[]): Promise<{ heading: string; body: string }[]> {
-  if (flags.aiMock && !flags.production) {
+  if (flags.aiMock) {
     return [...headings.map((h) => ({ heading: h, body: `${h.split(',')[0]} contributed as recorded in the contribution log.` })), { heading: 'Summary', body: 'The log records the tasks and confirmations above.' }];
   }
   let response;

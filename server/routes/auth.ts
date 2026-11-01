@@ -12,6 +12,9 @@ import { parse, readJson } from '../validate.js';
 
 export const authRoutes = new Hono<AppEnv>();
 
+// Long enough for the account to be created in this request, short enough to be useless to anyone else.
+const ALLOWANCE_MS = 2 * 60_000;
+
 // Sends a sign in link. The link is generated with the admin API and sent through Resend, so the
 // server controls rate limits per IP address and per email address. The response is the same
 // whether or not an account exists.
@@ -23,6 +26,13 @@ authRoutes.post('/magic-link', async (c) => {
   ]);
 
   const admin = adminClient();
+  // The before-user-created Auth hook only lets an email account be created while an allowance
+  // for the address exists, so sign ups that skip this route (and its rate limits) are refused.
+  const { error: allowErr } = await admin
+    .from('signup_allowances')
+    .upsert({ email: body.email, expires_at: new Date(Date.now() + ALLOWANCE_MS).toISOString() });
+  if (allowErr) throw new HttpError(502, 'sign_in_unavailable');
+
   // For an address without an account, Supabase creates the user and returns a signup token.
   let result = await admin.auth.admin.generateLink({ type: 'magiclink', email: body.email });
   if (result.error) {
@@ -34,6 +44,7 @@ authRoutes.post('/magic-link', async (c) => {
       password: randomBytes(32).toString('base64url'),
     });
   }
+  await admin.from('signup_allowances').delete().eq('email', body.email);
   const hashed = result.data?.properties?.hashed_token;
   const verification = result.data?.properties?.verification_type;
   const type = verification === 'signup' ? 'signup' : 'magiclink';

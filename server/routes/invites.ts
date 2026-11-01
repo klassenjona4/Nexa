@@ -51,12 +51,35 @@ projectInviteRoutes.post('/', async (c) => {
   const body = parse(createInvite, await readJson(c));
   const project = await projectAccess(c.var.db, projectId, c.var.user.id);
   requireOwnerRole(project.role);
-  await rateLimit([{ limit: LIMITS.inviteCreateGroup, key: project.group_id }]);
+  // Groups are cheap to create, so the per-group limit alone does not bound one person.
+  await rateLimit([
+    { limit: LIMITS.inviteCreateGroup, key: project.group_id },
+    { limit: LIMITS.inviteCreateUser, key: c.var.user.id },
+    { limit: LIMITS.inviteCreateIp, key: clientIp(c) },
+  ]);
 
   const admin = adminClient();
   const { count } = await admin.from('group_members').select('user_id', { count: 'exact', head: true }).eq('group_id', project.group_id);
   const free = 8 - (count ?? 0);
   if (free <= 0) throw new HttpError(409, 'group_full');
+
+  if (body.kind === 'email') {
+    // Pending email invites to other addresses may not exceed the free places in the group.
+    const { count: pending, error: pErr } = await admin
+      .from('invites')
+      .select('id', { count: 'exact', head: true })
+      .eq('group_id', project.group_id)
+      .eq('kind', 'email')
+      .neq('email', body.email)
+      .is('revoked_at', null)
+      .eq('use_count', 0)
+      .gt('expires_at', new Date().toISOString());
+    if (pErr) throw dbError(pErr);
+    if ((pending ?? 0) >= free) throw new HttpError(409, 'too_many_pending_invites');
+    await rateLimit([{ limit: LIMITS.inviteEmailAll, key: 'all' }]);
+    // A new invite to the same address replaces the pending one.
+    await admin.from('invites').update({ revoked_at: new Date().toISOString() }).eq('group_id', project.group_id).eq('kind', 'email').eq('email', body.email).is('revoked_at', null);
+  }
 
   if (body.kind === 'link') {
     // One active link per project: a new link replaces the previous one.
@@ -176,6 +199,7 @@ inviteRoutes.post('/:code/accept', requireUser, async (c) => {
   if (error) {
     const mapped = dbError(error);
     if (mapped.code === 'invite_invalid' || mapped.code === 'invite_used_up') throw new HttpError(410, mapped.code);
+    if (mapped.code === 'invite_wrong_account') throw new HttpError(403, mapped.code);
     throw mapped;
   }
   const row = data?.[0];

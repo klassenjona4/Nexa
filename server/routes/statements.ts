@@ -21,6 +21,7 @@ projectStatementRoutes.post('/generate', async (c) => {
   const project = await projectAccess(c.var.db, projectId, c.var.user.id);
   await rateLimit([
     { limit: LIMITS.aiUser, key: c.var.user.id },
+    { limit: LIMITS.aiUserDay, key: c.var.user.id },
     { limit: LIMITS.aiIp, key: clientIp(c) },
   ]);
 

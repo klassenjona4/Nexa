@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import type { AppEnv } from './context.js';
-import { flags } from './env.js';
+import { assertNoTestSettingsOnHostedPlatform, flags } from './env.js';
 import { HttpError } from './http.js';
 import { log, routeTemplate } from './logger.js';
 import { authRoutes } from './routes/auth.js';
@@ -17,6 +17,8 @@ import { projectRoutes } from './routes/projects.js';
 import { calendarRoutes, icsRoutes, projectCalendarRoutes } from './routes/calendar.js';
 import { accountRoutes } from './routes/account.js';
 import { readOutbox } from './services/email.js';
+
+assertNoTestSettingsOnHostedPlatform();
 
 export const app = new Hono<AppEnv>();
 
@@ -77,7 +79,7 @@ app.route('/api/projects', projectRoutes);
 app.route('/api/cron', cronRoutes);
 app.route('/api/account', accountRoutes);
 
-// Test support: only when EMAIL_MOCK=1 outside production.
-if (flags.emailMock && !flags.production) {
+// Test support: only in test mode (NEXA_TEST_MODE=1 and EMAIL_MOCK=1, never on a hosted platform).
+if (flags.emailMock) {
   app.get('/api/test/outbox', (c) => c.json(readOutbox()));
 }
