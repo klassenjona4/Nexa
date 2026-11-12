@@ -160,6 +160,7 @@ export type Database = {
     Views: { [_ in never]: never };
     Functions: {
       accept_brief: { Args: { p_actor: string; p_analysis: string; p_brief: Json; p_final_deadline?: string; p_project: string; p_tasks: Json }; Returns: number };
+      add_project_credit: { Args: { p_user: string }; Returns: number };
       apply_project_unlock: { Args: { p_project: string; p_user: string }; Returns: undefined };
       accept_invite: { Args: { p_code_hash: string; p_user: string }; Returns: { already_member: boolean; group_id: string; project_id: string }[] };
       create_group_with_project: { Args: { p_final_deadline: string | null; p_group_name: string; p_module_code: string; p_title: string }; Returns: { group_id: string; project_id: string }[] };

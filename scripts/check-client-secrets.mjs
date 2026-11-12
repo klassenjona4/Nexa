@@ -9,9 +9,10 @@ const PATTERNS = [
   { name: 'Anthropic API key', re: /sk-ant-[A-Za-z0-9_-]{10,}/ },
   { name: 'Resend API key', re: /\bre_[A-Za-z0-9]{8,}_[A-Za-z0-9]{8,}/ },
   { name: 'Supabase secret key', re: /sb_secret_[A-Za-z0-9_-]{10,}/ },
-  { name: 'Stripe style secret key', re: /\bsk_(live|test)_[A-Za-z0-9]{10,}/ },
+  { name: 'Stripe style secret key', re: /\b[sr]k_(live|test)_[A-Za-z0-9]{10,}/ },
+  { name: 'Stripe webhook secret', re: /\bwhsec_[A-Za-z0-9]{10,}/ },
   { name: 'private key block', re: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
-  { name: 'server environment variable name', re: /\b(SUPABASE_SERVICE_ROLE_KEY|SUPABASE_SECRET_KEY|ANTHROPIC_API_KEY|RESEND_API_KEY|TOKEN_SECRET|CRON_SECRET|RATE_LIMIT_SECRET)\b/ },
+  { name: 'server environment variable name', re: /\b(SUPABASE_SERVICE_ROLE_KEY|SUPABASE_SECRET_KEY|ANTHROPIC_API_KEY|RESEND_API_KEY|TOKEN_SECRET|CRON_SECRET|RATE_LIMIT_SECRET|STRIPE_SECRET_KEY|STRIPE_WEBHOOK_SECRET)\b/ },
   { name: 'process.env reference', re: /process\.env\.[A-Z]/ },
 ];
 

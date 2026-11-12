@@ -128,6 +128,7 @@ select throws_ok(format('update public.tasks set status = %L where id = %L', 'do
 select pg_temp.logout();
 
 -- Daily AI ceiling across projects -------------------------------------------------------
+delete from public.ai_daily_usage where day = current_date;
 update public.service_limits set max_value = 2 where name = 'ai_requests_per_day';
 set local role service_role;
 select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), 1, 'first AI request of the day');

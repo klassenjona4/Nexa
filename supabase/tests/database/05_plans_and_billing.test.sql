@@ -111,6 +111,12 @@ select is((select plan from public.projects where id = pg_temp.fx('ps')), 'proje
 select is(public.reserve_usage(pg_temp.fx('ps'), 'statement_generation'), 1, 'with a fresh allowance');
 select pg_temp.logout();
 
+-- Credits added by the server -------------------------------------------------------------
+set local role service_role;
+select is(public.add_project_credit('b1000000-0000-4000-8000-000000000004'), 1, 'the server adds a credit after a payment');
+select is(public.add_project_credit('b1000000-0000-4000-8000-000000000004'), 2, 'credits add up');
+select pg_temp.logout();
+
 -- Billing data is private and server written -------------------------------------------------
 select pg_temp.login('b1000000-0000-4000-8000-000000000001');
 select is((select count(*)::int from public.billing_accounts), 1, 'a user reads only their own billing row');
@@ -121,6 +127,7 @@ select throws_ok($$select * from public.stripe_events$$, '42501', null, 'payment
 select throws_ok(format('update public.projects set plan = %L where id = %L', 'subscription', pg_temp.fx('p1')), '42501', null, 'clients cannot change a project''s plan');
 select throws_ok(format('update public.projects set unlocks = 9 where id = %L', pg_temp.fx('p1')), '42501', null, 'clients cannot add unlocks');
 select throws_ok(format('select public.apply_project_unlock(%L, %L)', pg_temp.fx('p1'), 'b1000000-0000-4000-8000-000000000001'), '42501', null, 'clients cannot unlock projects without paying');
+select throws_ok($$select public.add_project_credit('b1000000-0000-4000-8000-000000000001')$$, '42501', null, 'clients cannot add credits');
 select pg_temp.logout();
 select pg_temp.login('b1000000-0000-4000-8000-000000000004');
 select throws_ok(format('select * from public.project_allowance(%L)', pg_temp.fx('p1')), 'P0002', 'not_found', 'outsiders cannot see a project''s allowance');
