@@ -89,6 +89,9 @@ select is((select already_member from public.accept_invite(sha256('email-code'),
 select pg_temp.logout();
 
 -- Quotas ---------------------------------------------------------------------------
+-- A subscriber may create many projects, so the quotas below are what stops them.
+insert into public.billing_accounts (user_id, subscription_status, current_period_end)
+  values ('d0000000-0000-4000-8000-000000000001', 'active', now() + interval '30 days');
 select pg_temp.login('d0000000-0000-4000-8000-000000000001');
 select lives_ok(format('select * from public.create_group_with_project(%L, %L, %L, null)', 'Group ' || n, '', 'Project ' || n), 'group ' || n || ' of 10 today')
   from generate_series(1, 10) n;

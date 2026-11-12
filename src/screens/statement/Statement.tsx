@@ -10,7 +10,8 @@ import { TextArea } from '../../components/Field';
 import { EmptyState, ErrorPanel, LoadingState } from '../../components/States';
 import { useToast } from '../../components/Toast';
 import { api, codeOf } from '../../lib/api';
-import { useUsage } from '../../lib/brief';
+import { allowanceLeft, useAllowance } from '../../lib/billing';
+import { AllowanceNotice } from '../../components/AllowanceNotice';
 import { errorMessage } from '../../lib/errors';
 import { useProject } from '../../lib/project';
 import { saveBlob as download } from '../../lib/download';
@@ -51,7 +52,7 @@ export function Statement() {
   const { project, members } = useProject();
   const statement = useStatement(project.id);
   const tasks = useTasks(project.id);
-  const usage = useUsage(project.id, project.plan, 'statement_generation');
+  const usage = useAllowance(project.id, 'statement_generation');
   const qc = useQueryClient();
   const toast = useToast();
   const [drafting, setDrafting] = useState(false);
@@ -60,12 +61,8 @@ export function Statement() {
   const [draft, setDraft] = useState<StatementSection[]>([]);
   const changes = useChangesSince(project.id, statement.data?.generated_at);
 
-  const left = usage.data ? usage.data.max - usage.data.used : 0;
-  const notice = usage.data ? (
-    <InlineNotice role="note">
-      Statement generations used: {usage.data.used} of {usage.data.max}.{left > 0 ? ' A failed attempt does not count.' : ' No generations are left. You can still edit and export the current statement.'}
-    </InlineNotice>
-  ) : null;
+  const left = allowanceLeft(usage.data) ?? Number.POSITIVE_INFINITY;
+  const notice = usage.data ? <AllowanceNotice kind="statement_generation" allowance={usage.data} projectId={project.id} /> : null;
 
   const generate = async () => {
     setDrafting(true);

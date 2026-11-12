@@ -6,12 +6,19 @@ test('sign up with a magic link, enter a name and create a group', async ({ page
   await signIn(page, email, 'Aoife Byrne');
   await expect(page.getByRole('heading', { name: 'Your projects' })).toBeVisible();
   await expect(page.getByText('You are not in a group yet')).toBeVisible();
+  await page.goto('/projects/new');
+  await expect(page.getByText('This is your free project.', { exact: false })).toBeVisible();
 
   await createGroup(page, 'Media Law group 4', 'Assignment 2 · Case study report');
   await expect(page.getByText('Group created. Next, upload the brief.')).toBeVisible();
 
   await page.goto('/projects');
   await expect(page.getByRole('link', { name: /Media Law group 4/ }).first()).toBeVisible();
+
+  // The free plan has 1 project. A second one points to the prices instead of the form.
+  await page.goto('/projects/new');
+  await expect(page.getByRole('heading', { name: 'Your free project is used' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'See prices' })).toBeVisible();
 
   // A signed in visitor to the landing page is offered their projects, never "Sign in".
   await page.goto('/');

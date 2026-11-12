@@ -50,7 +50,7 @@ test('a member completes a task, the owner sees it live and confirms it', async 
 
   // Draft the statement (AI mock), edit it and export it.
   await page.getByRole('link', { name: 'Draft contribution statement' }).click();
-  await expect(page.getByText('Statement generations used: 0 of 5.', { exact: false })).toBeVisible();
+  await expect(page.getByText('Statement generations used: 0 of 1.', { exact: false })).toBeVisible();
   await page.getByRole('button', { name: 'Draft statement' }).click();
   await expect(page.getByRole('heading', { name: 'Contribution statement, Task test group' })).toBeVisible();
   await page.getByRole('button', { name: 'Edit text' }).click();

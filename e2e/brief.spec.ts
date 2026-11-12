@@ -14,7 +14,7 @@ test('upload a brief PDF, review it and create the proposed tasks', async ({ pag
   await signIn(page, uniqueEmail('brief'), 'Aoife Byrne');
   const projectId = await createGroup(page, 'Brief test group', 'Assignment 2');
   await expect(page.getByRole('heading', { name: 'Upload the assignment brief' })).toBeVisible();
-  await expect(page.getByText('Brief breakdowns used: 0 of 5.')).toBeVisible();
+  await expect(page.getByText('Brief breakdowns used: 0 of 1.')).toBeVisible();
 
   // A file that is not a PDF is refused before upload.
   await page.locator('input[type=file]').setInputFiles({ name: 'brief.pdf', mimeType: 'application/pdf', buffer: Buffer.from('not really a pdf') });
@@ -41,5 +41,6 @@ test('upload a brief PDF, review it and create the proposed tasks', async ({ pag
   // The brief page now shows the checked brief and the usage count.
   await page.goto(`/p/${projectId}/brief`);
   await expect(page.getByText('Written case study report')).toBeVisible();
-  await expect(page.getByText('4 brief breakdowns left.', { exact: false })).toBeVisible();
+  await expect(page.getByText('0 brief breakdowns left.', { exact: false })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Unlock 3 more of each for 2 euro' })).toBeVisible();
 });
