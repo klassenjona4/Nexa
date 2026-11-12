@@ -116,6 +116,9 @@ export function AppShell() {
             </div>
           ) : null}
           <div className={s.sidebarFoot}>
+            <NavLink to="/help" className={s.navItem}>
+              Help
+            </NavLink>
             <NavLink to="/account" className={[s.navItem, s.account].join(' ')}>
               <Avatar name={profile?.full_name} />
               <span className={s.accountText}>
@@ -223,6 +226,7 @@ export function PublicFooter() {
   return (
     <footer className={s.footer}>
       <span className={s.footerText}>Nexa · Cork, Ireland</span>
+      <Link to="/help">Help</Link>
       <Link to="/privacy">Privacy policy</Link>
       <Link to="/terms">Terms of use</Link>
     </footer>

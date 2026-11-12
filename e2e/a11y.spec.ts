@@ -12,7 +12,7 @@ async function audit(page: Page, name: string) {
 }
 
 test('public pages meet WCAG 2.1 AA automated checks', async ({ page }) => {
-  for (const path of ['/', '/sign-in', '/privacy', '/terms', '/join', '/join/AAAAAAAAAAAAAAAAAAAAAA']) {
+  for (const path of ['/', '/sign-in', '/privacy', '/terms', '/help', '/join', '/join/AAAAAAAAAAAAAAAAAAAAAA']) {
     await page.goto(path);
     await audit(page, path);
   }

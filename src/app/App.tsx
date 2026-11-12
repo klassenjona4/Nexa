@@ -22,6 +22,7 @@ import { Join, JoinAccept, JoinEntry } from '../screens/public/Join';
 import { Landing } from '../screens/public/Landing';
 import { AuthProvider } from './AuthProvider';
 import { RequireAuth } from './RequireAuth';
+import { Help } from '../screens/help/Help';
 import { AppShell, PublicShell } from './Shell';
 
 const queryClient = new QueryClient({
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
       { path: '/auth/callback', element: <AuthCallback /> },
       { path: '/privacy', element: <Legal kind="privacy" /> },
       { path: '/terms', element: <Legal kind="terms" /> },
+      { path: '/help', element: <Help /> },
       { path: '/join', element: <JoinEntry /> },
       { path: '/join/:code', element: <Join /> },
     ],

@@ -4,7 +4,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname;
-const TARGETS = ['src', 'shared', 'server', 'legal', 'index.html', 'public/manifest.webmanifest'];
+const TARGETS = ['src', 'shared', 'server', 'legal', 'content', 'index.html', 'public/manifest.webmanifest'];
 const EXTENSIONS = new Set(['.ts', '.tsx', '.css', '.html', '.md', '.json', '.webmanifest']);
 const RULES = [
   { name: 'em dash', re: /—/ },
