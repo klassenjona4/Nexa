@@ -59,6 +59,7 @@ export function useProjectRealtime(projectId: string) {
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity_log', filter: `project_id=eq.${projectId}` }, () => {
         void qc.invalidateQueries({ queryKey: taskKeys.log(projectId) });
+        void qc.invalidateQueries({ queryKey: ['statement-changes', projectId] });
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'task_links' }, (payload) => {
         const taskId = (payload.new as { task_id?: string }).task_id;

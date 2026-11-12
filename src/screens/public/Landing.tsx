@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+import { useAuth } from '../../app/AuthProvider';
 import { PublicFooter } from '../../app/Shell';
 import p from '../../app/page.module.css';
 import { ButtonLink } from '../../components/Button';
@@ -23,6 +25,7 @@ const STEPS = [
 ];
 
 export function Landing() {
+  const { session } = useAuth();
   return (
     <div className={[p.content, p.wide, s.page].join(' ')}>
       <section className={s.hero} aria-labelledby="landing-title">
@@ -38,14 +41,22 @@ export function Landing() {
             completed task, file link and confirmation is recorded, and at the end the group exports a contribution statement for peer assessment.
           </p>
           <div className={p.actions}>
-            <ButtonLink to="/sign-in" size="lg">
-              Sign in
-            </ButtonLink>
+            {session ? (
+              <ButtonLink to="/projects" size="lg">
+                Your projects
+              </ButtonLink>
+            ) : (
+              <ButtonLink to="/sign-in" size="lg">
+                Sign in
+              </ButtonLink>
+            )}
             <ButtonLink to="/join" size="lg" variant="secondary">
               I have an invite link
             </ButtonLink>
           </div>
-          <p className={s.note}>Free for students. Works in the browser and can be installed on your phone.</p>
+          <p className={s.note}>
+            Free plan: 1 project with 1 brief breakdown and 1 contribution statement. More projects from 2 euro, see <Link to="/pricing">Pricing</Link>. Works in the browser and can be installed on your phone.
+          </p>
         </div>
       </section>
       <section className={s.section} aria-labelledby="how-title">

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, formatDateTime, formatLongDate, parseIrishDateTime } from './dates.js';
+import { activityPeriod, formatDate, formatDateTime, formatLongDate, parseIrishDateTime } from './dates.js';
 
 describe('Irish date handling', () => {
   it('formats as DD/MM/YYYY and 24 hour time in Irish time', () => {
@@ -20,5 +20,12 @@ describe('Irish date handling', () => {
     expect(parseIrishDateTime('31/02/2026', '17:00')).toBeNull();
     expect(parseIrishDateTime('14/11/2026', '24:00')).toBeNull();
     expect(parseIrishDateTime('14/11/2026', '5pm')).toBeNull();
+  });
+
+  it('describes the period of recorded activity on a statement', () => {
+    expect(activityPeriod('2026-10-31T23:13:00Z', '2026-10-31T23:18:00Z')).toBe('Activity recorded on 31/10/2026');
+    expect(activityPeriod('2026-10-31T23:13:00Z', '2026-11-02T10:07:00Z')).toBe('Activity recorded 31/10/2026 to 02/11/2026');
+    expect(activityPeriod(null, '2026-11-02T10:07:00Z')).toBe('Activity recorded on 02/11/2026');
+    expect(activityPeriod(null, null)).toBe('No activity recorded');
   });
 });

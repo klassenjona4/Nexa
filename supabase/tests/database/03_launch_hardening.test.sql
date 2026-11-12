@@ -89,6 +89,9 @@ select is((select already_member from public.accept_invite(sha256('email-code'),
 select pg_temp.logout();
 
 -- Quotas ---------------------------------------------------------------------------
+-- A subscriber may create many projects, so the quotas below are what stops them.
+insert into public.billing_accounts (user_id, subscription_status, current_period_end)
+  values ('d0000000-0000-4000-8000-000000000001', 'active', now() + interval '30 days');
 select pg_temp.login('d0000000-0000-4000-8000-000000000001');
 select lives_ok(format('select * from public.create_group_with_project(%L, %L, %L, null)', 'Group ' || n, '', 'Project ' || n), 'group ' || n || ' of 10 today')
   from generate_series(1, 10) n;
@@ -125,6 +128,7 @@ select throws_ok(format('update public.tasks set status = %L where id = %L', 'do
 select pg_temp.logout();
 
 -- Daily AI ceiling across projects -------------------------------------------------------
+delete from public.ai_daily_usage where day = current_date;
 update public.service_limits set max_value = 2 where name = 'ai_requests_per_day';
 set local role service_role;
 select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), 1, 'first AI request of the day');

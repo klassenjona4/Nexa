@@ -80,10 +80,22 @@ Set these in Vercel (Project settings, Environment Variables) for Production and
 | `APP_URL` | No | `https://<your-project>.vercel.app`, later your domain | The production URL, no trailing slash |
 | `TOKEN_SECRET` | **Yes** | 48 random bytes, base64 | `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"` |
 | `CRON_SECRET` | **Yes** | 32 random bytes, base64url | `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"` |
+| `STRIPE_SECRET_KEY` | **Yes** | `sk_test_...` until launch, then `sk_live_...` (or a restricted `rk_` key) | dashboard.stripe.com, Developers, API keys |
+| `STRIPE_WEBHOOK_SECRET` | **Yes** | `whsec_...` | dashboard.stripe.com, Developers, Webhooks, the endpoint `<APP_URL>/api/stripe/webhook` |
+| `STRIPE_PRICE_PROJECT` | No | `price_...` | The 2 euro one off price of the product "Project unlock" |
+| `STRIPE_PRICE_SUBSCRIPTION` | No | `price_...` | The 7.99 euro monthly recurring price of the product "Monthly plan" |
 
 Only for local development and tests: `NEXA_TEST_MODE`, `AI_MOCK`, `EMAIL_MOCK`, `RATE_LIMIT_MULTIPLIER`, `API_PORT`. Never set the first four in Vercel: the API refuses to start on a deployment that has any of them switched on.
 
 Rotating `TOKEN_SECRET` invalidates all invite and calendar links.
+
+### Help chat
+
+`POST /api/help/chat` answers questions with Claude Haiku from `content/help.md` only (shipped with the function through `includeFiles` in `vercel.json`). It receives no account or project data, and questions and answers are neither stored nor logged; logs hold the stop reason and token count. Limits: 20 questions an hour per IP address, 50 a day per signed-in user, and a separate ceiling for all help chat answers together (`service_limits.help_chat_per_day`, default 1,000), counted apart from brief breakdowns and statements.
+
+### Stripe
+
+Payments use Stripe Checkout and the Stripe Customer Portal; card details never reach Nexa. The webhook endpoint `<APP_URL>/api/stripe/webhook` must send these events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.subscription.paused`, `customer.subscription.resumed`, `invoice.paid`, `invoice.payment_failed`. Every request is checked against `STRIPE_WEBHOOK_SECRET`; each event id is applied once (`stripe_events`) and each Checkout session once (`billing_purchases`). Subscription changes are read back from Stripe, so events that arrive out of order cannot roll the state back. Plan limits are enforced in the database (`supabase/migrations/20261112194410_plans_and_billing.sql`).
 
 ## Deployment
 

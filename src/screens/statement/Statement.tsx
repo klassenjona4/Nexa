@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { formatDate, formatDateTime } from '../../../shared/dates';
+import { activityPeriod, formatDateTime } from '../../../shared/dates';
 import { statementSections, type StatementSection } from '../../../shared/schemas/statement';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
@@ -10,7 +10,8 @@ import { TextArea } from '../../components/Field';
 import { EmptyState, ErrorPanel, LoadingState } from '../../components/States';
 import { useToast } from '../../components/Toast';
 import { api, codeOf } from '../../lib/api';
-import { useUsage } from '../../lib/brief';
+import { allowanceLeft, useAllowance } from '../../lib/billing';
+import { AllowanceNotice } from '../../components/AllowanceNotice';
 import { errorMessage } from '../../lib/errors';
 import { useProject } from '../../lib/project';
 import { saveBlob as download } from '../../lib/download';
@@ -34,24 +35,34 @@ function useStatement(projectId: string) {
   });
 }
 
+// Counts log entries recorded after a statement was drafted, so a stale draft is visible.
+function useChangesSince(projectId: string, since: string | undefined) {
+  return useQuery({
+    queryKey: ['statement-changes', projectId, since],
+    enabled: !!since,
+    queryFn: async (): Promise<number> => {
+      const { count, error } = await supabase.from('activity_log').select('id', { count: 'exact', head: true }).eq('project_id', projectId).gt('created_at', since!);
+      if (error) throw error;
+      return count ?? 0;
+    },
+  });
+}
+
 export function Statement() {
   const { project, members } = useProject();
   const statement = useStatement(project.id);
   const tasks = useTasks(project.id);
-  const usage = useUsage(project.id, project.plan, 'statement_generation');
+  const usage = useAllowance(project.id, 'statement_generation');
   const qc = useQueryClient();
   const toast = useToast();
   const [drafting, setDrafting] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<StatementSection[]>([]);
+  const changes = useChangesSince(project.id, statement.data?.generated_at);
 
-  const left = usage.data ? usage.data.max - usage.data.used : 0;
-  const notice = usage.data ? (
-    <InlineNotice role="note">
-      Statement generations used: {usage.data.used} of {usage.data.max}.{left > 0 ? ' A failed attempt does not count.' : ' No generations are left. You can still edit and export the current statement.'}
-    </InlineNotice>
-  ) : null;
+  const left = allowanceLeft(usage.data) ?? Number.POSITIVE_INFINITY;
+  const notice = usage.data ? <AllowanceNotice kind="statement_generation" allowance={usage.data} projectId={project.id} /> : null;
 
   const generate = async () => {
     setDrafting(true);
@@ -59,6 +70,7 @@ export function Statement() {
     try {
       await api(`/api/projects/${project.id}/statements/generate`, { method: 'POST' });
       await qc.invalidateQueries({ queryKey: ['statement', project.id] });
+      await qc.invalidateQueries({ queryKey: ['statement-changes', project.id] });
       setEditing(false);
       toast.show('Statement drafted from the contribution log. Check it before you export it.');
     } catch (err) {
@@ -81,7 +93,7 @@ export function Statement() {
     const input = {
       label: [project.module_code, project.title].filter(Boolean).join(' · '),
       title: `Contribution statement, ${project.group_name}`,
-      period: `Period covered ${row.period_from ? formatDate(row.period_from) : formatDate(row.generated_at)} to ${formatDate(row.period_to ?? row.generated_at)} · ${members.length} ${members.length === 1 ? 'member' : 'members'}`,
+      period: `${activityPeriod(row.period_from, row.period_to ?? row.generated_at)} · ${members.length} ${members.length === 1 ? 'member' : 'members'}`,
       sections: editing ? draft : row.sections,
       members: members.map((m) => m.full_name),
     };
@@ -187,13 +199,18 @@ export function Statement() {
     <div className={p.content} style={{ gap: 24 }}>
       {header(row)}
       {failurePanel}
+      {changes.data ? (
+        <InlineNotice role="status">
+          {changes.data === 1 ? '1 change has' : `${changes.data} changes have`} been recorded in the contribution log since this draft on {formatDateTime(row.generated_at)}. The statement does not include {changes.data === 1 ? 'it' : 'them'}. Draft it again from the log, or edit the text by hand.
+        </InlineNotice>
+      ) : null}
       <div className={s.desk}>
         <article className={s.doc} aria-label="Contribution statement">
           <header className={s.docHead}>
             <span className={s.docLabel}>{[project.module_code, project.title].filter(Boolean).join(' · ')}</span>
             <h2 className={s.docTitle}>Contribution statement, {project.group_name}</h2>
             <span className={[p.small, p.muted].join(' ')}>
-              Period covered {row.period_from ? formatDate(row.period_from) : formatDate(row.generated_at)} to {formatDate(row.period_to ?? row.generated_at)} · {members.length} {members.length === 1 ? 'member' : 'members'}
+              {activityPeriod(row.period_from, row.period_to ?? row.generated_at)} · {members.length} {members.length === 1 ? 'member' : 'members'}
             </span>
           </header>
           {sections.map((x, i) => (

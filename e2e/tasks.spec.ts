@@ -50,7 +50,7 @@ test('a member completes a task, the owner sees it live and confirms it', async 
 
   // Draft the statement (AI mock), edit it and export it.
   await page.getByRole('link', { name: 'Draft contribution statement' }).click();
-  await expect(page.getByText('Statement generations used: 0 of 5.', { exact: false })).toBeVisible();
+  await expect(page.getByText('Statement generations used: 0 of 1.', { exact: false })).toBeVisible();
   await page.getByRole('button', { name: 'Draft statement' }).click();
   await expect(page.getByRole('heading', { name: 'Contribution statement, Task test group' })).toBeVisible();
   await page.getByRole('button', { name: 'Edit text' }).click();
@@ -61,4 +61,17 @@ test('a member completes a task, the owner sees it live and confirms it', async 
   await page.getByRole('button', { name: 'Export PDF' }).click();
   const file = await download;
   expect(file.suggestedFilename()).toBe('Contribution statement, Task test group.pdf');
+  await expect(page.getByText(/^Activity recorded on \d{2}\/\d{2}\/\d{4} · 2 members$/)).toBeVisible();
+
+  // A change to the log after the draft is pointed out on the statement page.
+  await page.goto(`/p/${projectId}/board`);
+  await page.getByRole('button', { name: 'New task' }).click();
+  const later = page.getByRole('dialog');
+  await later.getByLabel('Title').fill('Proofread the report');
+  await later.getByLabel('Hours').fill('1');
+  await later.getByLabel('Due date').fill('10/10/2030');
+  await later.getByRole('button', { name: 'Create task' }).click();
+  await expect(page.getByRole('heading', { name: 'Proofread the report' })).toBeVisible();
+  await page.goto(`/p/${projectId}/statement`);
+  await expect(page.getByText(/1 change has been recorded in the contribution log since this draft/)).toBeVisible();
 });

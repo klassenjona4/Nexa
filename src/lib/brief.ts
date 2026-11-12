@@ -34,24 +34,6 @@ export function useLatestAnalyses(projectId: string) {
   });
 }
 
-export type Usage = { used: number; max: number };
-
-// Usage is shown to members but counted and enforced only on the server.
-export function useUsage(projectId: string, plan: string, kind: 'brief_breakdown' | 'statement_generation') {
-  return useQuery({
-    queryKey: ['usage', projectId, kind],
-    queryFn: async (): Promise<Usage> => {
-      const [limit, usage] = await Promise.all([
-        supabase.from('plan_limits').select('max_per_project').eq('plan', plan).eq('kind', kind).maybeSingle(),
-        supabase.from('project_usage').select('used').eq('project_id', projectId).eq('kind', kind).maybeSingle(),
-      ]);
-      if (limit.error) throw limit.error;
-      if (usage.error) throw usage.error;
-      return { used: usage.data?.used ?? 0, max: limit.data?.max_per_project ?? 0 };
-    },
-  });
-}
-
 export function formatSize(bytes: number | null | undefined): string {
   if (!bytes) return '';
   return bytes >= 1024 * 1024 ? `${(bytes / (1024 * 1024)).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;

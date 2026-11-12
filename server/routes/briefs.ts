@@ -18,13 +18,14 @@ import { parse, readJson } from '../validate.js';
 export const briefRoutes = new Hono<AppEnv>();
 briefRoutes.use('*', requireUser);
 
-async function usageLeft(projectId: string, plan: string): Promise<number> {
-  const admin = adminClient();
-  const [{ data: limit }, { data: usage }] = await Promise.all([
-    admin.from('plan_limits').select('max_per_project').eq('plan', plan).eq('kind', 'brief_breakdown').maybeSingle(),
-    admin.from('project_usage').select('used').eq('project_id', projectId).eq('kind', 'brief_breakdown').maybeSingle(),
-  ]);
-  return (limit?.max_per_project ?? 0) - (usage?.used ?? 0);
+// A quick check before an upload. The real reservation happens atomically in /analyse.
+async function canAnalyse(db: AppEnv['Variables']['db'], projectId: string): Promise<void> {
+  const { data, error } = await db.rpc('project_allowance', { p_project: projectId });
+  if (error) throw dbError(error);
+  const row = data?.find((r) => r.kind === 'brief_breakdown');
+  if (!row) throw notFound();
+  if (row.plan === 'subscription' && !row.subscription_active) throw new HttpError(409, 'subscription_inactive');
+  if (row.used >= row.max) throw new HttpError(409, 'usage_limit_reached');
 }
 
 briefRoutes.post('/upload-url', async (c) => {
@@ -32,7 +33,7 @@ briefRoutes.post('/upload-url', async (c) => {
   parse(uploadUrlRequest, await readJson(c));
   const project = await projectAccess(c.var.db, projectId, c.var.user.id);
   await rateLimit([{ limit: LIMITS.aiUser, key: `upload:${c.var.user.id}` }]);
-  if ((await usageLeft(project.id, project.plan)) <= 0) throw new HttpError(409, 'usage_limit_reached');
+  await canAnalyse(c.var.db, project.id);
   // The path is chosen by the server. The bucket only accepts PDFs of 10 MB or less.
   const path = `${project.id}/${randomUUID()}.pdf`;
   const { data, error } = await adminClient().storage.from(BRIEF_BUCKET).createSignedUploadUrl(path);
@@ -88,7 +89,7 @@ briefRoutes.post('/analyse', async (c) => {
     if (insErr || !row) throw dbError(insErr);
     analysisId = row.id;
 
-    const output = await analyseBriefWithAi(pdf ? { pdf } : { text: 'text' in body ? body.text : '' }, Math.max(1, members ?? 1), formatDate(new Date()));
+    const output = await analyseBriefWithAi(pdf ? { pdf } : { text: 'text' in body ? body.text : '' }, Math.max(1, members ?? 1), formatDate(new Date()), project.final_deadline ? formatDate(project.final_deadline) : undefined);
     const result = normaliseAnalysis(output, Math.max(1, members ?? 1));
     await admin.from('brief_analyses').update({ status: 'ready', result: result as unknown as Json, completed_at: new Date().toISOString() }).eq('id', analysisId);
     return c.json({ id: analysisId, result }, 201);
@@ -148,6 +149,7 @@ briefRoutes.post('/:analysisId/accept', async (c) => {
     p_brief: current.brief as unknown as Json,
     p_tasks: body.tasks as unknown as Json,
     p_actor: c.var.user.id,
+    p_final_deadline: body.final_deadline ?? undefined,
   });
   if (error) throw dbError(error);
   return c.json({ created: data }, 201);

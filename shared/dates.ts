@@ -48,6 +48,14 @@ export function formatDateTime(value: Date | string | null | undefined): string 
   return `${formatDate(value)} ${formatTime(value)}`;
 }
 
+// The span of recorded activity a contribution statement covers, as shown on the statement.
+export function activityPeriod(from: Date | string | null | undefined, to: Date | string | null | undefined): string {
+  const start = formatDate(from ?? to);
+  const end = formatDate(to ?? from);
+  if (!start) return 'No activity recorded';
+  return start === end ? `Activity recorded on ${start}` : `Activity recorded ${start} to ${end}`;
+}
+
 // "Saturday 26/09/2026"
 export function formatLongDate(value: Date | string): string {
   return `${parts(new Date(value)).weekday} ${formatDate(value)}`;

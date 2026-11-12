@@ -147,5 +147,7 @@ export const acceptRequest = z
       )
       .min(1)
       .max(40),
+    // Set when the members choose the brief's final submission date as the project deadline.
+    final_deadline: isoDateTime.nullable().optional(),
   })
   .strict();

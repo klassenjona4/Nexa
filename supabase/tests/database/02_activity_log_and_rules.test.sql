@@ -141,18 +141,16 @@ select is((select count(*)::int from public.profiles where id = 'a0000000-0000-4
 
 -- Usage limits --------------------------------------------------------------------
 set local role service_role;
-select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), n, 'statement generation ' || n || ' of 5 is allowed')
-  from generate_series(1, 5) n;
-select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), null, 'the sixth statement generation is refused');
+select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), 1, 'the free plan allows one statement generation');
+select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), null, 'a second statement generation on the free plan is refused');
 select lives_ok(format('select public.release_usage(%L, %L)', pg_temp.fx('p'), 'statement_generation'), 'a failed call releases its reservation');
-select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), 5, 'the released unit can be used again');
+select is(public.reserve_usage(pg_temp.fx('p'), 'statement_generation'), 1, 'the released unit can be used again');
 
--- A paid tier is new data, not a schema change.
-insert into public.plan_limits (plan, kind, max_per_project) values ('pro', 'brief_breakdown', 7);
-update public.projects set plan = 'pro' where id = pg_temp.fx('p');
-select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), n, 'pro plan brief breakdown ' || n || ' is allowed')
-  from generate_series(1, 7) n;
-select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), null, 'the pro plan limit of 7 is enforced');
+-- Limits are data: a paid project has its own row in plan_limits.
+update public.projects set plan = 'project' where id = pg_temp.fx('p');
+select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), n, 'paid project brief breakdown ' || n || ' is allowed')
+  from generate_series(1, 3) n;
+select is(public.reserve_usage(pg_temp.fx('p'), 'brief_breakdown'), null, 'the paid project limit of 3 is enforced');
 select is(public.reserve_usage(gen_random_uuid(), 'brief_breakdown'), null, 'unknown projects get no usage');
 
 -- Rate limits -----------------------------------------------------------------------

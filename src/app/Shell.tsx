@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useMemo } from 'react';
 import { Link, matchPath, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { HelpChat } from '../components/HelpChat';
 import { Avatar } from '../components/Avatar';
 import { ButtonLink } from '../components/Button';
 import { Label } from '../components/Label';
@@ -116,6 +117,12 @@ export function AppShell() {
             </div>
           ) : null}
           <div className={s.sidebarFoot}>
+            <NavLink to="/pricing" className={s.navItem}>
+              Pricing
+            </NavLink>
+            <NavLink to="/help" className={s.navItem}>
+              Help
+            </NavLink>
             <NavLink to="/account" className={[s.navItem, s.account].join(' ')}>
               <Avatar name={profile?.full_name} />
               <span className={s.accountText}>
@@ -160,10 +167,11 @@ export function AppShell() {
             ))}
           </nav>
         ) : null}
-        <main id="main" tabIndex={-1} className={[s.main, !desktop ? s.withBottomNav : ''].join(' ')}>
+        <main id="main" tabIndex={-1} className={[s.main, s.withChat, !desktop ? s.withBottomNav : ''].join(' ')}>
           <Outlet />
         </main>
       </div>
+      <HelpChat />
 
       {!desktop ? (
         <nav aria-label="Main" className={s.bottomnav}>
@@ -189,6 +197,8 @@ export function PublicShell({ showSignIn = true, children }: { showSignIn?: bool
   const { session } = useAuth();
   const { pathname } = useLocation();
   const onAuthPage = pathname.startsWith('/sign-in') || pathname.startsWith('/auth/');
+  // The help chat is offered on the pages where people decide whether and how to use Nexa.
+  const chat = pathname === '/' || pathname === '/help' || pathname === '/pricing';
   return (
     <div className={s.shell}>
       <a href="#main" className={s.skip}>
@@ -211,10 +221,11 @@ export function PublicShell({ showSignIn = true, children }: { showSignIn?: bool
             )
           ) : null}
         </header>
-        <main id="main" tabIndex={-1} className={s.main}>
+        <main id="main" tabIndex={-1} className={[s.main, chat ? s.withChat : ''].join(' ')}>
           {children ?? <Outlet />}
         </main>
       </div>
+      {chat ? <HelpChat /> : null}
     </div>
   );
 }
@@ -223,6 +234,8 @@ export function PublicFooter() {
   return (
     <footer className={s.footer}>
       <span className={s.footerText}>Nexa · Cork, Ireland</span>
+      <Link to="/pricing">Pricing</Link>
+      <Link to="/help">Help</Link>
       <Link to="/privacy">Privacy policy</Link>
       <Link to="/terms">Terms of use</Link>
     </footer>

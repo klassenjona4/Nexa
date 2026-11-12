@@ -306,7 +306,7 @@ function TaskView({ task, number }: { task: Task; number: number }) {
           </div>
         </Card>
       </div>
-      <TaskFormDialog open={editing} title="Edit task" initial={taskToForm(task)} members={members} ownerLocked={task.status === 'done'} submitLabel="Save task" onSubmit={saveEdit} onClose={() => setEditing(false)} />
+      <TaskFormDialog open={editing} title="Edit task" initial={taskToForm(task)} members={members} ownerLocked={task.status === 'done'} finalDeadline={project.final_deadline} submitLabel="Save task" onSubmit={saveEdit} onClose={() => setEditing(false)} />
       <ConfirmDialog
         open={deleting}
         label="Delete task"

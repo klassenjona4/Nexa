@@ -32,14 +32,17 @@ Extraction rules:
 Planning rules:
 - Propose between 5 and 15 tasks that together cover every deliverable, including referencing, proofreading and submission.
 - Base estimated hours on the word counts and the complexity of each part. Use steps of 0.5 hours.
-- Suggest an internal due date for each task before the relevant deadline, leaving time for review.
+- Suggest an internal due date for each task before the relevant deadline, leaving time for review. No task may be due after the final submission date stated in the brief.
 - Assign each task a member number from 1 to the number of members so that the total hours per member are as even as possible.
 - Task titles and descriptions say what needs doing. Never write any part of the assessed work itself.
 
 Style: plain, factual Irish English. No emoji. Do not use em dashes or en dashes; use commas or the word "to".`;
 
-function userContent(input: { pdf?: Buffer; text?: string }, members: number, today: string): Anthropic.ContentBlockParam[] {
-  const instruction = `The group has ${members} member${members === 1 ? '' : 's'}. Today is ${today}. Extract the brief and propose tasks with an even split of hours across ${members} member${members === 1 ? '' : 's'}.`;
+function userContent(input: { pdf?: Buffer; text?: string }, members: number, today: string, finalDeadline?: string): Anthropic.ContentBlockParam[] {
+  const deadline = finalDeadline
+    ? ` The group entered ${finalDeadline} as the final deadline. If the brief states a different final submission date, plan against the brief's date.`
+    : '';
+  const instruction = `The group has ${members} member${members === 1 ? '' : 's'}. Today is ${today}.${deadline} Extract the brief and propose tasks with an even split of hours across ${members} member${members === 1 ? '' : 's'}.`;
   if (input.pdf) {
     return [
       { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: input.pdf.toString('base64') } },
@@ -50,7 +53,7 @@ function userContent(input: { pdf?: Buffer; text?: string }, members: number, to
   return [{ type: 'text', text: `<brief>\n${safe}\n</brief>\n\n${instruction}` }];
 }
 
-export async function analyseBriefWithAi(input: { pdf?: Buffer; text?: string }, members: number, today: string): Promise<AiBriefOutput> {
+export async function analyseBriefWithAi(input: { pdf?: Buffer; text?: string }, members: number, today: string, finalDeadline?: string): Promise<AiBriefOutput> {
   if (flags.aiMock) return mockBrief(members);
   let response;
   try {
@@ -58,7 +61,7 @@ export async function analyseBriefWithAi(input: { pdf?: Buffer; text?: string },
       model: BRIEF_MODEL,
       max_tokens: 8000,
       system: BRIEF_SYSTEM,
-      messages: [{ role: 'user', content: userContent(input, members, today) }],
+      messages: [{ role: 'user', content: userContent(input, members, today, finalDeadline) }],
       output_config: { format: zodOutputFormat(aiBriefOutput) },
     });
   } catch (err) {

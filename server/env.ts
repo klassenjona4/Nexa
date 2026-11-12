@@ -11,7 +11,11 @@ type Name =
   | 'EMAIL_FROM'
   | 'APP_URL'
   | 'TOKEN_SECRET'
-  | 'CRON_SECRET';
+  | 'CRON_SECRET'
+  | 'STRIPE_SECRET_KEY'
+  | 'STRIPE_WEBHOOK_SECRET'
+  | 'STRIPE_PRICE_PROJECT'
+  | 'STRIPE_PRICE_SUBSCRIPTION';
 
 export function requireEnv(name: Name): string {
   const value = process.env[name];

@@ -6,13 +6,15 @@ import type { AnalysisResult } from '../../../shared/schemas/brief';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
 import { Button } from '../../components/Button';
-import { Card, InlineNotice } from '../../components/Display';
+import { Card } from '../../components/Display';
 import { TextArea, TextField } from '../../components/Field';
 import { Label } from '../../components/Label';
 import { ErrorPanel, LoadingState } from '../../components/States';
 import { useToast } from '../../components/Toast';
 import { api, codeOf } from '../../lib/api';
-import { type Analysis, formatSize, looksLikePdf, useLatestAnalyses, useUsage } from '../../lib/brief';
+import { type Analysis, formatSize, looksLikePdf, useLatestAnalyses } from '../../lib/brief';
+import { type Allowance, allowanceLeft, useAllowance } from '../../lib/billing';
+import { AllowanceNotice } from '../../components/AllowanceNotice';
 import { errorMessage } from '../../lib/errors';
 import { useProject } from '../../lib/project';
 import { supabase } from '../../lib/supabase';
@@ -35,7 +37,9 @@ function failureCopy(f: Failure): { title: string; body: string } {
     case 'ai_invalid_output':
       return { title: 'The brief could not be read', body: 'The AI service could not extract the brief. Check that the document is an assignment brief, or paste the text instead. This attempt does not count against the limit.' };
     case 'usage_limit_reached':
-      return { title: 'No brief breakdowns left', body: 'This project has used all of its brief breakdowns. Add or edit tasks by hand on the task board.' };
+      return { title: 'No brief breakdowns left', body: 'This project has used all of its brief breakdowns. Add or edit tasks by hand on the task board, or unlock 3 more for 2 euro on the Pricing page.' };
+    case 'subscription_inactive':
+      return { title: 'AI features are paused', body: errorMessage('subscription_inactive') };
     default:
       return { title: 'The brief could not be read', body: `${errorMessage(f.code)} This attempt does not count against the limit.` };
   }
@@ -44,7 +48,7 @@ function failureCopy(f: Failure): { title: string; body: string } {
 export function Brief() {
   const { project } = useProject();
   const analyses = useLatestAnalyses(project.id);
-  const usage = useUsage(project.id, project.plan, 'brief_breakdown');
+  const usage = useAllowance(project.id, 'brief_breakdown');
   const [busy, setBusy] = useState<{ name: string; size: number | null } | null>(null);
   const [failure, setFailure] = useState<Failure | null>(null);
   const [replacing, setReplacing] = useState(false);
@@ -64,7 +68,7 @@ export function Brief() {
   const latest = analyses.data[0];
   const pending = latest && latest.status === 'ready' && !latest.accepted_at && latest.result ? latest : null;
   const inFlight = latest && latest.status === 'processing' && openedAt - new Date(latest.created_at).getTime() < 120_000 ? latest : null;
-  const left = usage.data ? usage.data.max - usage.data.used : 0;
+  const left = allowanceLeft(usage.data) ?? Number.POSITIVE_INFINITY;
 
   const run = async (input: { file?: File; text?: string }) => {
     setFailure(null);
@@ -99,26 +103,17 @@ export function Brief() {
     return <Review analysis={pending} result={pending.result} onReplace={() => setReplacing(true)} />;
   }
   if (project.brief && !replacing && !failure) {
-    return <CurrentBrief analyses={analyses.data} onReplace={() => setReplacing(true)} left={left} />;
+    return <CurrentBrief analyses={analyses.data} onReplace={() => setReplacing(true)} left={left} allowance={usage.data} />;
   }
-  return <Upload left={left} max={usage.data?.max ?? 0} failure={failure} onFile={(f) => void run({ file: f })} onText={(t) => void run({ text: t })} onCancel={project.brief || pending ? () => setReplacing(false) : undefined} />;
+  return <Upload left={left} allowance={usage.data} failure={failure} onFile={(f) => void run({ file: f })} onText={(t) => void run({ text: t })} onCancel={project.brief || pending ? () => setReplacing(false) : undefined} />;
 }
 
-function UsageNotice({ left, max }: { left: number; max: number }) {
-  const used = max - left;
-  return (
-    <InlineNotice role="note">
-      Brief breakdowns used: {used} of {max}.{' '}
-      {left > 0 ? 'A failed attempt does not count.' : 'No breakdowns are left for this project. You can still add and edit tasks by hand.'}
-    </InlineNotice>
-  );
-}
-
-function Upload({ left, max, failure, onFile, onText, onCancel }: { left: number; max: number; failure: Failure | null; onFile: (f: File) => void; onText: (t: string) => void; onCancel?: () => void }) {
+function Upload({ left, allowance, failure, onFile, onText, onCancel }: { left: number; allowance: Allowance | undefined; failure: Failure | null; onFile: (f: File) => void; onText: (t: string) => void; onCancel?: () => void }) {
   const [drag, setDrag] = useState(false);
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [textError, setTextError] = useState<string | null>(null);
+  const { project } = useProject();
   const disabled = left <= 0;
 
   const accept = async (file: File | undefined) => {
@@ -145,7 +140,7 @@ function Upload({ left, max, failure, onFile, onText, onCancel }: { left: number
     <div className={p.content}>
       <PageHeader label="Step 2 of 3 · Brief" title="Upload the assignment brief" intro="Nexa extracts the deliverables, deadlines, word counts and marking criteria. You can correct everything before tasks are created." />
       {failure ? <ErrorPanel {...failureCopy(failure)} /> : null}
-      <UsageNotice left={left} max={max} />
+      {allowance ? <AllowanceNotice kind="brief_breakdown" allowance={allowance} projectId={project.id} /> : null}
       <div className={s.uploadGrid}>
         <div
           className={[s.drop, drag ? s.dropActive : ''].join(' ')}
@@ -342,7 +337,7 @@ function Review({ analysis, result, onReplace }: { analysis: Analysis; result: A
   );
 }
 
-function CurrentBrief({ analyses, onReplace, left }: { analyses: Analysis[]; onReplace: () => void; left: number }) {
+function CurrentBrief({ analyses, onReplace, left, allowance }: { analyses: Analysis[]; onReplace: () => void; left: number; allowance: Allowance | undefined }) {
   const { project } = useProject();
   const toast = useToast();
   const brief = project.brief!;
@@ -406,7 +401,8 @@ function CurrentBrief({ analyses, onReplace, left }: { analyses: Analysis[]; onR
           </Card>
         </div>
       </div>
-      <p className={[p.small, p.muted].join(' ')}>A new brief proposes additional tasks. Existing tasks and the contribution log are kept. {left} brief {left === 1 ? 'breakdown' : 'breakdowns'} left.</p>
+      {allowance && left <= 0 ? <AllowanceNotice kind="brief_breakdown" allowance={allowance} projectId={project.id} /> : null}
+      <p className={[p.small, p.muted].join(' ')}>A new brief proposes additional tasks. Existing tasks and the contribution log are kept. {Number.isFinite(left) ? `${left} brief ${left === 1 ? 'breakdown' : 'breakdowns'} left.` : ''}</p>
     </div>
   );
 }

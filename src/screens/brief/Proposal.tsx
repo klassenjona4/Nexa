@@ -1,12 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { formatDate } from '../../../shared/dates';
+import { formatDate, formatDateTime } from '../../../shared/dates';
+import { deadlineDiffers, finalBriefDeadline, isAfterDeadline } from '../../../shared/deadlines';
 import type { AnalysisResult } from '../../../shared/schemas/brief';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
 import { Button } from '../../components/Button';
-import { Card, ProgressBar } from '../../components/Display';
+import { Card, InlineNotice, ProgressBar } from '../../components/Display';
 import { SelectField, TextField } from '../../components/Field';
 import { Label } from '../../components/Label';
 import { EmptyState, ErrorPanel, LoadingState } from '../../components/States';
@@ -67,6 +68,12 @@ function ProposalEditor({ analysis, result }: { analysis: Analysis; result: Anal
   const [nextKey, setNextKey] = useState(result.tasks.length);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The brief's final submission date can differ from the deadline typed when the project was created.
+  const briefFinal = finalBriefDeadline(result.brief.deadlines);
+  const differs = deadlineDiffers(briefFinal, project.final_deadline);
+  const [useBriefDate, setUseBriefDate] = useState(true);
+  const finalDeadline = differs && useBriefDate ? briefFinal : project.final_deadline;
+  const lateCount = tasks.filter((t) => isAfterDeadline(t.due_at, finalDeadline)).length;
 
   const update = (key: number, patch: Partial<Draft>) => setTasks((x) => x.map((t) => (t.key === key ? { ...t, ...patch } : t)));
   const total = tasks.reduce((a, t) => a + t.estimated_hours, 0);
@@ -88,7 +95,10 @@ function ProposalEditor({ analysis, result }: { analysis: Analysis; result: Anal
     setBusy(true);
     try {
       await api(`/api/projects/${project.id}/briefs/${analysis.id}/accept`, {
-        body: { tasks: tasks.map(({ key: _key, ...t }) => ({ ...t, title: t.title.trim() })) },
+        body: {
+          tasks: tasks.map(({ key: _key, ...t }) => ({ ...t, title: t.title.trim() })),
+          ...(differs && useBriefDate && briefFinal ? { final_deadline: briefFinal } : {}),
+        },
       });
       await Promise.all([
         qc.invalidateQueries({ queryKey: ['analyses', project.id] }),
@@ -112,11 +122,32 @@ function ProposalEditor({ analysis, result }: { analysis: Analysis; result: Anal
         title="Proposed tasks and split"
         intro={`The AI proposed ${result.tasks.length} tasks from ${result.brief.deliverables.length} deliverables and ${result.brief.criteria.length} marking criteria. Estimated hours follow the word counts in the brief. Change titles, owners or hours before you create the tasks.`}
       />
+      {differs && briefFinal ? (
+        <fieldset className={s.deadline}>
+          <legend>The brief and the project have different final deadlines</legend>
+          <p className={[p.small, p.muted].join(' ')}>
+            The brief states {formatDateTime(briefFinal)} as the final submission. The project's final deadline is {project.final_deadline ? formatDateTime(project.final_deadline) : 'not set'}.
+          </p>
+          <label className={s.choice}>
+            <input type="radio" name="final-deadline" checked={useBriefDate} onChange={() => setUseBriefDate(true)} />
+            <span>Use the brief's date, {formatDateTime(briefFinal)}</span>
+          </label>
+          <label className={s.choice}>
+            <input type="radio" name="final-deadline" checked={!useBriefDate} onChange={() => setUseBriefDate(false)} />
+            <span>Keep the project's date{project.final_deadline ? `, ${formatDateTime(project.final_deadline)}` : ''}</span>
+          </label>
+        </fieldset>
+      ) : null}
+      {lateCount ? (
+        <InlineNotice role="status">
+          {lateCount === 1 ? '1 task is' : `${lateCount} tasks are`} due after the final deadline of {formatDate(finalDeadline)}. Check the due dates on the board after you create the tasks.
+        </InlineNotice>
+      ) : null}
       <div className={s.layout}>
         <ol className={s.list}>
           {tasks.map((t, i) => (
             <li key={t.key} className={s.item}>
-              <TextField className={s.title} compact label={`Task ${i + 1}`} value={t.title} maxLength={200} onChange={(e) => update(t.key, { title: e.target.value })} hint={t.due_at ? `Due ${formatDate(t.due_at)}` : undefined} />
+              <TextField className={s.title} compact label={`Task ${i + 1}`} value={t.title} maxLength={200} onChange={(e) => update(t.key, { title: e.target.value })} hint={t.due_at ? `Due ${formatDate(t.due_at)}${isAfterDeadline(t.due_at, finalDeadline) ? ', after the final deadline' : ''}` : undefined} />
               <SelectField className={s.owner} compact label="Owner" value={t.assignee_id ?? ''} onChange={(e) => update(t.key, { assignee_id: e.target.value || null })}>
                 <option value="">Unassigned</option>
                 {members.map((m) => (

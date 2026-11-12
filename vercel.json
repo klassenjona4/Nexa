@@ -5,7 +5,7 @@
   "outputDirectory": "dist",
   "regions": ["dub1"],
   "functions": {
-    "api/index.ts": { "maxDuration": 15 },
+    "api/index.ts": { "maxDuration": 15, "includeFiles": "content/help.md" },
     "api/ai.ts": { "maxDuration": 60 }
   },
   "rewrites": [

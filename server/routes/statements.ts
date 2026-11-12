@@ -63,7 +63,8 @@ projectStatementRoutes.post('/generate', async (c) => {
         project_id: project.id,
         sections: sections as unknown as Json,
         period_from: entries[0]?.created_at ?? null,
-        period_to: new Date().toISOString(),
+        // The period ends at the last recorded activity, not at the moment of drafting.
+        period_to: entries.at(-1)?.created_at ?? null,
         generated_by: c.var.user.id,
       })
       .select('id')

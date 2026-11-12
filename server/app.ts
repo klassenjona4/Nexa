@@ -16,6 +16,8 @@ import { cronRoutes } from './routes/cron.js';
 import { projectRoutes } from './routes/projects.js';
 import { calendarRoutes, icsRoutes, projectCalendarRoutes } from './routes/calendar.js';
 import { accountRoutes } from './routes/account.js';
+import { billingRoutes, stripeWebhookRoutes } from './routes/billing.js';
+import { helpRoutes } from './routes/help.js';
 import { readOutbox } from './services/email.js';
 
 assertNoTestSettingsOnHostedPlatform();
@@ -45,7 +47,7 @@ const tooLarge = () => {
 };
 const smallBody = bodyLimit({ maxSize: 64 * 1024, onError: tooLarge });
 const briefBody = bodyLimit({ maxSize: 256 * 1024, onError: tooLarge });
-app.use('/api/*', (c, next) => (c.req.path.endsWith('/briefs/analyse') ? briefBody(c, next) : smallBody(c, next)));
+app.use('/api/*', (c, next) => (c.req.path.endsWith('/briefs/analyse') || c.req.path === '/api/stripe/webhook' ? briefBody(c, next) : smallBody(c, next)));
 
 app.onError((err, c) => {
   if (err instanceof HttpError) {
@@ -78,6 +80,9 @@ app.route('/cal', icsRoutes);
 app.route('/api/projects', projectRoutes);
 app.route('/api/cron', cronRoutes);
 app.route('/api/account', accountRoutes);
+app.route('/api/billing', billingRoutes);
+app.route('/api/help', helpRoutes);
+app.route('/api/stripe', stripeWebhookRoutes());
 
 // Test support: only in test mode (NEXA_TEST_MODE=1 and EMAIL_MOCK=1, never on a hosted platform).
 if (flags.emailMock) {

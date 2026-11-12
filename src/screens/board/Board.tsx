@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
+import { isAfterDeadline } from '../../../shared/deadlines';
 import { formatDate, formatDateTime } from '../../../shared/dates';
 import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
@@ -67,7 +68,7 @@ export function Board() {
   };
 
   const dialog = (
-    <TaskFormDialog open={creating} title="New task" initial={taskToForm(undefined, user?.id)} members={members} submitLabel="Create task" onSubmit={createTask} onClose={() => setCreating(false)} />
+    <TaskFormDialog open={creating} title="New task" initial={taskToForm(undefined, user?.id)} members={members} finalDeadline={project.final_deadline} submitLabel="Create task" onSubmit={createTask} onClose={() => setCreating(false)} />
   );
 
   if (tasks.isPending) return <div className={p.content}>{header}<LoadingState text="Loading the task board" /></div>;
@@ -112,6 +113,7 @@ export function Board() {
     const info = (
       <>
         {t.due_at ? <span>Due {formatDate(t.due_at)}</span> : null}
+        {t.status !== 'done' && isAfterDeadline(t.due_at, project.final_deadline) ? <span className={s.late}>After final deadline</span> : null}
         <span>{t.estimated_hours} h</span>
         {meta(t) ? <span>{meta(t)}</span> : null}
       </>

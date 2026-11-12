@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import s from './Button.module.css';
 
@@ -11,7 +11,7 @@ function classes({ variant = 'primary', size = 'md', block }: Omit<Common, 'chil
     .join(' ');
 }
 
-export function Button({ variant, size, block, className, type = 'button', ...rest }: Common & ButtonHTMLAttributes<HTMLButtonElement>) {
+export function Button({ variant, size, block, className, type = 'button', ...rest }: Common & ButtonHTMLAttributes<HTMLButtonElement> & { ref?: Ref<HTMLButtonElement> }) {
   return <button type={type} className={classes({ variant, size, block }, className)} {...rest} />;
 }
 

@@ -21,13 +21,19 @@ const MESSAGES: Record<string, string> = {
   own_task: 'You cannot confirm or flag a task that is assigned to you or that you marked as done.',
   task_not_done: 'Teammates can respond after the task is marked as done.',
   task_done_locked: 'Move the task out of Done before you change its owner.',
-  usage_limit_reached: 'This project has used all of its AI requests.',
+  usage_limit_reached: 'This project has used all of its AI requests. You can unlock 3 more of each for 2 euro on the Pricing page.',
+  plan_project_limit: 'Your free project is used. Unlock another project for 2 euro, or choose the monthly plan, on the Pricing page.',
+  subscription_inactive: 'The monthly plan that paid for this project has ended. Subscribe again, or unlock this project for 2 euro, to use AI features. Your data is kept.',
   ai_daily_limit: 'Nexa has reached its limit for AI requests today. Try again tomorrow.',
   group_limit: 'You have created the maximum number of groups for today. Try again tomorrow.',
   project_limit: 'This group already has the maximum of 10 projects.',
   task_limit: 'This project already has the maximum of 300 tasks.',
   link_limit: 'This task already has the maximum of 50 links.',
   payload_too_large: 'The content is too large.',
+  help_chat_busy: 'The help chat has answered as many questions as it can today. See the Help page, or try again tomorrow.',
+  already_subscribed: 'Your monthly plan is already active.',
+  no_billing_account: 'There are no payments on this account yet.',
+  checkout_unavailable: 'Stripe could not be reached. Nothing was charged. Try again in a few minutes.',
 };
 
 export function errorMessage(code: string | undefined | null): string {

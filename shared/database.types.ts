@@ -23,6 +23,18 @@ export type Database = {
         Update: { day?: string; used?: number };
         Relationships: [];
       };
+      billing_accounts: {
+        Row: { cancel_at_period_end: boolean; created_at: string; current_period_end: string | null; free_project_used: boolean; project_credits: number; stripe_customer_id: string | null; subscription_id: string | null; subscription_status: string | null; updated_at: string; user_id: string };
+        Insert: { cancel_at_period_end?: boolean; created_at?: string; current_period_end?: string | null; free_project_used?: boolean; project_credits?: number; stripe_customer_id?: string | null; subscription_id?: string | null; subscription_status?: string | null; updated_at?: string; user_id: string };
+        Update: { cancel_at_period_end?: boolean; created_at?: string; current_period_end?: string | null; free_project_used?: boolean; project_credits?: number; stripe_customer_id?: string | null; subscription_id?: string | null; subscription_status?: string | null; updated_at?: string; user_id?: string };
+        Relationships: [{ foreignKeyName: 'billing_accounts_user_id_fkey'; columns: ['user_id']; isOneToOne: true; referencedRelation: 'profiles'; referencedColumns: ['id'] }];
+      };
+      billing_purchases: {
+        Row: { amount_cents: number; created_at: string; currency: string; id: string; kind: string; project_id: string | null; stripe_session_id: string; user_id: string | null };
+        Insert: { amount_cents: number; created_at?: string; currency: string; id?: string; kind: string; project_id?: string | null; stripe_session_id: string; user_id?: string | null };
+        Update: { amount_cents?: number; created_at?: string; currency?: string; id?: string; kind?: string; project_id?: string | null; stripe_session_id?: string; user_id?: string | null };
+        Relationships: [];
+      };
       brief_analyses: {
         Row: { accepted_at: string | null; completed_at: string | null; created_at: string; created_by: string | null; error_code: string | null; file_name: string | null; file_size: number | null; id: string; project_id: string; result: Json | null; source: Database['public']['Enums']['brief_source']; status: Database['public']['Enums']['analysis_status']; storage_path: string | null };
         Insert: { accepted_at?: string | null; completed_at?: string | null; created_at?: string; created_by?: string | null; error_code?: string | null; file_name?: string | null; file_size?: number | null; id?: string; project_id: string; result?: Json | null; source: Database['public']['Enums']['brief_source']; status?: Database['public']['Enums']['analysis_status']; storage_path?: string | null };
@@ -84,10 +96,16 @@ export type Database = {
         Update: { kind?: Database['public']['Enums']['usage_kind']; project_id?: string; updated_at?: string; used?: number };
         Relationships: [{ foreignKeyName: 'project_usage_project_id_fkey'; columns: ['project_id']; isOneToOne: false; referencedRelation: 'projects'; referencedColumns: ['id'] }];
       };
+      help_chat_daily_usage: {
+        Row: { day: string; used: number };
+        Insert: { day: string; used?: number };
+        Update: { day?: string; used?: number };
+        Relationships: [];
+      };
       projects: {
-        Row: { brief: Json | null; created_at: string; deletion_warned_at: string | null; final_deadline: string | null; group_id: string; id: string; last_activity_at: string; module_code: string; plan: string; title: string };
-        Insert: { brief?: Json | null; created_at?: string; deletion_warned_at?: string | null; final_deadline?: string | null; group_id: string; id?: string; last_activity_at?: string; module_code?: string; plan?: string; title: string };
-        Update: { brief?: Json | null; created_at?: string; deletion_warned_at?: string | null; final_deadline?: string | null; group_id?: string; id?: string; last_activity_at?: string; module_code?: string; plan?: string; title?: string };
+        Row: { brief: Json | null; created_at: string; deletion_warned_at: string | null; final_deadline: string | null; funded_by: string | null; group_id: string; id: string; last_activity_at: string; module_code: string; plan: string; title: string; unlocks: number };
+        Insert: { brief?: Json | null; created_at?: string; deletion_warned_at?: string | null; final_deadline?: string | null; funded_by?: string | null; group_id: string; id?: string; last_activity_at?: string; module_code?: string; plan?: string; title: string; unlocks?: number };
+        Update: { brief?: Json | null; created_at?: string; deletion_warned_at?: string | null; final_deadline?: string | null; funded_by?: string | null; group_id?: string; id?: string; last_activity_at?: string; module_code?: string; plan?: string; title?: string; unlocks?: number };
         Relationships: [{ foreignKeyName: 'projects_group_id_fkey'; columns: ['group_id']; isOneToOne: false; referencedRelation: 'groups'; referencedColumns: ['id'] }];
       };
       rate_limits: {
@@ -127,6 +145,12 @@ export type Database = {
           { foreignKeyName: 'task_links_task_id_fkey'; columns: ['task_id']; isOneToOne: false; referencedRelation: 'tasks'; referencedColumns: ['id'] },
         ];
       };
+      stripe_events: {
+        Row: { id: string; received_at: string; type: string };
+        Insert: { id: string; received_at?: string; type: string };
+        Update: { id?: string; received_at?: string; type?: string };
+        Relationships: [];
+      };
       tasks: {
         Row: { assignee_id: string | null; completed_by: string | null; completion_seq: number; created_at: string; created_by: string | null; deliverable: string; description: string; due_at: string | null; estimated_hours: number; id: string; position: number; project_id: string; reminder_sent_at: string | null; status: Database['public']['Enums']['task_status']; title: string; updated_at: string };
         Insert: { assignee_id?: string | null; completed_by?: string | null; completion_seq?: number; created_at?: string; created_by?: string | null; deliverable?: string; description?: string; due_at?: string | null; estimated_hours?: number; id?: string; position?: number; project_id: string; reminder_sent_at?: string | null; status?: Database['public']['Enums']['task_status']; title: string; updated_at?: string };
@@ -141,7 +165,9 @@ export type Database = {
     };
     Views: { [_ in never]: never };
     Functions: {
-      accept_brief: { Args: { p_actor: string; p_analysis: string; p_brief: Json; p_project: string; p_tasks: Json }; Returns: number };
+      accept_brief: { Args: { p_actor: string; p_analysis: string; p_brief: Json; p_final_deadline?: string; p_project: string; p_tasks: Json }; Returns: number };
+      add_project_credit: { Args: { p_user: string }; Returns: number };
+      apply_project_unlock: { Args: { p_project: string; p_user: string }; Returns: undefined };
       accept_invite: { Args: { p_code_hash: string; p_user: string }; Returns: { already_member: boolean; group_id: string; project_id: string }[] };
       create_group_with_project: { Args: { p_final_deadline: string | null; p_group_name: string; p_module_code: string; p_title: string }; Returns: { group_id: string; project_id: string }[] };
       create_project: { Args: { p_final_deadline: string | null; p_group: string; p_module_code: string; p_title: string }; Returns: string };
@@ -150,10 +176,13 @@ export type Database = {
       hook_before_user_created: { Args: { event: Json }; Returns: Json };
       keep_project: { Args: { p_project: string }; Returns: undefined };
       leave_group: { Args: { p_group: string }; Returns: undefined };
+      my_entitlements: { Args: never; Returns: { free_project_available: boolean; project_credits: number; subscription_active: boolean }[] };
       prepare_account_deletion: { Args: { p_user: string }; Returns: undefined };
+      project_allowance: { Args: { p_project: string }; Returns: { kind: Database['public']['Enums']['usage_kind']; max: number; plan: string; subscription_active: boolean | null; unlimited: boolean; used: number }[] };
       rate_limit_hit: { Args: { p_bucket: string; p_max: number; p_window_seconds: number }; Returns: boolean };
       release_usage: { Args: { p_kind: Database['public']['Enums']['usage_kind']; p_project: string }; Returns: undefined };
       reserve_usage: { Args: { p_kind: Database['public']['Enums']['usage_kind']; p_project: string }; Returns: number | null };
+      reserve_help_chat: { Args: never; Returns: boolean };
       review_task: { Args: { p_kind: string; p_note?: string; p_task: string }; Returns: undefined };
     };
     Enums: {

@@ -7,9 +7,11 @@ import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
 import { Button } from '../../components/Button';
 import { TextField } from '../../components/Field';
-import { ErrorPanel } from '../../components/States';
 import { useToast } from '../../components/Toast';
 import { api, codeOf } from '../../lib/api';
+import { nextProjectSource, useEntitlements } from '../../lib/billing';
+import { InlineNotice } from '../../components/Display';
+import { EmptyState, ErrorPanel, LoadingState } from '../../components/States';
 import s from './CreateProject.module.css';
 
 type Errors = Partial<Record<'group_name' | 'title' | 'deadline_date' | 'deadline_time', string>>;
@@ -22,6 +24,8 @@ export function CreateProject() {
   const [errors, setErrors] = useState<Errors>({});
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
+  const entitlements = useEntitlements();
 
   const set = (k: keyof typeof form) => (e: { target: { value: string } }) => {
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -46,20 +50,47 @@ export function CreateProject() {
       const res = await api<{ project_id: string }>('/api/groups', { body });
       await qc.invalidateQueries({ queryKey: ['projects'] });
       await qc.invalidateQueries({ queryKey: ['dashboard'] });
+      await qc.invalidateQueries({ queryKey: ['entitlements'] });
       toast.show('Group created. Next, upload the brief.');
       navigate(`/p/${res.project_id}/brief`);
     } catch (err) {
-      if (codeOf(err) === 'invalid_input') setErrors({ deadline_date: 'Check the date and time.' });
+      const code = codeOf(err);
+      if (code === 'invalid_input') setErrors({ deadline_date: 'Check the date and time.' });
+      else if (code === 'plan_project_limit') setLimitReached(true);
       else setFailed(true);
     } finally {
       setBusy(false);
     }
   };
 
+  if (entitlements.isPending) return <div className={p.content}><LoadingState text="Loading your plan" /></div>;
+  const source = entitlements.data ? nextProjectSource(entitlements.data) : 'free';
+  if (source === null || limitReached) {
+    return (
+      <div className={p.content}>
+        <div className={p.narrow}>
+          <EmptyState
+            label="Plan"
+            title="Your free project is used"
+            body="The free plan includes 1 project. Unlock another project for 2 euro, paid once, or choose the monthly plan for 7.99 euro a month. Projects you join as a member do not count."
+            action={{ label: 'See prices', to: '/pricing' }}
+          />
+        </div>
+      </div>
+    );
+  }
+  const planLine =
+    source === 'subscription'
+      ? 'This project is included in your monthly plan.'
+      : source === 'free'
+        ? 'This is your free project. It includes 1 brief breakdown and 1 contribution statement.'
+        : `This project uses 1 of your ${entitlements.data?.projectCredits ?? 1} project ${entitlements.data?.projectCredits === 1 ? 'unlock' : 'unlocks'}. It includes 3 brief breakdowns and 3 contribution statements.`;
+
   return (
     <div className={p.content}>
       <div className={[p.narrow, p.stackLg].join(' ')} style={{ gap: 32 }}>
         <PageHeader label="Step 1 of 3 · Group and project" title="Create a group and project" intro="You become the owner of the group. Next you upload the brief, then invite members." />
+        <InlineNotice role="note">{planLine}</InlineNotice>
         {failed ? <ErrorPanel title="The group was not created" body="A connection error stopped the group from saving. Your entries are kept. Try again." /> : null}
         <form onSubmit={submit} className={s.form} noValidate>
           <fieldset className={s.fieldset}>
