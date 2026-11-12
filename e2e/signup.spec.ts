@@ -12,6 +12,11 @@ test('sign up with a magic link, enter a name and create a group', async ({ page
 
   await page.goto('/projects');
   await expect(page.getByRole('link', { name: /Media Law group 4/ }).first()).toBeVisible();
+
+  // A signed in visitor to the landing page is offered their projects, never "Sign in".
+  await page.goto('/');
+  await expect(page.getByRole('main').getByRole('link', { name: 'Your projects' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toHaveCount(0);
 });
 
 test('sign in rejects an invalid email address', async ({ page }) => {
