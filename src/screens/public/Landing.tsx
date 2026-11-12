@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { useAuth } from '../../app/AuthProvider';
 import { PublicFooter } from '../../app/Shell';
 import p from '../../app/page.module.css';
@@ -53,7 +54,9 @@ export function Landing() {
               I have an invite link
             </ButtonLink>
           </div>
-          <p className={s.note}>Free for students. Works in the browser and can be installed on your phone.</p>
+          <p className={s.note}>
+            Free plan: 1 project with 1 brief breakdown and 1 contribution statement. More projects from 2 euro, see <Link to="/pricing">Pricing</Link>. Works in the browser and can be installed on your phone.
+          </p>
         </div>
       </section>
       <section className={s.section} aria-labelledby="how-title">

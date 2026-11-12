@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { api } from './api';
 import { supabase } from './supabase';
 
 import type { Allowance, Entitlements, UsageKind } from '../../shared/plans';
@@ -26,9 +27,10 @@ export function useAllowance(projectId: string, kind: UsageKind) {
 }
 
 
-export function useEntitlements() {
+export function useEntitlements(enabled = true) {
   return useQuery({
     queryKey: ['entitlements'],
+    enabled,
     queryFn: async (): Promise<Entitlements> => {
       const { data, error } = await supabase.rpc('my_entitlements');
       if (error) throw error;
@@ -42,3 +44,42 @@ export function useEntitlements() {
   });
 }
 
+
+// Sends the browser to Stripe Checkout. Prices and limits are decided on the server.
+export async function startCheckout(kind: 'project' | 'subscription', projectId?: string): Promise<void> {
+  const { url } = await api<{ url: string }>('/api/billing/checkout', {
+    body: { kind, start_now: true, ...(projectId ? { project_id: projectId } : {}) },
+  });
+  window.location.assign(url);
+}
+
+export async function openBillingPortal(): Promise<void> {
+  const { url } = await api<{ url: string }>('/api/billing/portal', { method: 'POST' });
+  window.location.assign(url);
+}
+
+export type BillingAccount = {
+  subscription_status: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  project_credits: number;
+  free_project_used: boolean;
+  has_customer: boolean;
+};
+
+export function useBillingAccount(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['billing-account', userId],
+    enabled: !!userId,
+    queryFn: async (): Promise<BillingAccount | null> => {
+      const { data, error } = await supabase
+        .from('billing_accounts')
+        .select('subscription_status, current_period_end, cancel_at_period_end, project_credits, free_project_used, stripe_customer_id')
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return null;
+      const { stripe_customer_id, ...rest } = data;
+      return { ...rest, has_customer: !!stripe_customer_id };
+    },
+  });
+}

@@ -20,10 +20,29 @@ test('sign up with a magic link, enter a name and create a group', async ({ page
   await expect(page.getByRole('heading', { name: 'Your free project is used' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'See prices' })).toBeVisible();
 
+  // Account settings show the plan; paying needs the start now consent first.
+  await page.goto('/account');
+  await expect(page.getByRole('heading', { name: 'Plan and billing' })).toBeVisible();
+  await expect(page.getByText('Free plan.')).toBeVisible();
+  await page.goto('/pricing');
+  await page.getByRole('button', { name: 'Unlock a project' }).click();
+  await expect(page.getByRole('alert')).toContainText('Tick the box above the plans');
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Unlock a project' }).click();
+  // Stripe is not configured in local tests, so the server says so and nothing is charged.
+  await expect(page.getByRole('alert')).toContainText('not set up on the server');
+
   // A signed in visitor to the landing page is offered their projects, never "Sign in".
   await page.goto('/');
   await expect(page.getByRole('main').getByRole('link', { name: 'Your projects' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toHaveCount(0);
+});
+
+test('the pricing page asks visitors to sign in before paying', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('main').getByRole('link', { name: 'Pricing' }).first().click();
+  await expect(page.getByRole('heading', { name: 'Plans and prices' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Sign in to continue' })).toHaveCount(2);
 });
 
 test('sign in rejects an invalid email address', async ({ page }) => {

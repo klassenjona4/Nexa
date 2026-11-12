@@ -30,6 +30,9 @@ const MESSAGES: Record<string, string> = {
   task_limit: 'This project already has the maximum of 300 tasks.',
   link_limit: 'This task already has the maximum of 50 links.',
   payload_too_large: 'The content is too large.',
+  already_subscribed: 'Your monthly plan is already active.',
+  no_billing_account: 'There are no payments on this account yet.',
+  checkout_unavailable: 'Stripe could not be reached. Nothing was charged. Try again in a few minutes.',
 };
 
 export function errorMessage(code: string | undefined | null): string {

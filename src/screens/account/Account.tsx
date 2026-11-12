@@ -1,15 +1,17 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { formatDate, formatDateTime } from '../../../shared/dates';
 import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
-import { Button } from '../../components/Button';
+import { Button, ButtonLink } from '../../components/Button';
+import { InlineNotice } from '../../components/Display';
 import { ConfirmDialog } from '../../components/Dialog';
 import { TextField } from '../../components/Field';
 import { useToast } from '../../components/Toast';
 import { api, codeOf } from '../../lib/api';
+import { openBillingPortal, useBillingAccount, useEntitlements } from '../../lib/billing';
 import { downloadFromApi } from '../../lib/download';
 import { errorMessage } from '../../lib/errors';
 import { supabase } from '../../lib/supabase';
@@ -70,6 +72,8 @@ export function Account() {
             Save profile
           </Button>
         </form>
+
+        <Billing userId={user?.id} />
 
         <section className={s.section} aria-labelledby="cal-title">
           <h2 id="cal-title" className={[p.h2, p.h2Rule].join(' ')} style={{ marginBottom: -16 }}>
@@ -135,6 +139,8 @@ export function Account() {
         </section>
 
         <nav aria-label="Legal and session" className={s.links}>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/help">Help</Link>
           <Link to="/privacy">Privacy policy</Link>
           <Link to="/terms">Terms of use</Link>
           <Button variant="text" onClick={() => {
@@ -187,5 +193,83 @@ export function Account() {
         }}
       />
     </div>
+  );
+}
+
+const STATUS: Record<string, string> = {
+  active: 'Active',
+  trialing: 'Active',
+  past_due: 'Payment failed. Stripe will try again; update your card in Manage billing.',
+  unpaid: 'Ended because a payment failed',
+  canceled: 'Ended',
+  incomplete: 'Waiting for the first payment',
+  incomplete_expired: 'Not started',
+  paused: 'Paused',
+};
+
+function Billing({ userId }: { userId: string | undefined }) {
+  const account = useBillingAccount(userId);
+  const entitlements = useEntitlements();
+  const toast = useToast();
+  const [params] = useSearchParams();
+  const [opening, setOpening] = useState(false);
+  const a = account.data;
+  const active = entitlements.data?.subscriptionActive ?? false;
+  const status = a?.subscription_status;
+
+  let plan: string;
+  if (active && a?.current_period_end) {
+    plan = a.cancel_at_period_end ? `Monthly plan, ends on ${formatDate(a.current_period_end)}.` : `Monthly plan, renews on ${formatDate(a.current_period_end)}.`;
+  } else if (active) {
+    plan = 'Monthly plan.';
+  } else {
+    plan = 'Free plan.';
+  }
+
+  return (
+    <section className={s.section} aria-labelledby="billing-title">
+      <h2 id="billing-title" className={[p.h2, p.h2Rule].join(' ')}>
+        Plan and billing
+      </h2>
+      {params.get('billing') === 'success' ? <InlineNotice role="status">Payment received. It can take a minute to show here.</InlineNotice> : null}
+      <dl className={s.readonly} style={{ margin: 0 }}>
+        <dt style={{ fontWeight: 600, fontSize: '0.875rem' }}>Current plan</dt>
+        <dd style={{ margin: 0 }}>{account.isPending ? 'Loading' : plan}</dd>
+        {status && status !== 'active' && status !== 'trialing' ? (
+          <>
+            <dt style={{ fontWeight: 600, fontSize: '0.875rem' }}>Monthly plan status</dt>
+            <dd style={{ margin: 0 }}>{STATUS[status] ?? status}</dd>
+          </>
+        ) : null}
+        <dt style={{ fontWeight: 600, fontSize: '0.875rem' }}>Free project</dt>
+        <dd style={{ margin: 0 }}>{entitlements.data?.freeProjectAvailable ? 'Available' : 'Used'}</dd>
+        <dt style={{ fontWeight: 600, fontSize: '0.875rem' }}>Unused project unlocks</dt>
+        <dd style={{ margin: 0 }}>{entitlements.data?.projectCredits ?? 0}</dd>
+      </dl>
+      <p className={[p.serif, p.muted].join(' ')}>Projects you create use your plan. Projects you join use the plan of the member who created them.</p>
+      <div className={p.actions}>
+        <ButtonLink to="/pricing" variant={active ? 'secondary' : undefined}>
+          {active ? 'See prices' : 'Upgrade'}
+        </ButtonLink>
+        {a?.has_customer ? (
+          <Button
+            variant="secondary"
+            disabled={opening}
+            onClick={async () => {
+              setOpening(true);
+              try {
+                await openBillingPortal();
+              } catch (err) {
+                toast.show(`Error: ${errorMessage(codeOf(err))}`);
+                setOpening(false);
+              }
+            }}
+          >
+            Manage billing
+          </Button>
+        ) : null}
+      </div>
+      {a?.has_customer ? <p className={p.caption}>Manage billing opens Stripe, where you can cancel the monthly plan, change your card and download invoices.</p> : null}
+    </section>
   );
 }

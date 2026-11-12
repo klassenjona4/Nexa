@@ -23,6 +23,7 @@ import { Landing } from '../screens/public/Landing';
 import { AuthProvider } from './AuthProvider';
 import { RequireAuth } from './RequireAuth';
 import { Help } from '../screens/help/Help';
+import { Pricing } from '../screens/pricing/Pricing';
 import { AppShell, PublicShell } from './Shell';
 
 const queryClient = new QueryClient({
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
       { path: '/privacy', element: <Legal kind="privacy" /> },
       { path: '/terms', element: <Legal kind="terms" /> },
       { path: '/help', element: <Help /> },
+      { path: '/pricing', element: <Pricing /> },
       { path: '/join', element: <JoinEntry /> },
       { path: '/join/:code', element: <Join /> },
     ],

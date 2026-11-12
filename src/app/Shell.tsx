@@ -116,6 +116,9 @@ export function AppShell() {
             </div>
           ) : null}
           <div className={s.sidebarFoot}>
+            <NavLink to="/pricing" className={s.navItem}>
+              Pricing
+            </NavLink>
             <NavLink to="/help" className={s.navItem}>
               Help
             </NavLink>
@@ -226,6 +229,7 @@ export function PublicFooter() {
   return (
     <footer className={s.footer}>
       <span className={s.footerText}>Nexa · Cork, Ireland</span>
+      <Link to="/pricing">Pricing</Link>
       <Link to="/help">Help</Link>
       <Link to="/privacy">Privacy policy</Link>
       <Link to="/terms">Terms of use</Link>
