@@ -95,7 +95,7 @@ Rotating `TOKEN_SECRET` invalidates all invite and calendar links.
 
 ### Stripe
 
-Payments use Stripe Checkout and the Stripe Customer Portal; card details never reach Nexa. The webhook endpoint `<APP_URL>/api/stripe/webhook` must send these events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.subscription.paused`, `customer.subscription.resumed`, `invoice.paid`, `invoice.payment_failed`. Every request is checked against `STRIPE_WEBHOOK_SECRET`; each event id is applied once (`stripe_events`) and each Checkout session once (`billing_purchases`). Subscription changes are read back from Stripe, so events that arrive out of order cannot roll the state back. Plan limits are enforced in the database (`supabase/migrations/20261112110000_plans_and_billing.sql`).
+Payments use Stripe Checkout and the Stripe Customer Portal; card details never reach Nexa. The webhook endpoint `<APP_URL>/api/stripe/webhook` must send these events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.subscription.paused`, `customer.subscription.resumed`, `invoice.paid`, `invoice.payment_failed`. Every request is checked against `STRIPE_WEBHOOK_SECRET`; each event id is applied once (`stripe_events`) and each Checkout session once (`billing_purchases`). Subscription changes are read back from Stripe, so events that arrive out of order cannot roll the state back. Plan limits are enforced in the database (`supabase/migrations/20261112194410_plans_and_billing.sql`).
 
 ## Deployment
 
