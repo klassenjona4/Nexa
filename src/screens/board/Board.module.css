@@ -144,3 +144,7 @@
     flex: 1;
   }
 }
+.late {
+  color: var(--rust);
+  font-weight: 600;
+}

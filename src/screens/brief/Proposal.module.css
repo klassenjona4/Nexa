@@ -62,3 +62,34 @@
   border-top: var(--rule-hairline);
   padding-top: var(--s3);
 }
+.deadline {
+  border: 0;
+  margin: 0;
+  padding: var(--s4);
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.deadline legend {
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: var(--s2);
+}
+.choice {
+  display: flex;
+  gap: var(--s2);
+  align-items: flex-start;
+  min-height: 44px;
+  align-items: center;
+}
+.choice input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--ink);
+  flex: 0 0 auto;
+}
+.late {
+  color: var(--rust);
+  font-weight: 600;
+}

@@ -88,7 +88,7 @@ briefRoutes.post('/analyse', async (c) => {
     if (insErr || !row) throw dbError(insErr);
     analysisId = row.id;
 
-    const output = await analyseBriefWithAi(pdf ? { pdf } : { text: 'text' in body ? body.text : '' }, Math.max(1, members ?? 1), formatDate(new Date()));
+    const output = await analyseBriefWithAi(pdf ? { pdf } : { text: 'text' in body ? body.text : '' }, Math.max(1, members ?? 1), formatDate(new Date()), project.final_deadline ? formatDate(project.final_deadline) : undefined);
     const result = normaliseAnalysis(output, Math.max(1, members ?? 1));
     await admin.from('brief_analyses').update({ status: 'ready', result: result as unknown as Json, completed_at: new Date().toISOString() }).eq('id', analysisId);
     return c.json({ id: analysisId, result }, 201);
@@ -148,6 +148,7 @@ briefRoutes.post('/:analysisId/accept', async (c) => {
     p_brief: current.brief as unknown as Json,
     p_tasks: body.tasks as unknown as Json,
     p_actor: c.var.user.id,
+    p_final_deadline: body.final_deadline ?? undefined,
   });
   if (error) throw dbError(error);
   return c.json({ created: data }, 201);

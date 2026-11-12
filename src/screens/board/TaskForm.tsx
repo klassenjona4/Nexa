@@ -1,5 +1,6 @@
 import { type FormEvent, useId, useState } from 'react';
 import { formatDate, formatTime, parseIrishDateTime } from '../../../shared/dates';
+import { isAfterDeadline } from '../../../shared/deadlines';
 import { Button } from '../../components/Button';
 import { Dialog } from '../../components/Dialog';
 import { SelectField, TextArea, TextField } from '../../components/Field';
@@ -37,6 +38,7 @@ export function TaskFormDialog({
   initial,
   members,
   ownerLocked = false,
+  finalDeadline = null,
   submitLabel,
   onSubmit,
   onClose,
@@ -47,6 +49,8 @@ export function TaskFormDialog({
   members: Member[];
   // A done task keeps its owner; the database refuses the change.
   ownerLocked?: boolean;
+  // The project's final deadline, for a warning when the task is due after it.
+  finalDeadline?: string | null;
   submitLabel: string;
   onSubmit: (v: TaskFormValues) => Promise<void>;
   onClose: () => void;
@@ -54,12 +58,12 @@ export function TaskFormDialog({
   const id = useId();
   return (
     <Dialog open={open} onClose={onClose} labelledBy={`${id}-t`}>
-      {open ? <TaskFormBody headingId={`${id}-t`} title={title} initial={initial} members={members} ownerLocked={ownerLocked} submitLabel={submitLabel} onSubmit={onSubmit} onClose={onClose} /> : null}
+      {open ? <TaskFormBody headingId={`${id}-t`} title={title} initial={initial} members={members} ownerLocked={ownerLocked} finalDeadline={finalDeadline} submitLabel={submitLabel} onSubmit={onSubmit} onClose={onClose} /> : null}
     </Dialog>
   );
 }
 
-function TaskFormBody({ headingId, title, initial, members, ownerLocked, submitLabel, onSubmit, onClose }: { headingId: string; title: string; initial: TaskFormValues; members: Member[]; ownerLocked: boolean; submitLabel: string; onSubmit: (v: TaskFormValues) => Promise<void>; onClose: () => void }) {
+function TaskFormBody({ headingId, title, initial, members, ownerLocked, finalDeadline, submitLabel, onSubmit, onClose }: { headingId: string; title: string; initial: TaskFormValues; members: Member[]; ownerLocked: boolean; finalDeadline: string | null; submitLabel: string; onSubmit: (v: TaskFormValues) => Promise<void>; onClose: () => void }) {
   const [v, setV] = useState(initial);
   const [errors, setErrors] = useState<Partial<Record<keyof TaskFormValues, string>>>({});
   const [busy, setBusy] = useState(false);
@@ -67,6 +71,9 @@ function TaskFormBody({ headingId, title, initial, members, ownerLocked, submitL
     setV((x) => ({ ...x, [k]: value }));
     setErrors((e) => ({ ...e, [k]: undefined }));
   };
+
+  const parsedDue = v.due_date.trim() ? parseIrishDateTime(v.due_date.trim(), v.due_time.trim() || '17:00') : null;
+  const late = isAfterDeadline(parsedDue?.toISOString(), finalDeadline);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -113,7 +120,7 @@ function TaskFormBody({ headingId, title, initial, members, ownerLocked, submitL
         <TextField className={s.flex1} label="Hours" type="number" min={0} max={200} step={0.5} numeric value={String(v.estimated_hours)} onChange={(e) => set('estimated_hours', Number(e.target.value))} error={errors.estimated_hours} />
       </div>
       <div className={s.formRow}>
-        <TextField className={s.flex2} label="Due date" placeholder="DD/MM/YYYY" inputMode="numeric" numeric value={v.due_date} onChange={(e) => set('due_date', e.target.value)} error={errors.due_date} hint="Format DD/MM/YYYY" />
+        <TextField className={s.flex2} label="Due date" placeholder="DD/MM/YYYY" inputMode="numeric" numeric value={v.due_date} onChange={(e) => set('due_date', e.target.value)} error={errors.due_date} hint={late && finalDeadline ? `After the project's final deadline of ${formatDate(finalDeadline)}. You can still save it.` : 'Format DD/MM/YYYY'} />
         <TextField className={s.flex1} label="Time" placeholder="17:00" inputMode="numeric" numeric value={v.due_time} onChange={(e) => set('due_time', e.target.value)} error={errors.due_time} hint="24 hour" />
       </div>
       <TextField label="Deliverable" value={v.deliverable} onChange={(e) => set('deliverable', e.target.value)} maxLength={200} />
