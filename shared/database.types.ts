@@ -96,6 +96,12 @@ export type Database = {
         Update: { kind?: Database['public']['Enums']['usage_kind']; project_id?: string; updated_at?: string; used?: number };
         Relationships: [{ foreignKeyName: 'project_usage_project_id_fkey'; columns: ['project_id']; isOneToOne: false; referencedRelation: 'projects'; referencedColumns: ['id'] }];
       };
+      help_chat_daily_usage: {
+        Row: { day: string; used: number };
+        Insert: { day: string; used?: number };
+        Update: { day?: string; used?: number };
+        Relationships: [];
+      };
       projects: {
         Row: { brief: Json | null; created_at: string; deletion_warned_at: string | null; final_deadline: string | null; funded_by: string | null; group_id: string; id: string; last_activity_at: string; module_code: string; plan: string; title: string; unlocks: number };
         Insert: { brief?: Json | null; created_at?: string; deletion_warned_at?: string | null; final_deadline?: string | null; funded_by?: string | null; group_id: string; id?: string; last_activity_at?: string; module_code?: string; plan?: string; title: string; unlocks?: number };
@@ -176,6 +182,7 @@ export type Database = {
       rate_limit_hit: { Args: { p_bucket: string; p_max: number; p_window_seconds: number }; Returns: boolean };
       release_usage: { Args: { p_kind: Database['public']['Enums']['usage_kind']; p_project: string }; Returns: undefined };
       reserve_usage: { Args: { p_kind: Database['public']['Enums']['usage_kind']; p_project: string }; Returns: number | null };
+      reserve_help_chat: { Args: never; Returns: boolean };
       review_task: { Args: { p_kind: string; p_note?: string; p_task: string }; Returns: undefined };
     };
     Enums: {

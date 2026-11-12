@@ -52,6 +52,8 @@ export const LIMITS = {
   calendarToken: { name: 'calendar:token', max: 120, windowSeconds: 3600 },
   exportUser: { name: 'export:user', max: 5, windowSeconds: 86400 },
   writeUser: { name: 'write:user', max: 600, windowSeconds: 3600 },
+  helpChatIp: { name: 'help-chat:ip', max: 20, windowSeconds: 3600 },
+  helpChatUser: { name: 'help-chat:user', max: 50, windowSeconds: 86400 },
   billingUser: { name: 'billing:user', max: 20, windowSeconds: 3600 },
   // Stripe sends from a small set of addresses; this only stops floods of forged requests.
   stripeWebhookIp: { name: 'stripe-webhook:ip', max: 2000, windowSeconds: 3600 },

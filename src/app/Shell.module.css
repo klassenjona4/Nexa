@@ -19,6 +19,13 @@
 .withBottomNav {
   padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom));
 }
+/* Room below the content so the help chat button never covers the last line. */
+.withChat {
+  padding-bottom: 72px;
+}
+.withBottomNav.withChat {
+  padding-bottom: calc(var(--bar-h) + 64px + env(safe-area-inset-bottom));
+}
 .skip {
   position: absolute;
   left: 8px;

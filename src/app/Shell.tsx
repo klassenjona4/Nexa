@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useMemo } from 'react';
 import { Link, matchPath, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { HelpChat } from '../components/HelpChat';
 import { Avatar } from '../components/Avatar';
 import { ButtonLink } from '../components/Button';
 import { Label } from '../components/Label';
@@ -166,10 +167,11 @@ export function AppShell() {
             ))}
           </nav>
         ) : null}
-        <main id="main" tabIndex={-1} className={[s.main, !desktop ? s.withBottomNav : ''].join(' ')}>
+        <main id="main" tabIndex={-1} className={[s.main, s.withChat, !desktop ? s.withBottomNav : ''].join(' ')}>
           <Outlet />
         </main>
       </div>
+      <HelpChat />
 
       {!desktop ? (
         <nav aria-label="Main" className={s.bottomnav}>
@@ -195,6 +197,8 @@ export function PublicShell({ showSignIn = true, children }: { showSignIn?: bool
   const { session } = useAuth();
   const { pathname } = useLocation();
   const onAuthPage = pathname.startsWith('/sign-in') || pathname.startsWith('/auth/');
+  // The help chat is offered on the pages where people decide whether and how to use Nexa.
+  const chat = pathname === '/' || pathname === '/help' || pathname === '/pricing';
   return (
     <div className={s.shell}>
       <a href="#main" className={s.skip}>
@@ -217,10 +221,11 @@ export function PublicShell({ showSignIn = true, children }: { showSignIn?: bool
             )
           ) : null}
         </header>
-        <main id="main" tabIndex={-1} className={s.main}>
+        <main id="main" tabIndex={-1} className={[s.main, chat ? s.withChat : ''].join(' ')}>
           {children ?? <Outlet />}
         </main>
       </div>
+      {chat ? <HelpChat /> : null}
     </div>
   );
 }

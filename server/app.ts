@@ -17,6 +17,7 @@ import { projectRoutes } from './routes/projects.js';
 import { calendarRoutes, icsRoutes, projectCalendarRoutes } from './routes/calendar.js';
 import { accountRoutes } from './routes/account.js';
 import { billingRoutes, stripeWebhookRoutes } from './routes/billing.js';
+import { helpRoutes } from './routes/help.js';
 import { readOutbox } from './services/email.js';
 
 assertNoTestSettingsOnHostedPlatform();
@@ -80,6 +81,7 @@ app.route('/api/projects', projectRoutes);
 app.route('/api/cron', cronRoutes);
 app.route('/api/account', accountRoutes);
 app.route('/api/billing', billingRoutes);
+app.route('/api/help', helpRoutes);
 app.route('/api/stripe', stripeWebhookRoutes());
 
 // Test support: only in test mode (NEXA_TEST_MODE=1 and EMAIL_MOCK=1, never on a hosted platform).
