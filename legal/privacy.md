@@ -1,8 +1,8 @@
 ---
 title: Privacy policy
 status: draft
-version: 0.2
-updated: 26/09/2026
+version: 0.3
+updated: 12/11/2026
 ---
 
 > DRAFT. This privacy policy has not been reviewed by a legal professional. It must be reviewed and the bracketed details completed before Nexa is launched.
@@ -27,6 +27,8 @@ This policy explains which personal data Nexa processes, why, on which legal bas
 - Contribution records: the contribution log and contribution statements.
 - Invite data: the email addresses of people a group owner invites.
 - Calendar data: the date a calendar link was created and last read by a calendar app.
+- Billing data, if you pay: your plan, the number of unused project unlocks, the status and renewal date of a monthly plan, the amount, currency and date of each payment, and the identifiers Stripe gives your customer record, payments and subscription. Nexa never receives or stores your card or bank details. Stripe collects them directly.
+- Help chat questions: the questions you type into the help chat and the answers. They are sent to the AI model to write the answer and are not stored by Nexa.
 - Technical data: your IP address and browser details when you use Nexa. Nexa does not store your IP address. For rate limiting it stores a keyed, one way hash of it for up to 24 hours. The hosting providers named below keep short technical logs.
 
 You provide your email address so that Nexa can sign you in. Without it, you cannot use Nexa. All other information is provided by you or your group as you use the service.
@@ -36,6 +38,9 @@ You provide your email address so that Nexa can sign you in. Without it, you can
 - To provide the service you signed up for: your account, groups, projects, the task board, the contribution log, contribution statements, calendar links, reminders and data export. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
 - To extract details from a brief and draft a contribution statement with an AI model, when a member asks for this. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
 - To send an invite to an email address that a group owner enters. Legal basis: the legitimate interest of the group in inviting members, Article 6(1)(f) GDPR. The address is used only to send the invite and to show the owner that the invite is pending.
+- To take payments for project unlocks and the monthly plan, apply them to your account and send receipts. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
+- To keep payment and invoice records for as long as tax law requires. Legal basis: legal obligation, Article 6(1)(c) GDPR. [TO REVIEW: confirm the retention period under Irish tax law, usually 6 years.]
+- To answer questions in the help chat. Legal basis: legitimate interest in helping people use Nexa, Article 6(1)(f) GDPR. You decide whether to use the chat.
 - To keep log entries accurate after a member leaves or deletes their account. Legal basis: the legitimate interest of the other group members in a reliable contribution record for their assessment, Article 6(1)(f) GDPR. These entries are shown as Former member and are not linked to your identity.
 - To keep Nexa secure, prevent misuse, apply rate limits and fix errors. Legal basis: legitimate interest in a secure and working service, Article 6(1)(f) GDPR.
 - To comply with legal obligations. Legal basis: Article 6(1)(c) GDPR.
@@ -48,6 +53,8 @@ When a member uploads or pastes a brief, the brief is sent to Anthropic, which p
 
 When a member drafts a contribution statement, a summary of the group's contribution log is sent to Anthropic. This summary contains members' names, task titles, dates, estimated hours and flag reasons. It does not contain email addresses or file links.
 
+When you use the help chat, your questions and the earlier messages of that conversation are sent to Anthropic together with the text of the Help page. Nothing about your account, groups or projects is sent. Do not enter personal data in the help chat. Nexa does not store the conversation or write it to logs; it is cleared when you close or reload the page.
+
 Anthropic processes this data on behalf of Nexa and does not use it to train its models. AI output is a suggestion only. Group members review and edit it before it is saved or used, and it is never used to make decisions about you with legal or similarly significant effects.
 
 ## Who receives your data
@@ -58,8 +65,10 @@ Nexa uses these processors under data processing agreements:
 
 - Supabase Inc: database, sign in and file storage. Data is stored in the European Union (Ireland).
 - Vercel Inc: hosting of the web application and the server functions. Functions run in the European Union (Dublin). Static files are delivered through a worldwide network.
-- Anthropic PBC: AI processing of briefs and contribution log summaries, in the United States.
+- Anthropic PBC: AI processing of briefs, contribution log summaries and help chat questions, in the United States.
 - Resend (Plus Five Five Inc): sending sign in, invite, reminder and deletion notice emails, from its European Union region.
+
+If you pay, Stripe Payments Europe, Limited (Dublin, Ireland) processes the payment. Nexa sends Stripe your email address and an internal account identifier. Stripe acts as a processor for Nexa for the payment itself and as a separate controller for its own legal duties, such as fraud prevention and anti money laundering checks, under its own privacy policy. Stripe can transfer data to the United States under the safeguards described in its policy. [TO REVIEW: check the current Stripe data processing agreement and its controller and processor roles.]
 
 If you choose to sign in with Google, Google Ireland Limited processes your sign in as a separate controller under its own privacy policy.
 
@@ -75,6 +84,8 @@ Some processors are based in the United States or can access data from there. Tr
 - Invites: until they expire after 7 days, are revoked, or the group is deleted.
 - Rate limit records: 24 hours.
 - Log entries you created in a group: for as long as the project exists, shown as Former member after you delete your account.
+- Billing data: for as long as you have an account, and payment and invoice records for as long as tax law requires, also after you delete your account. [TO REVIEW: retention period.]
+- Help chat questions: not stored by Nexa. Anthropic keeps API inputs and outputs for a limited period under its own commercial terms. [TO REVIEW: confirm Anthropic's current retention period for API data.]
 - Emails: Resend keeps delivery records for a limited period set by its own policy.
 
 Deleted data can remain in the hosting providers' backups for a short period until those backups expire.

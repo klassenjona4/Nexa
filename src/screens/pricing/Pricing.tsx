@@ -64,7 +64,7 @@ export function Pricing() {
         <label className={s.consent}>
           <input type="checkbox" checked={startNow} onChange={(e) => setStartNow(e.target.checked)} />
           <span>
-            I want the unlock or plan to start immediately. I understand that I lose my 14 day right of withdrawal once it has started. For the monthly plan, I can cancel at any time and keep it until the end of the paid month.
+            I ask for the unlock or plan to start immediately. I understand that I lose my 14 day right of withdrawal once it has been provided in full, and that if I withdraw from the monthly plan I pay for the time already provided. I can cancel the monthly plan at any time.
           </span>
         </label>
       ) : null}
