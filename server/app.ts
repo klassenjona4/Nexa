@@ -16,6 +16,7 @@ import { cronRoutes } from './routes/cron.js';
 import { projectRoutes } from './routes/projects.js';
 import { calendarRoutes, icsRoutes, projectCalendarRoutes } from './routes/calendar.js';
 import { accountRoutes } from './routes/account.js';
+import { PAYMENTS_AVAILABLE } from '../shared/plans.js';
 import { billingRoutes, stripeWebhookRoutes } from './routes/billing.js';
 import { helpRoutes } from './routes/help.js';
 import { readOutbox } from './services/email.js';
@@ -80,9 +81,12 @@ app.route('/cal', icsRoutes);
 app.route('/api/projects', projectRoutes);
 app.route('/api/cron', cronRoutes);
 app.route('/api/account', accountRoutes);
-app.route('/api/billing', billingRoutes);
 app.route('/api/help', helpRoutes);
-app.route('/api/stripe', stripeWebhookRoutes());
+// No payment backend until payments are switched on (see shared/plans.ts).
+if (PAYMENTS_AVAILABLE) {
+  app.route('/api/billing', billingRoutes);
+  app.route('/api/stripe', stripeWebhookRoutes());
+}
 
 // Test support: only in test mode (NEXA_TEST_MODE=1 and EMAIL_MOCK=1, never on a hosted platform).
 if (flags.emailMock) {

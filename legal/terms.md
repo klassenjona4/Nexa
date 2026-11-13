@@ -15,6 +15,8 @@ These terms apply between you and the operator when you use Nexa. By creating an
 
 ## Plans and prices
 
+Paid options are not yet available to buy. Until they are, only the free plan can be used, and nothing is charged.
+
 Nexa has three options. The current prices are shown on the Pricing page and at checkout before you pay. [TO REVIEW: whether VAT applies and how prices are shown.]
 
 - Free plan: each account can create 1 project with 1 brief breakdown and 1 contribution statement draft.

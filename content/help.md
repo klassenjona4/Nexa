@@ -2,7 +2,7 @@
 title: Help
 status: final
 version: 1.0
-updated: 12/11/2026
+updated: 13/11/2026
 ---
 
 ## Creating a group and project
@@ -58,6 +58,8 @@ On Calendar feed, create a private link and add it to Google Calendar, Apple Cal
 Nexa works in any modern browser and can be installed like an app. On an iPhone, open Nexa in Safari, choose the Share button, then Add to Home Screen. On Android, open Nexa in Chrome, open the menu and choose Install app. On a computer, use the install button in the address bar of Chrome or Edge. The installed app only stores the application files, not your data.
 
 ## Plans and billing
+
+Paid plans are not available yet. Nexa is completing its business registration, so the project unlock and the monthly plan cannot be bought at the moment. Everyone can use the free plan. The prices below are the planned prices.
 
 The free plan includes 1 project with 1 brief breakdown and 1 contribution statement. A project is paid for by the member who creates it; members who join a project do not use their own allowance.
 

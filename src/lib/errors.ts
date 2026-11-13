@@ -31,6 +31,7 @@ const MESSAGES: Record<string, string> = {
   link_limit: 'This task already has the maximum of 50 links.',
   payload_too_large: 'The content is too large.',
   help_chat_busy: 'The help chat has answered as many questions as it can today. See the Help page, or try again tomorrow.',
+  payments_unavailable: 'Paid plans are not available yet. Nexa is completing its business registration, so nothing can be bought at the moment. You can keep using the free plan.',
   already_subscribed: 'Your monthly plan is already active.',
   no_billing_account: 'There are no payments on this account yet.',
   checkout_unavailable: 'Stripe could not be reached. Nothing was charged. Try again in a few minutes.',
