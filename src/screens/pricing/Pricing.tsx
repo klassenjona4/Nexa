@@ -7,7 +7,7 @@ import { Button, ButtonLink } from '../../components/Button';
 import { InlineNotice } from '../../components/Display';
 import { Label } from '../../components/Label';
 import { codeOf } from '../../lib/api';
-import { startCheckout, useEntitlements } from '../../lib/billing';
+import { PAYMENTS_AVAILABLE, startCheckout, useEntitlements } from '../../lib/billing';
 import { errorMessage } from '../../lib/errors';
 import s from './Pricing.module.css';
 
@@ -22,30 +22,38 @@ export function Pricing() {
   const entitlements = useEntitlements(!!session);
   const [startNow, setStartNow] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ kind: 'project' | 'subscription'; text: string } | null>(null);
   const subscribed = entitlements.data?.subscriptionActive ?? false;
 
   const buy = async (kind: 'project' | 'subscription', forProject?: string) => {
     setError(null);
-    if (!startNow) return setError('Tick the box above the plans to continue.');
+    if (PAYMENTS_AVAILABLE && !startNow) return setError({ kind, text: 'Tick the box above the plans to continue.' });
     setBusy(kind);
     try {
       await startCheckout(kind, forProject);
     } catch (err) {
-      setError(errorMessage(codeOf(err)));
+      setError({ kind, text: errorMessage(codeOf(err)) });
       setBusy(null);
     }
   };
 
   const signInTo = `/sign-in?next=${encodeURIComponent(`/pricing${projectId ? `?project=${projectId}` : ''}`)}`;
-  const action = (kind: 'project' | 'subscription', label: string, forProject?: string) =>
-    session ? (
-      <Button onClick={() => void buy(kind, forProject)} disabled={!!busy || (kind === 'subscription' && subscribed)}>
-        {busy === kind ? 'Opening Stripe' : label}
-      </Button>
-    ) : (
-      <ButtonLink to={signInTo}>Sign in to continue</ButtonLink>
-    );
+  const action = (kind: 'project' | 'subscription', label: string, forProject?: string) => (
+    <>
+      {session ? (
+        <Button onClick={() => void buy(kind, forProject)} disabled={!!busy || (kind === 'subscription' && subscribed)}>
+          {busy === kind ? 'Opening Stripe' : label}
+        </Button>
+      ) : (
+        <ButtonLink to={signInTo}>Sign in to continue</ButtonLink>
+      )}
+      {error?.kind === kind ? (
+        <p role="alert" className={p.small} style={{ color: 'var(--rust)', fontWeight: 600 }}>
+          {error.text}
+        </p>
+      ) : null}
+    </>
+  );
 
   return (
     <div className={[p.content, p.wide].join(' ')} style={{ gap: 32 }}>
@@ -56,22 +64,22 @@ export function Pricing() {
           A project is paid for by the member who creates it. Members who join a project use its allowance and pay nothing. Payments are handled by Stripe; Nexa does not see or store card details.
         </p>
       </div>
+      {!PAYMENTS_AVAILABLE ? (
+        <InlineNotice role="note">
+          Paid plans are not available yet. Nexa is completing its business registration. Until then you can use the free plan; the paid options below show the planned prices.
+        </InlineNotice>
+      ) : null}
       {cancelled ? <InlineNotice role="status">The payment was cancelled. Nothing was charged.</InlineNotice> : null}
       {projectId ? (
         <InlineNotice role="note">You are unlocking more AI use for one project. The 2 euro unlock below adds 3 brief breakdowns and 3 contribution statements to it.</InlineNotice>
       ) : null}
-      {session ? (
+      {session && PAYMENTS_AVAILABLE ? (
         <label className={s.consent}>
           <input type="checkbox" checked={startNow} onChange={(e) => setStartNow(e.target.checked)} />
           <span>
             I ask for the unlock or plan to start immediately. I understand that I lose my 14 day right of withdrawal once it has been provided in full, and that if I withdraw from the monthly plan I pay for the time already provided. I can cancel the monthly plan at any time.
           </span>
         </label>
-      ) : null}
-      {error ? (
-        <p role="alert" className={p.small} style={{ color: 'var(--rust)', fontWeight: 600 }}>
-          Error: {error}
-        </p>
       ) : null}
       <ul className={s.plans}>
         <li className={s.plan}>

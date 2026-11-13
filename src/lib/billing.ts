@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from './api';
+import { api, ApiError } from './api';
 import { supabase } from './supabase';
 
-import type { Allowance, Entitlements, UsageKind } from '../../shared/plans';
+import { type Allowance, type Entitlements, PAYMENTS_AVAILABLE, type UsageKind } from '../../shared/plans';
 
-export { allowanceLeft, nextProjectSource, type Allowance, type Entitlements, type UsageKind } from '../../shared/plans';
+export { PAYMENTS_AVAILABLE, allowanceLeft, nextProjectSource, type Allowance, type Entitlements, type UsageKind } from '../../shared/plans';
 
 
 // The allowance is shown to members but counted and enforced only in the database.
@@ -47,6 +47,7 @@ export function useEntitlements(enabled = true) {
 
 // Sends the browser to Stripe Checkout. Prices and limits are decided on the server.
 export async function startCheckout(kind: 'project' | 'subscription', projectId?: string): Promise<void> {
+  if (!PAYMENTS_AVAILABLE) throw new ApiError(403, 'payments_unavailable');
   const { url } = await api<{ url: string }>('/api/billing/checkout', {
     body: { kind, start_now: true, ...(projectId ? { project_id: projectId } : {}) },
   });
@@ -54,6 +55,7 @@ export async function startCheckout(kind: 'project' | 'subscription', projectId?
 }
 
 export async function openBillingPortal(): Promise<void> {
+  if (!PAYMENTS_AVAILABLE) throw new ApiError(403, 'payments_unavailable');
   const { url } = await api<{ url: string }>('/api/billing/portal', { method: 'POST' });
   window.location.assign(url);
 }

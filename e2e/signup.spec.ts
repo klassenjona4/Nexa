@@ -24,13 +24,13 @@ test('sign up with a magic link, enter a name and create a group', async ({ page
   await page.goto('/account');
   await expect(page.getByRole('heading', { name: 'Plan and billing' })).toBeVisible();
   await expect(page.getByText('Free plan.')).toBeVisible();
+  // Paid plans are visible, but cannot be bought until payments are switched on.
   await page.goto('/pricing');
+  await expect(page.getByText('Paid plans are not available yet.', { exact: false }).first()).toBeVisible();
   await page.getByRole('button', { name: 'Unlock a project' }).click();
-  await expect(page.getByRole('alert')).toContainText('Tick the box above the plans');
-  await page.getByRole('checkbox').check();
-  await page.getByRole('button', { name: 'Unlock a project' }).click();
-  // Stripe is not configured in local tests, so the server says so and nothing is charged.
-  await expect(page.getByRole('alert')).toContainText('not set up on the server');
+  await expect(page.getByRole('alert')).toContainText('Paid plans are not available yet');
+  await page.getByRole('button', { name: 'Choose the monthly plan' }).click();
+  await expect(page.getByRole('alert')).toContainText('Paid plans are not available yet');
 
   // A signed in visitor to the landing page is offered their projects, never "Sign in".
   await page.goto('/');
