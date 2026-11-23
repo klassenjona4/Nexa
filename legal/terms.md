@@ -45,7 +45,7 @@ You must be 16 or older to create an account. Nexa is intended for students work
 
 ## Your account
 
-You sign in with a one time link sent to your email address or with Google. Keep access to your email account secure. Tell the operator at nexa.legal@web.de if you think someone else has used your account.
+You sign in with a one time link sent to your email address or with Google. Keep access to your email account secure. Tell the operator at hello@nexa-groups.com if you think someone else has used your account.
 
 ## Acceptable use
 
@@ -98,4 +98,4 @@ These terms are governed by the law of Ireland. The courts of Ireland have juris
 
 ## Contact
 
-Jona Klassen, [ADDRESS], Ireland. nexa.legal@web.de.
+Jona Klassen, [ADDRESS], Ireland. hello@nexa-groups.com.

@@ -11,7 +11,7 @@ updated: 12/11/2026
 
 Nexa is operated by Jona Klassen. Jona Klassen is the controller of the personal data described in this policy under the General Data Protection Regulation (GDPR).
 
-Contact for all privacy questions and requests: nexa.legal@web.de.
+Contact for all privacy questions and requests: hello@nexa-groups.com.
 
 Nexa is not required to appoint a data protection officer.
 
@@ -74,7 +74,7 @@ If you choose to sign in with Google, Google Ireland Limited processes your sign
 
 ## International transfers
 
-Some processors are based in the United States or can access data from there. Transfers are protected by the EU-US Data Privacy Framework where the processor is certified under it, and otherwise by the standard contractual clauses adopted by the European Commission (Article 46(2)(c) GDPR). You can request a copy of the safeguards at nexa.legal@web.de.
+Some processors are based in the United States or can access data from there. Transfers are protected by the EU-US Data Privacy Framework where the processor is certified under it, and otherwise by the standard contractual clauses adopted by the European Commission (Article 46(2)(c) GDPR). You can request a copy of the safeguards at hello@nexa-groups.com.
 
 ## How long data is kept
 
@@ -101,7 +101,7 @@ You have the right to:
 - receive your data in a portable format;
 - object to processing based on legitimate interest.
 
-Use Download my data in account settings for a copy of your data, edit your name in account settings, and use Delete account to delete your account. For any other request, email nexa.legal@web.de. Nexa replies within one month.
+Use Download my data in account settings for a copy of your data, edit your name in account settings, and use Delete account to delete your account. For any other request, email hello@nexa-groups.com. Nexa replies within one month.
 
 You have the right to lodge a complaint with the Data Protection Commission, 21 Fitzwilliam Square South, Dublin 2, D02 RD28, Ireland, www.dataprotection.ie.
 
