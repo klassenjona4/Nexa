@@ -148,9 +148,9 @@ Nexa also stops all AI requests for the day after 500 across all projects. Chang
 
 Complete `[ADDRESS]` in `legal/terms.md`, have both documents reviewed by a legal professional, then change `status: draft` to `status: final`. The pages then show "Last updated" instead of the draft label.
 
-**Custom domain (later)**
+**Custom domain**
 
-Add it in Vercel, update `APP_URL`, the Supabase Site URL and redirect URLs, the Vault secret `nexa_app_url`, and the Resend sender.
+Production runs on `https://nexa-groups.com` (registered through Vercel, DNS on Vercel). `www.nexa-groups.com` redirects to it. When the domain changes, update `APP_URL`, the Supabase Site URL and redirect URLs, the Vault secret `nexa_app_url`, the Resend sender and the Google OAuth authorised domains. The full setup log is in `docs/domain-setup.md`.
 
 ## Accessibility
 
