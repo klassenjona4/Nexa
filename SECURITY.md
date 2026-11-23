@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Email **nexa.legal@web.de** with a description, the steps to reproduce and the impact. Please do not open a public issue and do not access, change or delete other people's data while testing.
+Email **hello@nexa-groups.com** with a description, the steps to reproduce and the impact. Please do not open a public issue and do not access, change or delete other people's data while testing.
 
 You will receive a reply within 5 working days. Confirmed issues are fixed as quickly as possible and you are told when the fix is released. Please allow 90 days before public disclosure. Good faith research that follows these rules will not lead to legal action.
 

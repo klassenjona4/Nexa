@@ -13,20 +13,19 @@ Domain: `nexa-groups.com`, registered 23/11/2026 through Vercel (team `klassenjo
 | 5 | Changed Vault secret `nexa_app_url` to `https://nexa-groups.com` | Supabase SQL: `vault.update_secret` | pg_cron reminder and retention jobs call the new address |
 | 6 | Redeployed production so the new `APP_URL` is used | Vercel, Deployments | New production deployment |
 | 7 | Contact address in privacy policy, terms and `security.txt` changed to `hello@nexa-groups.com`; `security.txt` canonical URL moved to the new domain | Repository | Goes live with the next merge to `main` |
+| 8 | Supabase Site URL and redirect URLs, Google OAuth authorised domain, Resend domain (EU, records added automatically by Resend), ImprovMX alias `hello` | Dashboards (owner) | Done and tested by the owner |
+| 9 | `EMAIL_FROM` changed from the Resend test sender `onboarding@resend.dev` (which only delivers to the Resend account owner) to `Nexa <noreply@nexa-groups.com>`; production redeployed | Vercel | Sign in and invite emails reach every user |
+| 10 | Checked `https://nexa-groups.com/api/health`: 200 `{"ok":true}`, region `dub1`, all security headers present | | Passed |
 
-`nexa-groups.vercel.app` still serves the app, so old links keep working. Redirect it to `nexa-groups.com` once sign in works on the new domain (step 10 below).
+`nexa-groups.vercel.app` still serves the app, so old links keep working. Sign in works on the new domain, so it can now redirect to `nexa-groups.com` (step 11 below).
 
 ## To do by hand (dashboards only the owner can reach)
 
 | # | Step | Where |
 |---|---|---|
-| 8 | Site URL `https://nexa-groups.com`; add redirect URL `https://nexa-groups.com/**`; keep `https://nexa-groups.vercel.app/**` and `http://localhost:5173/**` | Supabase, Authentication, URL Configuration |
-| 9 | Add `nexa-groups.com` to Authorised domains; update home page, privacy and terms links | Google Cloud Console, OAuth consent screen (Branding) |
-| 10 | After testing sign in: edit `nexa-groups.vercel.app`, Redirect to `nexa-groups.com`, 308 | Vercel, project nexa, Settings, Domains |
-| 11 | Add domain `nexa-groups.com`, region EU (eu-west-1); send the records to Claude or add them in Vercel DNS; click Verify | resend.com, Domains |
-| 12 | Set `EMAIL_FROM` to `Nexa <noreply@nexa-groups.com>`, then redeploy | Vercel, Environment Variables |
-| 13 | Create an account, add domain `nexa-groups.com`, alias `hello` forwarding to the personal inbox | improvmx.com |
-| 14 | Optional: Gmail, Settings, Accounts, Send mail as `hello@nexa-groups.com`; SMTP `smtp.resend.com`, port 465, user `resend`, password a Resend API key | Gmail |
+| 11 | Edit `nexa-groups.vercel.app` and `nexa-seven-zeta.vercel.app`: Redirect to `nexa-groups.com`, 308 | Vercel, project nexa, Settings, Domains |
+| 12 | Merge branch `claude/wizardly-sagan-hk1v0b` into `main` (contact address and this log) | GitHub |
+| 13 | Optional: Gmail, Settings, Accounts, Send mail as `hello@nexa-groups.com`; SMTP `smtp.resend.com`, port 465, user `resend`, password a Resend API key | Gmail |
 
 ## DNS records for email
 
@@ -38,9 +37,11 @@ Added in Vercel DNS for `nexa-groups.com`.
 | Receiving (ImprovMX) | MX | `@` | `mx2.improvmx.com` | 20 |
 | Receiving SPF (ImprovMX) | TXT | `@` | `v=spf1 include:spf.improvmx.com ~all` | |
 | DMARC | TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:hello@nexa-groups.com` | |
-| Sending (Resend) | as shown by Resend | `send`, `resend._domainkey` | DKIM key and SPF for the `send` subdomain | |
+| Sending DKIM (Resend) | TXT | `resend._domainkey` | public DKIM key | |
+| Sending (Resend, EU) | CNAME | `send` | `send.forge.rmta.net` | |
+| Sending (Resend, EU) | CNAME | `rsend` | `rsend-euw1.forge.rmta.net` | |
 
-Resend sends from the `send` subdomain, so its SPF record does not clash with the ImprovMX record on the root.
+Resend uses the `send` subdomain as its return path, so its SPF does not clash with the ImprovMX SPF record on the root.
 
 ## Checks after setup
 
