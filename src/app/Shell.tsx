@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useMemo } from 'react';
 import { Link, matchPath, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { HelpChat } from '../components/HelpChat';
+import { useApplyUpdateOnNavigate } from '../lib/appUpdate';
 import { Avatar } from '../components/Avatar';
 import { ButtonLink } from '../components/Button';
 import { Label } from '../components/Label';
@@ -43,6 +44,7 @@ function useRouteInfo() {
 }
 
 export function AppShell() {
+  useApplyUpdateOnNavigate();
   const bp = useBreakpoint();
   const desktop = bp === 'desktop';
   const { user, profile, signOut } = useAuth();
@@ -193,6 +195,7 @@ export function AppShell() {
 }
 
 export function PublicShell({ showSignIn = true, children }: { showSignIn?: boolean; children?: ReactNode }) {
+  useApplyUpdateOnNavigate();
   const { session } = useAuth();
   const { pathname } = useLocation();
   const onAuthPage = pathname.startsWith('/sign-in') || pathname.startsWith('/auth/');

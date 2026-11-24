@@ -10,6 +10,10 @@ for (const strategy of ['NetworkFirst', 'CacheFirst', 'StaleWhileRevalidate', 'N
 if (/precacheAndRoute\([^)]*\/api\//.test(sw)) problems.push('sw.js precaches an API path.');
 if (!sw.includes('api')) problems.push('sw.js does not exclude /api from the navigation fallback.');
 
+const html = readFileSync(`${dist}index.html`, 'utf8');
+if (html.includes('registerSW.js')) problems.push('index.html injects registerSW.js; the app registers the service worker itself (src/lib/appUpdate.ts).');
+if (!/self\.skipWaiting\(\)[,;]/.test(sw)) problems.push('sw.js does not take over at once when a new version is deployed (skipWaiting missing).');
+
 const manifest = JSON.parse(readFileSync(`${dist}manifest.webmanifest`, 'utf8'));
 for (const key of ['name', 'short_name', 'start_url', 'display', 'theme_color', 'background_color']) {
   if (!manifest[key]) problems.push(`manifest is missing ${key}.`);
