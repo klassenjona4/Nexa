@@ -8,8 +8,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // A new version takes over at once (skipWaiting, clientsClaim). The app registers the service
+      // worker itself (src/lib/appUpdate.ts) and reloads onto it when nothing can be lost.
       registerType: 'autoUpdate',
-      injectRegister: 'script',
+      injectRegister: false,
       includeAssets: ['icon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
         name: 'Nexa',
@@ -38,6 +40,8 @@ export default defineConfig({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//, /^\/auth\//],
         cleanupOutdatedCaches: true,
+        // Set explicitly: the plugin only adds these itself when it injects its own register script.
+        skipWaiting: true,
         clientsClaim: true,
       },
       devOptions: { enabled: false },
