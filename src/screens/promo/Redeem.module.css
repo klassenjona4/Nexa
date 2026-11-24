@@ -32,10 +32,81 @@
   font-size: 0.8125rem;
   color: var(--graphite);
 }
-.confirm {
-  border-left: 3px solid var(--ink);
-  padding-left: var(--s4);
-}
 .start {
   align-self: flex-start;
+}
+
+/* The offer, in the Rust accent: a solid block with white text, so it reads as an offer and not
+   as an error. White on Rust is 5.3 : 1. */
+.offer {
+  background: var(--rust);
+  color: var(--white);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.offerLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+.offerTitle {
+  font-weight: 700;
+  font-size: 2.25rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+@media (min-width: 600px) {
+  .offerTitle {
+    font-size: 2.75rem;
+  }
+}
+.offerCompact .offerTitle {
+  font-size: 1.75rem;
+}
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+  font-size: 1.125rem;
+}
+.priceNow {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+.priceWas {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+.offerList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.offerList li::before {
+  content: '+';
+  font-weight: 700;
+  margin-right: var(--s2);
+}
+.offerText {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.cta {
+  background: var(--rust);
+  border-color: var(--rust);
+  color: var(--white);
+}
+.cta:hover:not(:disabled) {
+  background: var(--ink);
+  border-color: var(--ink);
 }

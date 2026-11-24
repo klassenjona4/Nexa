@@ -1,15 +1,15 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { type FormEvent, useState } from 'react';
-import { formatDate, formatLongDate, formatTime } from '../../../shared/dates';
+import { formatDate, formatTime } from '../../../shared/dates';
 import { normalisePromoCode } from '../../../shared/promo';
 import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
 import { Button } from '../../components/Button';
 import { TextField } from '../../components/Field';
-import { Label } from '../../components/Label';
 import { codeOf } from '../../lib/api';
 import { errorMessage } from '../../lib/errors';
 import { redeemCode, type RedeemPromoResponse, useEmailUpdates } from '../../lib/promo';
+import { PromoActive } from './PromoOffer';
 import s from './Redeem.module.css';
 
 // The plain terms shown before and after redeeming. No payment details, no automatic renewal.
@@ -22,11 +22,9 @@ export function PremiumTerms() {
 }
 
 export function RedeemConfirmation({ result, headingLevel = 'h1' }: { result: RedeemPromoResponse; headingLevel?: 'h1' | 'h3' }) {
-  const H = headingLevel;
   return (
-    <div role="status" className={[s.confirm, p.stack].join(' ')}>
-      <Label>Premium is active</Label>
-      <H className={headingLevel === 'h1' ? p.h1 : p.h3}>Premium until {formatLongDate(result.premium_until)}</H>
+    <div role="status" className={p.stack}>
+      <PromoActive premiumUntil={result.premium_until} headingLevel={headingLevel} />
       <p className={p.serif}>
         Your free Premium runs for {result.premium_days} days, until <strong>{formatDate(result.premium_until)} at {formatTime(result.premium_until)}</strong> Irish time. After that it simply ends and your account goes back to the Free plan.
         No payment details were collected and nothing renews automatically.
@@ -39,7 +37,7 @@ export function RedeemConfirmation({ result, headingLevel = 'h1' }: { result: Re
 }
 
 // Used on the redeem page (code from the QR link) and in account settings.
-export function RedeemForm({ initialCode = '', onRedeemed, compact = false }: { initialCode?: string; onRedeemed: (r: RedeemPromoResponse) => void; compact?: boolean }) {
+export function RedeemForm({ initialCode = '', onRedeemed, compact = false, submitLabel = 'Redeem code' }: { initialCode?: string; onRedeemed: (r: RedeemPromoResponse) => void; compact?: boolean; submitLabel?: string }) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const consent = useEmailUpdates(user?.id);
@@ -102,8 +100,8 @@ export function RedeemForm({ initialCode = '', onRedeemed, compact = false }: { 
           </span>
         </label>
       )}
-      <Button type="submit" size={compact ? undefined : 'lg'} disabled={busy} className={compact ? s.start : undefined}>
-        {busy ? 'Redeeming' : 'Redeem code'}
+      <Button type="submit" size={compact ? undefined : 'lg'} disabled={busy} className={compact ? s.start : s.cta}>
+        {busy ? 'Redeeming' : submitLabel}
       </Button>
     </form>
   );

@@ -41,7 +41,8 @@ test('scan, sign up with an email address and redeem the prefilled code on a pho
   // Scanning the QR code opens the redeem link. Without an account it asks for an email address only.
   await page.goto(`/redeem?code=${code}`);
   await expect(page).toHaveURL(/\/sign-in\?next=/);
-  await expect(page.getByText('Create an account or sign in to redeem your code.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '1 month of Premium, free' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible();
   await noHorizontalScroll(page);
   await page.getByLabel('Email address').fill(email);
   await page.getByRole('button', { name: 'Send sign in link' }).click();
@@ -54,7 +55,7 @@ test('scan, sign up with an email address and redeem the prefilled code on a pho
   await expect(page).toHaveURL(new RegExp(`/redeem\\?code=${code}`));
 
   // No name is needed before redeeming. The code is filled in and the email box is not ticked.
-  await expect(page.getByRole('heading', { name: 'Redeem your code' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '1 month of Premium, free' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Code', exact: true })).toHaveValue(code);
   const emails = page.getByLabel('Send me occasional emails about Nexa.');
   await expect(emails).not.toBeChecked();
@@ -64,10 +65,11 @@ test('scan, sign up with an email address and redeem the prefilled code on a pho
   const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
   expect(axe.violations.map((v) => v.id)).toEqual([]);
 
-  await page.getByRole('button', { name: 'Redeem code' }).click();
+  await page.getByRole('button', { name: 'Get my free month' }).click();
   const confirmation = page.getByRole('status').filter({ hasText: 'Premium is active' });
   await expect(confirmation).toBeVisible();
-  await expect(confirmation.getByRole('heading', { name: /^Premium until \w+day \d{2}\/\d{2}\/\d{4}$/ })).toBeVisible();
+  await expect(confirmation.getByRole('heading', { name: 'Your free month of Premium has started' })).toBeVisible();
+  await expect(confirmation.getByText(/^Free until \w+day \d{2}\/\d{2}\/\d{4}$/)).toBeVisible();
   await expect(confirmation).toContainText('runs for 30 days');
   await expect(confirmation).toContainText('goes back to the Free plan');
   await expect(confirmation).toContainText('No payment details were collected and nothing renews automatically.');
@@ -132,12 +134,12 @@ test('codes outside their window, at their cap or deactivated give the same mess
   await page.getByLabel('Email address').fill(email);
   await page.getByRole('button', { name: 'Send sign in link' }).click();
   await page.goto(await latestLink(page, email, /http:\/\/localhost:5173\/auth\/confirm\?\S+/));
-  await expect(page.getByRole('heading', { name: 'Redeem your code' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '1 month of Premium, free' })).toBeVisible();
 
   // The local test stack raises rate limits (RATE_LIMIT_MULTIPLIER); unit tests prove the limit of 5.
   for (const code of [early, late, off, full, 'BCDFGHJK22']) {
     await page.getByRole('textbox', { name: 'Code', exact: true }).fill(code);
-    await page.getByRole('button', { name: 'Redeem code' }).click();
+    await page.getByRole('button', { name: 'Get my free month' }).click();
     await expect(page.getByText('This code is invalid or has expired.')).toBeVisible();
   }
   const { data } = await admin.from('promo_codes').select('uses').in('code', [early, late, off]);

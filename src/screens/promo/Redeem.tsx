@@ -4,6 +4,7 @@ import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
 import { ButtonLink } from '../../components/Button';
 import type { RedeemPromoResponse } from '../../lib/promo';
+import { PromoOffer } from './PromoOffer';
 import { PremiumTerms, RedeemConfirmation, RedeemForm } from './RedeemForm';
 import s from './Redeem.module.css';
 
@@ -38,13 +39,8 @@ export function Redeem() {
   return (
     <div className={p.content}>
       <section className={s.panel} aria-labelledby="redeem-title">
-        <div className={p.stack}>
-          <h1 id="redeem-title" className={p.h1}>
-            Redeem your code
-          </h1>
-          <p className={p.intro}>Premium gives you everything in the monthly plan: unlimited projects, and brief breakdowns and statements within the fair use limit of each project.</p>
-        </div>
-        <RedeemForm initialCode={initialCode} onRedeemed={setResult} />
+        <PromoOffer headingId="redeem-title" />
+        <RedeemForm initialCode={initialCode} onRedeemed={setResult} submitLabel="Get my free month" />
         <PremiumTerms />
       </section>
     </div>
