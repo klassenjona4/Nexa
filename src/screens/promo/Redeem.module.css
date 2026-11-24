@@ -1,0 +1,41 @@
+.panel {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+.code input {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.consent {
+  display: flex;
+  gap: var(--s3);
+  align-items: flex-start;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  min-height: 44px;
+  cursor: pointer;
+}
+.consent input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex: none;
+  accent-color: var(--ink);
+}
+.consentHint {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}
+.confirm {
+  border-left: 3px solid var(--ink);
+  padding-left: var(--s4);
+}
+.start {
+  align-self: flex-start;
+}

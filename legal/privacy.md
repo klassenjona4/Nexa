@@ -1,8 +1,8 @@
 ---
 title: Privacy policy
 status: draft
-version: 0.3
-updated: 12/11/2026
+version: 0.4
+updated: 24/11/2026
 ---
 
 > DRAFT. This privacy policy has not been reviewed by a legal professional. It must be reviewed and the bracketed details completed before Nexa is launched.
@@ -17,6 +17,16 @@ Nexa is not required to appoint a data protection officer.
 
 This policy explains which personal data Nexa processes, why, on which legal basis, who receives it, how long it is kept and which rights you have.
 
+## What you give Nexa when you sign up
+
+To create an account Nexa needs only your email address. It is used to send you sign in links and to identify your account. After your first sign in Nexa asks for your name, which members of your groups see. If you sign in with Google, Nexa receives the details listed under Account data below instead of a sign in link.
+
+If you redeem a code, for example at an event, Nexa records which code campaign you redeemed, when, and the date your free Premium ends. Premium from a code ends on its own; Nexa does not ask for or store any payment details for it.
+
+When you redeem a code, Nexa also asks whether you want occasional emails about Nexa. The box is not ticked unless you tick it, and you can redeem the code without it. Nexa stores your choice and the time you made it.
+
+This data is kept until you delete your account (see How long data is kept). To delete it, use Delete account in account settings, or email hello@nexa-groups.com and ask for deletion.
+
 ## Data Nexa collects
 
 - Account data: your email address and your name. If you sign in with Google, Nexa also receives the Google account identifier, name and email address that Google shares.
@@ -27,6 +37,8 @@ This policy explains which personal data Nexa processes, why, on which legal bas
 - Contribution records: the contribution log and contribution statements.
 - Invite data: the email addresses of people a group owner invites.
 - Calendar data: the date a calendar link was created and last read by a calendar app.
+- Premium from a code: the campaign of each code you redeemed, the time you redeemed it and the date your free Premium ends.
+- Email preference: whether you want occasional emails about Nexa, when you made or last changed that choice, and where (when redeeming a code or in account settings).
 - Billing data, if you pay: your plan, the number of unused project unlocks, the status and renewal date of a monthly plan, the amount, currency and date of each payment, and the identifiers Stripe gives your customer record, payments and subscription. Nexa never receives or stores your card or bank details. Stripe collects them directly.
 - Help chat questions: the questions you type into the help chat and the answers. They are sent to the AI model to write the answer and are not stored by Nexa.
 - Technical data: your IP address and browser details when you use Nexa. Nexa does not store your IP address. For rate limiting it stores a keyed, one way hash of it for up to 24 hours. The hosting providers named below keep short technical logs.
@@ -40,6 +52,8 @@ You provide your email address so that Nexa can sign you in. Without it, you can
 - To send an invite to an email address that a group owner enters. Legal basis: the legitimate interest of the group in inviting members, Article 6(1)(f) GDPR. The address is used only to send the invite and to show the owner that the invite is pending.
 - To take payments for project unlocks and the monthly plan, apply them to your account and send receipts. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
 - To keep payment and invoice records for as long as tax law requires. Legal basis: legal obligation, Article 6(1)(c) GDPR. [TO REVIEW: confirm the retention period under Irish tax law, usually 6 years.]
+- To give you Premium for the free period of a code you redeemed, and to make sure each person redeems a campaign only once and a code is not used more often than allowed. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
+- To send you occasional emails about Nexa, only if you ticked the box. Legal basis: your consent, Article 6(1)(a) GDPR, and Regulation 13 of the ePrivacy Regulations (S.I. No. 336 of 2011). Giving consent is optional and is never a condition for an account, a code or any feature. You can withdraw it at any time in account settings, or with the unsubscribe link in each of these emails. Withdrawing does not affect emails sent before. Sign in links, invites, reminders and deletion notices are part of the service and are not affected by this choice.
 - To answer questions in the help chat. Legal basis: legitimate interest in helping people use Nexa, Article 6(1)(f) GDPR. You decide whether to use the chat.
 - To keep log entries accurate after a member leaves or deletes their account. Legal basis: the legitimate interest of the other group members in a reliable contribution record for their assessment, Article 6(1)(f) GDPR. These entries are shown as Former member and are not linked to your identity.
 - To keep Nexa secure, prevent misuse, apply rate limits and fix errors. Legal basis: legitimate interest in a secure and working service, Article 6(1)(f) GDPR.
@@ -79,6 +93,8 @@ Some processors are based in the United States or can access data from there. Tr
 ## How long data is kept
 
 - Account data: until you delete your account. Deletion is immediate.
+- Premium from a code and your redemptions: until you delete your account. Nexa keeps only an anonymous count of how often each code was used.
+- Your email preference and the time you made it: until you delete your account, so that Nexa can show that it had your consent. If you withdraw consent, Nexa stops sending these emails immediately and keeps only the record of your choice.
 - Projects, including tasks, briefs, files, the contribution log and statements: until a group owner deletes the group, or 30 days after the last activity in the project or 30 days after its final deadline, whichever is later. All members are emailed 7 days before automatic deletion and any member can keep the project.
 - Brief details extracted by AI that are never accepted: 30 days.
 - Invites: until they expire after 7 days, are revoked, or the group is deleted.
@@ -101,7 +117,7 @@ You have the right to:
 - receive your data in a portable format;
 - object to processing based on legitimate interest.
 
-Use Download my data in account settings for a copy of your data, edit your name in account settings, and use Delete account to delete your account. For any other request, email hello@nexa-groups.com. Nexa replies within one month.
+Use Download my data in account settings for a copy of your data, edit your name in account settings, change your email preference in account settings, and use Delete account to delete your account and the data described in this policy. For any other request, email hello@nexa-groups.com. Nexa replies within one month.
 
 You have the right to lodge a complaint with the Data Protection Commission, 21 Fitzwilliam Square South, Dublin 2, D02 RD28, Ireland, www.dataprotection.ie.
 

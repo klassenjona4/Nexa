@@ -34,6 +34,8 @@ const MESSAGES: Record<string, string> = {
   payments_unavailable: 'Paid plans are not available yet. Nexa is completing its business registration, so nothing can be bought at the moment. You can keep using the free plan.',
   already_subscribed: 'Your monthly plan is already active.',
   no_billing_account: 'There are no payments on this account yet.',
+  promo_invalid: 'This code is invalid or has expired.',
+  promo_already_redeemed: 'You have already redeemed this code. Your Premium end date is in account settings.',
   checkout_unavailable: 'Stripe could not be reached. Nothing was charged. Try again in a few minutes.',
 };
 

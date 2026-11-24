@@ -16,6 +16,8 @@ import s from './SignIn.module.css';
 export function SignIn() {
   const [params] = useSearchParams();
   const next = safeNextPathOrDefault(params.get('next'));
+  // Arrived from a code link: the code stays in `next` through the sign in email.
+  const redeeming = next.startsWith('/redeem');
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState<string | null>(null);
@@ -96,7 +98,11 @@ export function SignIn() {
           <h1 id="signin-title" className={p.h1}>
             Sign in to Nexa
           </h1>
-          <p className={p.intro}>Enter your email address and a sign in link will be sent to it. No password is needed. A new account is created the first time you sign in.</p>
+          {redeeming ? (
+            <p className={p.intro}>Create an account or sign in to redeem your code. Enter your email address and a sign in link will be sent to it. No password is needed.</p>
+          ) : (
+            <p className={p.intro}>Enter your email address and a sign in link will be sent to it. No password is needed. A new account is created the first time you sign in.</p>
+          )}
         </div>
         {failure ? <ErrorPanel title="The sign in link was not sent" body={failure} /> : null}
         <form onSubmit={onSubmit} className={p.stack} noValidate>

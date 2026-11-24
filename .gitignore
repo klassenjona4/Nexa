@@ -13,3 +13,4 @@ playwright-report
 supabase/.branches
 supabase/.temp
 test-results
+promo-out

@@ -66,6 +66,7 @@ export type BillingAccount = {
   cancel_at_period_end: boolean;
   project_credits: number;
   free_project_used: boolean;
+  premium_until: string | null;
   has_customer: boolean;
 };
 
@@ -76,7 +77,7 @@ export function useBillingAccount(userId: string | undefined) {
     queryFn: async (): Promise<BillingAccount | null> => {
       const { data, error } = await supabase
         .from('billing_accounts')
-        .select('subscription_status, current_period_end, cancel_at_period_end, project_credits, free_project_used, stripe_customer_id')
+        .select('subscription_status, current_period_end, cancel_at_period_end, project_credits, free_project_used, premium_until, stripe_customer_id')
         .maybeSingle();
       if (error) throw error;
       if (!data) return null;

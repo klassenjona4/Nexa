@@ -42,5 +42,7 @@ for f in "$ROOT"/supabase/tests/database/*.test.sql; do
   fi
 done
 
+bash "$ROOT/scripts/db-test-concurrency.sh" "${PSQL[@]}" -d nexa_test || status=1
+
 if [ "$status" = "0" ]; then echo "All database tests passed."; else echo "Database tests failed."; fi
 exit "$status"

@@ -24,6 +24,7 @@ import { AuthProvider } from './AuthProvider';
 import { RequireAuth } from './RequireAuth';
 import { Help } from '../screens/help/Help';
 import { Pricing } from '../screens/pricing/Pricing';
+import { Redeem } from '../screens/promo/Redeem';
 import { AppShell, PublicShell } from './Shell';
 
 const queryClient = new QueryClient({
@@ -52,6 +53,8 @@ const router = createBrowserRouter([
     element: <PublicShell showSignIn={false} />,
     children: [
       { element: <RequireAuth allowWithoutName />, children: [{ path: '/welcome', element: <Welcome /> }] },
+      // Redeeming needs only an email address; the name is asked for afterwards.
+      { element: <RequireAuth allowWithoutName />, children: [{ path: '/redeem', element: <Redeem /> }] },
       { element: <RequireAuth />, children: [{ path: '/join/:code/accept', element: <JoinAccept /> }] },
     ],
   },

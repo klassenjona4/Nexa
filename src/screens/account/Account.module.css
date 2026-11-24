@@ -47,3 +47,19 @@
   min-height: 44px;
   font-size: 0.9375rem;
 }
+.consent {
+  display: flex;
+  gap: var(--s3);
+  align-items: flex-start;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  min-height: 44px;
+  cursor: pointer;
+}
+.consent input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex: none;
+  accent-color: var(--ink);
+}

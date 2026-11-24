@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type FormEvent, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { formatDate, formatDateTime } from '../../../shared/dates';
+import { formatDate, formatDateTime, formatTime } from '../../../shared/dates';
 import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
@@ -14,7 +14,9 @@ import { api, codeOf } from '../../lib/api';
 import { openBillingPortal, useBillingAccount, useEntitlements } from '../../lib/billing';
 import { downloadFromApi } from '../../lib/download';
 import { errorMessage } from '../../lib/errors';
+import { premiumActive, type RedeemPromoResponse, saveEmailUpdates, useEmailUpdates } from '../../lib/promo';
 import { supabase } from '../../lib/supabase';
+import { RedeemConfirmation, RedeemForm } from '../promo/RedeemForm';
 import s from './Account.module.css';
 
 type Feed = { id: string; created_at: string; last_read_at: string | null; project: string };
@@ -74,6 +76,10 @@ export function Account() {
         </form>
 
         <Billing userId={user?.id} />
+
+        <RedeemSection />
+
+        <EmailUpdates userId={user?.id} />
 
         <section className={s.section} aria-labelledby="cal-title">
           <h2 id="cal-title" className={[p.h2, p.h2Rule].join(' ')} style={{ marginBottom: -16 }}>
@@ -217,8 +223,14 @@ function Billing({ userId }: { userId: string | undefined }) {
   const active = entitlements.data?.subscriptionActive ?? false;
   const status = a?.subscription_status;
 
+  const [now] = useState(() => Date.now());
+  const stripeActive = !!status && ['active', 'trialing', 'past_due'].includes(status) && (!a?.current_period_end || new Date(a.current_period_end).getTime() > now);
+  const premium = premiumActive(a?.premium_until, now);
+
   let plan: string;
-  if (active && a?.current_period_end) {
+  if (premium && !stripeActive && a?.premium_until) {
+    plan = `Premium, free from a code, until ${formatDate(a.premium_until)} at ${formatTime(a.premium_until)}.`;
+  } else if (active && a?.current_period_end) {
     plan = a.cancel_at_period_end ? `Monthly plan, ends on ${formatDate(a.current_period_end)}.` : `Monthly plan, renews on ${formatDate(a.current_period_end)}.`;
   } else if (active) {
     plan = 'Monthly plan.';
@@ -239,6 +251,14 @@ function Billing({ userId }: { userId: string | undefined }) {
           <>
             <dt style={{ fontWeight: 600, fontSize: '0.875rem' }}>Monthly plan status</dt>
             <dd style={{ margin: 0 }}>{STATUS[status] ?? status}</dd>
+          </>
+        ) : null}
+        {premium && a?.premium_until ? (
+          <>
+            <dt style={{ fontWeight: 600, fontSize: '0.875rem' }}>Premium ends</dt>
+            <dd style={{ margin: 0 }}>
+              {formatDate(a.premium_until)} at {formatTime(a.premium_until)}. It does not renew: your account then goes back to the Free plan. No payment details are stored.
+            </dd>
           </>
         ) : null}
         <dt style={{ fontWeight: 600, fontSize: '0.875rem' }}>Free project</dt>
@@ -270,6 +290,69 @@ function Billing({ userId }: { userId: string | undefined }) {
         ) : null}
       </div>
       {a?.has_customer ? <p className={p.caption}>Manage billing opens Stripe, where you can cancel the monthly plan, change your card and download invoices.</p> : null}
+    </section>
+  );
+}
+
+function RedeemSection() {
+  const [result, setResult] = useState<RedeemPromoResponse | null>(null);
+  return (
+    <section className={s.section} aria-labelledby="redeem-title">
+      <h2 id="redeem-title" className={[p.h2, p.h2Rule].join(' ')}>
+        Redeem code
+      </h2>
+      {result ? (
+        <RedeemConfirmation result={result} headingLevel="h3" />
+      ) : (
+        <div className={s.row}>
+          <RedeemForm compact onRedeemed={setResult} />
+        </div>
+      )}
+    </section>
+  );
+}
+
+function EmailUpdates({ userId }: { userId: string | undefined }) {
+  const consent = useEmailUpdates(userId);
+  const qc = useQueryClient();
+  const toast = useToast();
+  const [busy, setBusy] = useState(false);
+  // Shows the new choice at once and returns to the stored one if saving fails.
+  const [pending, setPending] = useState<boolean | null>(null);
+  const checked = pending ?? consent.data?.email_updates ?? false;
+
+  return (
+    <section className={s.section} aria-labelledby="emails-title">
+      <h2 id="emails-title" className={[p.h2, p.h2Rule].join(' ')}>
+        Emails about Nexa
+      </h2>
+      <label className={s.consent}>
+        <input
+          type="checkbox"
+          checked={checked}
+          disabled={busy || consent.isPending}
+          onChange={async (e) => {
+            const value = e.target.checked;
+            setPending(value);
+            setBusy(true);
+            try {
+              await saveEmailUpdates(value);
+              await qc.invalidateQueries({ queryKey: ['email-updates', userId] });
+              toast.show(value ? 'You will receive occasional emails about Nexa.' : 'You will no longer receive emails about Nexa.');
+            } catch (err) {
+              toast.show(`Error: ${errorMessage(codeOf(err))}`);
+            } finally {
+              setPending(null);
+              setBusy(false);
+            }
+          }}
+        />
+        <span>Send me occasional emails about Nexa.</span>
+      </label>
+      <p className={p.caption}>
+        Optional. Sign in links, invites, reminders and deletion notices are sent either way.
+        {consent.data ? ` Last changed ${formatDateTime(consent.data.decided_at)}.` : ''}
+      </p>
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { deleteAccount } from '../../shared/schemas/account.js';
+import { emailUpdatesRequest } from '../../shared/schemas/promo.js';
 import { type AppEnv, requireUser } from '../context.js';
 import { HttpError } from '../http.js';
 import { log } from '../logger.js';
@@ -10,6 +11,22 @@ import { parse, readJson } from '../validate.js';
 
 export const accountRoutes = new Hono<AppEnv>();
 accountRoutes.use('*', requireUser);
+
+// Stores the choice about occasional emails about Nexa with the time it was made. Consent is
+// never a condition for anything else, and it can be withdrawn here as easily as it was given.
+export async function saveEmailUpdates(userId: string, emailUpdates: boolean, source: 'redeem' | 'account'): Promise<void> {
+  const { error } = await adminClient()
+    .from('marketing_consents')
+    .upsert({ user_id: userId, email_updates: emailUpdates, decided_at: new Date().toISOString(), source }, { onConflict: 'user_id' });
+  if (error) throw new HttpError(500, 'server_error');
+}
+
+accountRoutes.put('/email-updates', async (c) => {
+  const body = parse(emailUpdatesRequest, await readJson(c));
+  await rateLimit([{ limit: LIMITS.consentUser, key: c.var.user.id }]);
+  await saveEmailUpdates(c.var.user.id, body.email_updates, 'account');
+  return c.json({ ok: true });
+});
 
 // All personal data of the signed-in user as JSON (GDPR Articles 15 and 20).
 accountRoutes.get('/export', async (c) => {
