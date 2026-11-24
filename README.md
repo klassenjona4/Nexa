@@ -22,7 +22,7 @@ Nexa helps university student groups coordinate group assignments. A member uplo
 ```
 api/                 Vercel function entry points (one Hono app)
 server/              API routes, services (AI, email, storage), rate limits, tokens, logger
-shared/              zod schemas, date helpers, iCalendar builder, database types
+shared/              zod schemas, date helpers, database types
 src/                 React app: components, screens, app shell, client libraries
 supabase/            config.toml, migrations, pgTAP tests
 e2e/                 Playwright tests (375 and 1280 px)
@@ -40,7 +40,7 @@ npm ci
 npx supabase start          # local Postgres, Auth, Storage, Realtime; applies all migrations
 node scripts/local-env.mjs  # writes .env.local from `supabase status` (local keys only)
 npm run dev:api             # API on http://localhost:8787
-npm run dev                 # app on http://localhost:5173 (proxies /api and /cal)
+npm run dev                 # app on http://localhost:5173 (proxies /api)
 ```
 
 `.env.local` sets `NEXA_TEST_MODE=1` with `EMAIL_MOCK=1` and `AI_MOCK=1`, so no email is sent and no AI call is made. Sign in links are available at `http://localhost:8787/api/test/outbox`. The test helpers only work with `NEXA_TEST_MODE=1` and never on Vercel or Replit, and the API refuses to start on a hosted platform where any of these settings is switched on. To try the real Claude API locally, set `AI_MOCK=0` and add `ANTHROPIC_API_KEY` to `.env.local`.
@@ -87,7 +87,7 @@ Set these in Vercel (Project settings, Environment Variables) for Production and
 
 Only for local development and tests: `NEXA_TEST_MODE`, `AI_MOCK`, `EMAIL_MOCK`, `RATE_LIMIT_MULTIPLIER`, `API_PORT`. Never set the first four in Vercel: the API refuses to start on a deployment that has any of them switched on.
 
-Rotating `TOKEN_SECRET` invalidates all invite and calendar links.
+Rotating `TOKEN_SECRET` invalidates all invite links.
 
 ### Help chat
 

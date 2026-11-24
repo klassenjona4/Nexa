@@ -12,7 +12,6 @@
     { "source": "/api/projects/:id/briefs/analyse", "destination": "/api/ai" },
     { "source": "/api/projects/:id/statements/generate", "destination": "/api/ai" },
     { "source": "/api/:path*", "destination": "/api/index" },
-    { "source": "/cal/:path*", "destination": "/api/index" },
     { "source": "/((?!api/|cal/|assets/)[^.]*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -34,10 +33,6 @@
     },
     {
       "source": "/join/(.*)",
-      "headers": [{ "key": "Referrer-Policy", "value": "no-referrer" }]
-    },
-    {
-      "source": "/cal/(.*)",
       "headers": [{ "key": "Referrer-Policy", "value": "no-referrer" }]
     },
     {

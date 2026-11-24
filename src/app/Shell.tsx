@@ -16,7 +16,6 @@ export const PROJECT_NAV = [
   { key: 'log', label: 'Contribution log', short: 'Log' },
   { key: 'statement', label: 'Contribution statement', short: 'Statement' },
   { key: 'invite', label: 'Invite members', short: 'Invite' },
-  { key: 'calendar', label: 'Calendar feed', short: 'Calendar' },
   { key: 'settings', label: 'Group settings', short: 'Settings' },
 ] as const;
 

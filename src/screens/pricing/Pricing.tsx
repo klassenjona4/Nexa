@@ -91,7 +91,7 @@ export function Pricing() {
             <li>1 project</li>
             <li>1 brief breakdown</li>
             <li>1 contribution statement</li>
-            <li>Task board, contribution log, invites and calendar feed</li>
+            <li>Task board, contribution log and invites</li>
           </ul>
           {session ? (
             <p className={[p.small, p.muted].join(' ')}>{entitlements.data?.freeProjectAvailable ? 'Your free project is available.' : 'Your free project is used.'}</p>

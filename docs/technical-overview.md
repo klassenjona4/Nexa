@@ -14,7 +14,7 @@ Nexa is a web app for university group assignments. A member uploads the assignm
         v
  Vercel (CDN + Node functions in Dublin, dub1)  <-- domain nexa-groups.com
    - React app (static files)
-   - Nexa API (Hono): sign in, groups, invites, briefs, statements, calendar, account, cron
+   - Nexa API (Hono): sign in, groups, invites, briefs, statements, account, cron
         |                         |                  |               |
         v                         v                  v               v
  Supabase (Ireland, eu-west-1)   Claude API        Resend (EU)     Stripe (switched off)
@@ -48,10 +48,9 @@ Data lives in Ireland. The browser talks to Supabase directly for reading data (
 | Email sending | Resend, EU region, from noreply@nexa-groups.com | Sign in links, invites, 48 hour reminders, deletion warnings | Developer-friendly, EU region, DKIM signed so it does not land in spam |
 | Email receiving | ImprovMX forwarding, hello@nexa-groups.com | Contact and privacy address | Free; forwards to the founder's inbox |
 | Scheduled jobs | Supabase pg_cron plus pg_net, secret in Supabase Vault | Hourly deadline reminders, daily data retention | Vercel's free cron only runs daily |
-| Calendar | Own iCalendar feed (`/cal/<token>.ics`) | Deadlines appear in Google, Apple and Outlook calendars | Works with every calendar without integrations |
 | PDF export | pdf-lib in the browser | Contribution statement as PDF | No server cost; nothing leaves the device |
 | Payments | Stripe Checkout and Customer Portal (built, switched off) | 2 euro one-off project unlock, 7.99 euro per month plan | Card data never touches Nexa; off until the business is registered |
-| Tests | Vitest (15 unit test files), pgTAP (6 database security test files), Playwright (9 end-to-end specs) with axe-core | Every change is checked automatically in GitHub Actions | The database tests prove one group cannot read or change another group's data |
+| Tests | Vitest (14 unit test files), pgTAP (6 database security test files), Playwright (8 end-to-end specs) with axe-core | Every change is checked automatically in GitHub Actions | The database tests prove one group cannot read or change another group's data |
 | Accessibility | WCAG 2.1 AA target, automated axe checks at phone and desktop widths | Usable with screen readers and keyboard | Universities must buy accessible software |
 | Code | About 9,600 lines of TypeScript, GitHub, CI on every change | | |
 
@@ -65,7 +64,7 @@ Data lives in Ireland. The browser talks to Supabase directly for reading data (
 - **Strict security headers.** Content Security Policy without inline scripts, HSTS, no framing. Checked live on 23/11/2026.
 - **Minimal data.** Name and email only. No analytics, no tracking cookies. Account deletion is immediate; data export is one click (JSON). Projects are deleted automatically 30 days after the last activity or the final deadline, with a warning 7 days before.
 - **AI is contained.** The brief is treated as untrusted data, the model has no tools, its output is validated and only fills a form that a human reviews. A daily ceiling of 500 AI requests caps the cost.
-- **Abuse limits.** Rate limits on sign in, invites, AI and calendar links; quotas in the database (8 members per group, 300 tasks per project).
+- **Abuse limits.** Rate limits on sign in, invites and AI; quotas in the database (8 members per group, 300 tasks per project).
 
 ## 5. Running costs today
 

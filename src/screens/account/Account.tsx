@@ -1,7 +1,7 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { type FormEvent, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { formatDate, formatDateTime } from '../../../shared/dates';
+import { formatDate } from '../../../shared/dates';
 import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
@@ -14,10 +14,7 @@ import { api, codeOf } from '../../lib/api';
 import { openBillingPortal, useBillingAccount, useEntitlements } from '../../lib/billing';
 import { downloadFromApi } from '../../lib/download';
 import { errorMessage } from '../../lib/errors';
-import { supabase } from '../../lib/supabase';
 import s from './Account.module.css';
-
-type Feed = { id: string; created_at: string; last_read_at: string | null; project: string };
 
 export function Account() {
   const { user, profile, signOut } = useAuth();
@@ -26,18 +23,8 @@ export function Account() {
   const navigate = useNavigate();
   const [name, setName] = useState(profile?.full_name ?? '');
   const [nameError, setNameError] = useState<string | null>(null);
-  const [revoke, setRevoke] = useState<Feed | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
-
-  const feeds = useQuery({
-    queryKey: ['feeds', user?.id],
-    queryFn: async (): Promise<Feed[]> => {
-      const { data, error } = await supabase.from('calendar_feeds').select('id, created_at, last_read_at, projects(title, groups(name))').is('revoked_at', null).order('created_at');
-      if (error) throw error;
-      return (data ?? []).map((f) => ({ id: f.id, created_at: f.created_at, last_read_at: f.last_read_at, project: f.projects?.groups?.name ?? f.projects?.title ?? 'Project' }));
-    },
-  });
 
   const provider = (user?.app_metadata?.provider as string | undefined) === 'google' ? 'Signed in with Google.' : 'Signed in with email link.';
 
@@ -75,32 +62,6 @@ export function Account() {
 
         <Billing userId={user?.id} />
 
-        <section className={s.section} aria-labelledby="cal-title">
-          <h2 id="cal-title" className={[p.h2, p.h2Rule].join(' ')} style={{ marginBottom: -16 }}>
-            Calendar links
-          </h2>
-          <div>
-            {(feeds.data ?? []).length === 0 ? (
-              <p className={[p.serif, p.muted].join(' ')} style={{ padding: '16px 0' }}>
-                No calendar links. Create one from a project's task board with Calendar feed.
-              </p>
-            ) : null}
-            {(feeds.data ?? []).map((f) => (
-              <div key={f.id} className={s.feed}>
-                <span className={s.feedText}>
-                  <span style={{ fontWeight: 600, fontSize: '0.9375rem' }}>{f.project}</span>
-                  <span className={p.caption}>
-                    Created {formatDate(f.created_at)} · {f.last_read_at ? `Last read by a calendar ${formatDateTime(f.last_read_at)}` : 'Not read by a calendar yet'}
-                  </span>
-                </span>
-                <Button size="sm" variant="secondary" aria-label={`Revoke calendar link for ${f.project}`} onClick={() => setRevoke(f)}>
-                  Revoke
-                </Button>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className={s.section} aria-labelledby="data-title">
           <h2 id="data-title" className={[p.h2, p.h2Rule].join(' ')}>
             Your data
@@ -131,7 +92,7 @@ export function Account() {
             Delete account
           </h2>
           <p className={[p.serif, p.muted].join(' ')}>
-            Your profile, sign in details and calendar links are deleted immediately. Groups where you are the only member are deleted with their data. Your entries in other groups' logs stay under the name Former member so group records stay accurate.
+            Your profile and sign in details are deleted immediately. Groups where you are the only member are deleted with their data. Your entries in other groups' logs stay under the name Former member so group records stay accurate.
           </p>
           <Button variant="destructive" className={s.start} onClick={() => setDeleting(true)}>
             Delete my account
@@ -152,26 +113,6 @@ export function Account() {
         </nav>
       </div>
 
-      <ConfirmDialog
-        open={!!revoke}
-        label="Calendar link"
-        title={`Revoke the calendar link for ${revoke?.project ?? ''}?`}
-        body="Calendars subscribed with this link stop updating. Deadlines already in those calendars are removed at the next refresh."
-        confirmLabel="Revoke link"
-        onCancel={() => setRevoke(null)}
-        onConfirm={async () => {
-          if (!revoke) return;
-          try {
-            await api(`/api/calendar/${revoke.id}/revoke`, { method: 'POST' });
-            await qc.invalidateQueries({ queryKey: ['feeds', user?.id] });
-            await qc.invalidateQueries({ queryKey: ['calendar'] });
-            toast.show('Calendar link revoked.');
-          } catch (err) {
-            toast.show(`Error: ${errorMessage(codeOf(err))}`);
-          }
-          setRevoke(null);
-        }}
-      />
       <ConfirmDialog
         open={deleting}
         label="Delete account"

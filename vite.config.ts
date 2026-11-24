@@ -36,7 +36,7 @@ export default defineConfig({
         globIgnores: ['**/statementPdf-*.js'],
         runtimeCaching: [],
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/api\//, /^\/cal\//, /^\/auth\//],
+        navigateFallbackDenylist: [/^\/api\//, /^\/auth\//],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
@@ -47,7 +47,6 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': 'http://localhost:8787',
-      '/cal': 'http://localhost:8787',
     },
   },
   build: {

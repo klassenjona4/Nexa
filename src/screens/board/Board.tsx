@@ -6,7 +6,7 @@ import { formatDate, formatDateTime } from '../../../shared/dates';
 import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
-import { Button, ButtonLink } from '../../components/Button';
+import { Button } from '../../components/Button';
 import { FilterChips, Tabs } from '../../components/Controls';
 import { Avatar, Badge } from '../../components/Display';
 import { EmptyState, ErrorPanel, LoadingState } from '../../components/States';
@@ -45,12 +45,7 @@ export function Board() {
       label={label || undefined}
       title="Task board"
       actions={
-        <>
-          <ButtonLink to={`/p/${project.id}/calendar`} variant="secondary">
-            Calendar feed
-          </ButtonLink>
-          <Button onClick={() => setCreating(true)}>New task</Button>
-        </>
+<Button onClick={() => setCreating(true)}>New task</Button>
       }
     />
   );
