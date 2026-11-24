@@ -16,20 +16,6 @@
   flex-direction: column;
   gap: var(--s2);
 }
-.feed {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--s3);
-  padding: var(--s3) 0;
-  border-bottom: var(--rule-hairline);
-}
-.feedText {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
 .start {
   align-self: flex-start;
 }

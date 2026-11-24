@@ -35,7 +35,6 @@ test('capture screens', async ({ page, browser }) => {
     ['brief', `/p/${projectId}/brief`],
     ['log', `/p/${projectId}/log`],
     ['statement', `/p/${projectId}/statement`],
-    ['calendar', `/p/${projectId}/calendar`],
     ['account', '/account'],
     ['landing', '/'],
     ['privacy', '/privacy'],

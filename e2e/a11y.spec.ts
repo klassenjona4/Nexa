@@ -43,7 +43,6 @@ test('signed in screens meet WCAG 2.1 AA automated checks', async ({ page, brows
     ['log', `/p/${projectId}/log`],
     ['statement', `/p/${projectId}/statement`],
     ['settings', `/p/${projectId}/settings`],
-    ['calendar', `/p/${projectId}/calendar`],
     ['account', '/account'],
   ] as const) {
     await page.goto(path);
