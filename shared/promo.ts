@@ -2,7 +2,7 @@ import { TIME_ZONE } from './dates.js';
 
 // Promo codes: 10 characters from an alphabet without 0/O, 1/I/L and without vowels, so a code
 // is easy to type from a slide and never spells a word. 28 characters give 28^10 (about 3 * 10^14)
-// codes. The database checks the same format (supabase/migrations/20261124120000_event_promo.sql).
+// codes. The database checks the same format (supabase/migrations/20261124104335_event_promo.sql).
 export const PROMO_ALPHABET = 'BCDFGHJKMNPQRSTVWXYZ23456789';
 export const PROMO_LENGTH = 10;
 export const PROMO_CODE_RE = /^[B-DF-HJKMNP-TV-Z2-9]{10}$/;
