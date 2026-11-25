@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 status: draft
-version: 0.5
+version: 0.6
 updated: 25/11/2026
 ---
 
@@ -86,6 +86,8 @@ If you pay, Stripe Payments Europe, Limited (Dublin, Ireland) processes the paym
 
 If you choose to sign in with Google, Google Ireland Limited processes your sign in as a separate controller under its own privacy policy.
 
+The landing page shows a short video hosted on YouTube. Nothing is loaded from YouTube until you press Play. When you do, the video loads from YouTube's privacy-enhanced domain (youtube-nocookie.com), and Google Ireland Limited receives your IP address and browser details and may store data on your device, as a separate controller under its own privacy policy. Nexa receives nothing from this. [TO REVIEW: whether pressing Play is sufficient consent under the ePrivacy rules for the data YouTube stores on the device.]
+
 ## International transfers
 
 Some processors are based in the United States or can access data from there. Transfers are protected by the EU-US Data Privacy Framework where the processor is certified under it, and otherwise by the standard contractual clauses adopted by the European Commission (Article 46(2)(c) GDPR). You can request a copy of the safeguards at hello@nexa-groups.com.
@@ -123,7 +125,7 @@ You have the right to lodge a complaint with the Data Protection Commission, 21 
 
 ## Cookies and storage on your device
 
-Nexa does not use cookies. It keeps your sign in session in your browser's local storage, and the installed app keeps copies of the application files (not your data) so that it starts quickly. Both are strictly necessary to provide the service you asked for, so no consent is required under the ePrivacy rules (Regulation 5(5) of S.I. No. 336 of 2011). Nexa does not use analytics, advertising or tracking technologies.
+Nexa does not use cookies. It keeps your sign in session in your browser's local storage, and the installed app keeps copies of the application files (not your data) so that it starts quickly. Both are strictly necessary to provide the service you asked for, so no consent is required under the ePrivacy rules (Regulation 5(5) of S.I. No. 336 of 2011). Nexa does not use analytics, advertising or tracking technologies. The YouTube video on the landing page is the one exception described under Who receives your data: it loads only when you press Play.
 
 ## Age
 

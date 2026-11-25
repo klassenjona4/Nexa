@@ -211,6 +211,14 @@ export function PublicShell({ showSignIn = true, children }: { showSignIn?: bool
           <Link to="/" className={s.wordmark}>
             Nexa
           </Link>
+          {pathname === '/' ? (
+            <nav aria-label="Landing page" className={s.landingNav}>
+              <a href="#video">Video</a>
+              <a href="#how">How it works</a>
+              <Link to="/pricing">Pricing</Link>
+              <Link to="/help">Help</Link>
+            </nav>
+          ) : null}
           {showSignIn && !onAuthPage ? (
             session ? (
               <ButtonLink to="/projects" variant="secondary">
