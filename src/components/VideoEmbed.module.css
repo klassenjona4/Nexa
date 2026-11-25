@@ -1,0 +1,81 @@
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.frame {
+  position: relative;
+  display: flex;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background: var(--ink);
+  border-top: 4px solid var(--slate);
+}
+.iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+/* In the normal flow, so the 16:9 frame grows when the text needs more room on small screens. */
+.poster {
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: var(--s4);
+  padding: var(--s5);
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (min-width: 600px) {
+  .poster {
+    padding: var(--s6);
+  }
+}
+.posterLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--sage);
+}
+.posterHeading {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  max-width: 20ch;
+  text-wrap: balance;
+}
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid var(--paper);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.play:hover {
+  background: var(--white);
+}
+.play:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
+}
+.caption {
+  font-size: 0.8125rem;
+  color: var(--graphite);
+}

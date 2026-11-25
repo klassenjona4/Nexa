@@ -281,3 +281,31 @@
 .footerText {
   color: var(--graphite);
 }
+
+/* Section links on the landing page, from 768 px. */
+.landingNav {
+  display: none;
+}
+@media (min-width: 768px) {
+  .landingNav {
+    display: flex;
+    border: 1px solid var(--mist);
+    background: var(--white);
+  }
+  .landingNav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 var(--s4);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .landingNav a + a {
+    border-left: 1px solid var(--mist);
+  }
+  .landingNav a:hover {
+    background: var(--paper);
+  }
+}

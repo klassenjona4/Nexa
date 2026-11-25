@@ -18,7 +18,9 @@ import { Invite } from '../screens/projects/Invite';
 import { ProjectLayout } from '../screens/projects/ProjectLayout';
 import { Legal } from '../screens/legal/Legal';
 import { Join, JoinAccept, JoinEntry } from '../screens/public/Join';
-import { Landing } from '../screens/public/Landing';
+// The landing page with the launch video. To go back to the earlier page, render <Landing /> from
+// '../screens/public/Landing' at / instead; that file is unchanged.
+import { LandingVideo } from '../screens/public/LandingVideo';
 import { AuthProvider } from './AuthProvider';
 import { RequireAuth } from './RequireAuth';
 import { Help } from '../screens/help/Help';
@@ -36,7 +38,7 @@ const router = createBrowserRouter([
   {
     element: <PublicShell />,
     children: [
-      { path: '/', element: <Landing /> },
+      { path: '/', element: <LandingVideo /> },
       { path: '/sign-in', element: <SignIn /> },
       { path: '/auth/confirm', element: <AuthConfirm /> },
       { path: '/auth/callback', element: <AuthCallback /> },
