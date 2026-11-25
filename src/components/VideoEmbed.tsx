@@ -33,10 +33,11 @@ export function VideoEmbed({ id, title, label, heading }: { id: string; title: s
       <figcaption className={s.caption}>
         {playing ? (
           <>
-            Playing from YouTube.{' '}
+            Playing from YouTube. If YouTube asks you to sign in to confirm you are not a bot,{' '}
             <a href={`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`} target="_blank" rel="noreferrer">
-              Open on YouTube
+              watch it on YouTube
             </a>
+            .
           </>
         ) : (
           'The video plays from YouTube. Nothing is loaded from YouTube until you press Play.'

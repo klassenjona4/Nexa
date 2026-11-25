@@ -21,7 +21,7 @@ test('the landing page shows the launch video and loads YouTube only after Play'
   await page.getByRole('button', { name: 'Play video' }).click();
   const frame = page.locator('iframe[title="Nexa explained in under a minute"]');
   await expect(frame).toHaveAttribute('src', /^https:\/\/www\.youtube-nocookie\.com\/embed\/pztb9J6tM3g\?autoplay=1/);
-  await expect(page.getByRole('link', { name: 'Open on YouTube' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=pztb9J6tM3g');
+  await expect(page.getByRole('link', { name: 'watch it on YouTube' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=pztb9J6tM3g');
 
   // The steps and the free plan note are still there.
   await expect(page.getByRole('heading', { name: 'How it works' })).toBeVisible();
