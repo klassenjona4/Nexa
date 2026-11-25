@@ -36,10 +36,9 @@
   align-self: flex-start;
 }
 
-/* The offer, in the Rust accent: a solid block with white text, so it reads as an offer and not
-   as an error. White on Rust is 5.3 : 1. */
+/* The offer, in the Slate (blue) accent: a solid block with white text. White on Slate is 7.4 : 1. */
 .offer {
-  background: var(--rust);
+  background: var(--slate);
   color: var(--white);
   padding: var(--s5);
   display: flex;
@@ -102,8 +101,8 @@
   line-height: 1.45;
 }
 .cta {
-  background: var(--rust);
-  border-color: var(--rust);
+  background: var(--slate);
+  border-color: var(--slate);
   color: var(--white);
 }
 .cta:hover:not(:disabled) {
