@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 
 // The design system's uppercase label, screen size.
-const COLORS = { ink: 'var(--ink)', graphite: 'var(--graphite)', rust: 'var(--rust)', sage: 'var(--sage)', paper: 'var(--paper)' };
+const COLORS = { ink: 'var(--ink)', graphite: 'var(--graphite)', rust: 'var(--rust)', sage: 'var(--sage)', paper: 'var(--paper)', slate: 'var(--slate)' };
 
 export function Label({ children, color = 'graphite', as: As = 'span', style }: { children: ReactNode; color?: keyof typeof COLORS; as?: 'span' | 'p' | 'div'; style?: CSSProperties }) {
   return (

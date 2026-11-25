@@ -10,6 +10,8 @@
   --graphite: #4a4d4a;
   --slate: #34566a;
   --rust: #b4441c;
+  /* A light tint of slate for highlighted panels; derived, not a new colour. */
+  --slate-tint: color-mix(in srgb, var(--slate) 7%, var(--white));
 
   --font-sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
   --font-serif: 'Source Serif 4', Georgia, Cambria, 'Times New Roman', serif;
