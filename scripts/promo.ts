@@ -18,6 +18,11 @@ import type { Database } from '../shared/database.types.js';
 import { formatDateTime } from '../shared/dates.js';
 import { CAMPAIGN_RE, eventWindow, generatePromoCode, parseLocalDateTime, PROMO_CODE_RE, PROMO_DEFAULT_DAYS, PROMO_DEFAULT_MAX_USES } from '../shared/promo.js';
 
+// Command line output.
+const out = (line = ''): void => {
+  process.stdout.write(`${line}\n`);
+};
+
 const { values: opt, positionals } = parseArgs({
   allowPositionals: true,
   options: {
@@ -65,7 +70,7 @@ function fail(message: string): never {
 }
 
 if (opt.help || !command) {
-  console.log(USAGE);
+  out(USAGE);
   process.exit(command ? 0 : 1);
 }
 
@@ -150,7 +155,7 @@ async function create() {
     if (active.length) {
       const { error } = await client.from('promo_codes').update({ active: false }).eq('campaign', campaign);
       if (error) fail(`Could not deactivate the old code: ${error.message}`);
-      console.log(`Deactivated the previous code of ${campaign}.`);
+      out(`Deactivated the previous code of ${campaign}.`);
     }
     const { error } = await client.from('promo_codes').insert({
       code,
@@ -163,16 +168,16 @@ async function create() {
     if (error) fail(`Could not create the code: ${error.message}`);
   }
 
-  console.log(opt['dry-run'] ? 'Dry run: nothing was written to the database.\n' : 'Created.\n');
-  console.log(`Campaign      ${campaign}`);
-  console.log(`Code          ${code}`);
-  console.log(`Valid from    ${irish(validFrom.toISOString())}`);
-  console.log(`Valid until   ${irish(validUntil.toISOString())}`);
-  console.log(`Max uses      ${maxUses}`);
-  console.log(`Premium days  ${premiumDays}`);
-  console.log(`Redeem URL    ${url}`);
+  out(opt['dry-run'] ? 'Dry run: nothing was written to the database.\n' : 'Created.\n');
+  out(`Campaign      ${campaign}`);
+  out(`Code          ${code}`);
+  out(`Valid from    ${irish(validFrom.toISOString())}`);
+  out(`Valid until   ${irish(validUntil.toISOString())}`);
+  out(`Max uses      ${maxUses}`);
+  out(`Premium days  ${premiumDays}`);
+  out(`Redeem URL    ${url}`);
   const files = await writeQr(code);
-  console.log(`QR code       ${files.png}\n              ${files.svg}`);
+  out(`QR code       ${files.png}\n              ${files.svg}`);
 }
 
 async function activeCode(): Promise<string> {
@@ -191,15 +196,15 @@ async function status() {
   for (const c of data) {
     const open = new Date(c.valid_from).getTime() <= now && now < new Date(c.valid_until).getTime();
     const state = !c.active ? 'deactivated' : c.uses >= c.max_uses ? 'used up' : open ? 'accepting redemptions' : now < new Date(c.valid_from).getTime() ? 'not open yet' : 'window ended';
-    console.log(`${campaign}  ${c.code}`);
-    console.log(`  Uses          ${c.uses} / ${c.max_uses}`);
-    console.log(`  Redemptions   ${c.redemptions} (accounts deleted since are not counted here; uses stay)`);
-    console.log(`  State         ${state}`);
-    console.log(`  Window        ${formatDateTime(c.valid_from)} to ${formatDateTime(c.valid_until)} Irish time`);
-    console.log(`  Premium days  ${c.premium_days}`);
+    out(`${campaign}  ${c.code}`);
+    out(`  Uses          ${c.uses} / ${c.max_uses}`);
+    out(`  Redemptions   ${c.redemptions} (accounts deleted since are not counted here; uses stay)`);
+    out(`  State         ${state}`);
+    out(`  Window        ${formatDateTime(c.valid_from)} to ${formatDateTime(c.valid_until)} Irish time`);
+    out(`  Premium days  ${c.premium_days}`);
   }
   const total = data.reduce((n, c) => n + c.uses, 0);
-  if (data.length > 1) console.log(`Total uses across the campaign's codes: ${total}`);
+  if (data.length > 1) out(`Total uses across the campaign's codes: ${total}`);
 }
 
 async function setActive(active: boolean) {
@@ -210,12 +215,12 @@ async function setActive(active: boolean) {
     if (!id) fail(`No codes for campaign ${campaign}.`);
     const { error } = await client.from('promo_codes').update({ active: true }).eq('id', id);
     if (error) fail(error.message);
-    console.log(`Activated the newest code of ${campaign}. It works again within its window and cap.`);
+    out(`Activated the newest code of ${campaign}. It works again within its window and cap.`);
   } else {
     const { data, error } = await client.from('promo_codes').update({ active: false }).eq('campaign', campaign).select('code');
     if (error) fail(error.message);
     if (!data?.length) fail(`No codes for campaign ${campaign}.`);
-    console.log(`Deactivated ${data.length} code(s) of ${campaign}. They stop working immediately. Premium already given is kept.`);
+    out(`Deactivated ${data.length} code(s) of ${campaign}. They stop working immediately. Premium already given is kept.`);
   }
 }
 
@@ -231,11 +236,11 @@ async function main() {
       return setActive(true);
     case 'qr': {
       const files = await writeQr(await activeCode());
-      console.log(`Redeem URL  ${files.url}\nQR code     ${files.png}\n            ${files.svg}`);
+      out(`Redeem URL  ${files.url}\nQR code     ${files.png}\n            ${files.svg}`);
       return;
     }
     default:
-      console.log(USAGE);
+      out(USAGE);
       process.exit(1);
   }
 }

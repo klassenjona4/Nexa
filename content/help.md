@@ -2,7 +2,7 @@
 title: Help
 status: final
 version: 1.0
-updated: 13/11/2026
+updated: 24/11/2026
 ---
 
 ## Creating a group and project
@@ -48,10 +48,6 @@ The statement shows the dates of the recorded activity it covers. If the log cha
 Only the group owner can invite members. On Invite members, copy the invite link or show the QR code for teammates to scan. A link works for 7 days and for a limited number of joins, and the owner can revoke it at any time. You can also send an invite by email; that invite only works for the email address it was sent to.
 
 A person who opens an invite sees the group name, the project, the first names of members and the extracted brief, then signs in to join.
-
-## Calendar feed
-
-On Calendar feed, create a private link and add it to Google Calendar, Apple Calendar or Outlook as a subscription. The feed lists your tasks and the project deadlines. Calendar apps refresh subscriptions every few hours, so changes can take time to appear. Anyone with the link can read the feed, so do not share it. Regenerate the link if it has been shared by mistake; the old link stops working at once.
 
 ## Installing the app
 

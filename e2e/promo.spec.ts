@@ -102,7 +102,8 @@ test('scan, sign up with an email address and redeem the prefilled code on a pho
 
   // Account settings show the end date and that nothing renews.
   await page.goto('/account');
-  await expect(page.getByText('Premium, free from a code, until', { exact: false })).toBeVisible();
+  await expect(page.getByText('Unlimited projects and AI features, free from your code')).toBeVisible();
+  await expect(page.getByText('Monthly plan')).toHaveCount(0);
   await expect(page.getByText('Premium ends')).toBeVisible();
   await expect(page.getByText('It does not renew', { exact: false })).toBeVisible();
   await noHorizontalScroll(page);

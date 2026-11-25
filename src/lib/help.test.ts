@@ -6,7 +6,7 @@ describe('help page content', () => {
   const doc = parseLegal(readFileSync('content/help.md', 'utf8'));
   it('covers every topic the help page promises', () => {
     const headings = doc.sections.map((s) => s.heading);
-    for (const topic of ['Creating a group and project', 'Uploading the brief', 'Reviewing the extracted details', 'The task proposal', 'The task board', 'The contribution log', 'Exporting the contribution statement', 'Inviting members', 'Calendar feed', 'Installing the app', 'Plans and billing', 'Deleting your data']) {
+    for (const topic of ['Creating a group and project', 'Uploading the brief', 'Reviewing the extracted details', 'The task proposal', 'The task board', 'The contribution log', 'Exporting the contribution statement', 'Inviting members', 'Installing the app', 'Plans and billing', 'Deleting your data']) {
       expect(headings).toContain(topic);
     }
   });

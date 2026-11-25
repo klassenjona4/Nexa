@@ -23,7 +23,9 @@ test('sign up with a magic link, enter a name and create a group', async ({ page
   // Account settings show the plan; paying needs the start now consent first.
   await page.goto('/account');
   await expect(page.getByRole('heading', { name: 'Plan and billing' })).toBeVisible();
-  await expect(page.getByText('Free plan.')).toBeVisible();
+  await expect(page.getByText('Current plan')).toBeVisible();
+  await expect(page.getByText('1 project with 1 brief breakdown and 1 contribution statement')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'See plans' })).toBeVisible();
   // Paid plans are visible, but cannot be bought until payments are switched on.
   await page.goto('/pricing');
   await expect(page.getByText('Paid plans are not available yet.', { exact: false }).first()).toBeVisible();

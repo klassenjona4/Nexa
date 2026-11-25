@@ -1,8 +1,8 @@
 ---
 title: Privacy policy
 status: draft
-version: 0.4
-updated: 24/11/2026
+version: 0.5
+updated: 25/11/2026
 ---
 
 > DRAFT. This privacy policy has not been reviewed by a legal professional. It must be reviewed and the bracketed details completed before Nexa is launched.
@@ -36,7 +36,7 @@ This data is kept until you delete your account (see How long data is kept). To 
 - Task data: tasks, descriptions, due dates, estimated hours, status changes, file links you add, and confirmations and flags, including the reason you give for a flag.
 - Contribution records: the contribution log and contribution statements.
 - Invite data: the email addresses of people a group owner invites.
-- Calendar data: the date a calendar link was created and last read by a calendar app.
+- Calendar data, only if you created a calendar link before 24/11/2026: the date it was created and last read by a calendar app. Nexa no longer offers calendar links and these links no longer work. The records are deleted with your account.
 - Premium from a code: the campaign of each code you redeemed, the time you redeemed it and the date your free Premium ends.
 - Email preference: whether you want occasional emails about Nexa, when you made or last changed that choice, and where (when redeeming a code or in account settings).
 - Billing data, if you pay: your plan, the number of unused project unlocks, the status and renewal date of a monthly plan, the amount, currency and date of each payment, and the identifiers Stripe gives your customer record, payments and subscription. Nexa never receives or stores your card or bank details. Stripe collects them directly.
@@ -47,7 +47,7 @@ You provide your email address so that Nexa can sign you in. Without it, you can
 
 ## Why the data is processed and the legal basis
 
-- To provide the service you signed up for: your account, groups, projects, the task board, the contribution log, contribution statements, calendar links, reminders and data export. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
+- To provide the service you signed up for: your account, groups, projects, the task board, the contribution log, contribution statements, reminders and data export. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
 - To extract details from a brief and draft a contribution statement with an AI model, when a member asks for this. Legal basis: performance of a contract, Article 6(1)(b) GDPR.
 - To send an invite to an email address that a group owner enters. Legal basis: the legitimate interest of the group in inviting members, Article 6(1)(f) GDPR. The address is used only to send the invite and to show the owner that the invite is pending.
 - To take payments for project unlocks and the monthly plan, apply them to your account and send receipts. Legal basis: performance of a contract, Article 6(1)(b) GDPR.

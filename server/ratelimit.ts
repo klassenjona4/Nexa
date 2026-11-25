@@ -79,7 +79,6 @@ export const LIMITS = {
   inviteCreateIp: { name: 'invite-create:ip', max: 40, windowSeconds: 86400 },
   // All invite emails together, to protect the sending domain's reputation.
   inviteEmailAll: { name: 'invite-email:all', max: 500, windowSeconds: 86400 },
-  calendarToken: { name: 'calendar:token', max: 120, windowSeconds: 3600 },
   exportUser: { name: 'export:user', max: 5, windowSeconds: 86400 },
   writeUser: { name: 'write:user', max: 600, windowSeconds: 3600 },
   helpChatIp: { name: 'help-chat:ip', max: 20, windowSeconds: 3600 },
