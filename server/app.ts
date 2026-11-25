@@ -18,6 +18,7 @@ import { accountRoutes } from './routes/account.js';
 import { PAYMENTS_AVAILABLE } from '../shared/plans.js';
 import { billingRoutes, stripeWebhookRoutes } from './routes/billing.js';
 import { helpRoutes } from './routes/help.js';
+import { promoRoutes } from './routes/promo.js';
 import { readOutbox } from './services/email.js';
 
 assertNoTestSettingsOnHostedPlatform();
@@ -78,6 +79,7 @@ app.route('/api/projects', projectRoutes);
 app.route('/api/cron', cronRoutes);
 app.route('/api/account', accountRoutes);
 app.route('/api/help', helpRoutes);
+app.route('/api/promo', promoRoutes);
 // No payment backend until payments are switched on (see shared/plans.ts).
 if (PAYMENTS_AVAILABLE) {
   app.route('/api/billing', billingRoutes);

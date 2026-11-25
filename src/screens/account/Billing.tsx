@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { formatDate } from '../../../shared/dates';
+import { formatDate, formatTime } from '../../../shared/dates';
 import p from '../../app/page.module.css';
 import { Button, ButtonLink } from '../../components/Button';
 import { InlineNotice } from '../../components/Display';
@@ -9,6 +9,7 @@ import { useToast } from '../../components/Toast';
 import { codeOf } from '../../lib/api';
 import { type BillingAccount, openBillingPortal, PAYMENTS_AVAILABLE, useBillingAccount, useEntitlements } from '../../lib/billing';
 import { errorMessage } from '../../lib/errors';
+import { premiumActive } from '../../lib/promo';
 import s from './Billing.module.css';
 
 const MONTHLY_PERKS = [
@@ -27,6 +28,13 @@ export function Billing({ userId }: { userId: string | undefined }) {
   const account = useBillingAccount(userId);
   const entitlements = useEntitlements();
   const [params] = useSearchParams();
+  const [now] = useState(() => Date.now());
+  const a = account.data ?? null;
+  // A paid subscription takes precedence; otherwise free Premium from a code is shown on its own,
+  // with its end date and no renewal.
+  const stripeActive =
+    !!a?.subscription_status && ['active', 'trialing', 'past_due'].includes(a.subscription_status) && (!a.current_period_end || new Date(a.current_period_end).getTime() > now);
+  const promoPremium = !stripeActive && premiumActive(a?.premium_until, now);
 
   return (
     <section className={s.section} aria-labelledby="billing-title">
@@ -36,6 +44,8 @@ export function Billing({ userId }: { userId: string | undefined }) {
       {params.get('billing') === 'success' ? <InlineNotice role="status">Payment received. It can take a minute to show here.</InlineNotice> : null}
       {account.isPending || entitlements.isPending ? (
         <p className={[p.serif, p.muted].join(' ')}>Loading your plan</p>
+      ) : promoPremium && a?.premium_until ? (
+        <PremiumPlan account={a} premiumUntil={a.premium_until} />
       ) : entitlements.data?.subscriptionActive ? (
         <MonthlyPlan account={account.data ?? null} credits={entitlements.data.projectCredits} />
       ) : (
@@ -85,6 +95,40 @@ function MonthlyPlan({ account, credits }: { account: BillingAccount | null; cre
       </dl>
       {credits > 0 ? <p className={[p.small, p.muted].join(' ')}>Your project unlocks are not used while the monthly plan is active. They stay on your account.</p> : null}
       <BillingActions account={account} subscribed />
+    </div>
+  );
+}
+
+// Premium from a promo code: free, with an end date, and nothing renews.
+function PremiumPlan({ account, premiumUntil }: { account: BillingAccount | null; premiumUntil: string }) {
+  return (
+    <div className={[s.card, s.active].join(' ')}>
+      <div className={s.head}>
+        <Label color="slate">Premium</Label>
+        <span className={s.pill}>Free</span>
+      </div>
+      <p className={s.title}>Unlimited projects and AI features, free from your code</p>
+      <ul className={s.perks}>
+        {MONTHLY_PERKS.map((perk) => (
+          <li key={perk.strong}>
+            <strong>{perk.strong}</strong> {perk.rest}
+          </li>
+        ))}
+      </ul>
+      <dl className={s.facts}>
+        <div>
+          <dt>Premium ends</dt>
+          <dd>
+            {formatDate(premiumUntil)} at {formatTime(premiumUntil)}
+          </dd>
+        </div>
+        <div>
+          <dt>Then</dt>
+          <dd>Free plan</dd>
+        </div>
+      </dl>
+      <p className={[p.small, p.muted].join(' ')}>It does not renew: your account then goes back to the Free plan. No payment details are stored.</p>
+      <BillingActions account={account} subscribed={false} />
     </div>
   );
 }

@@ -11,11 +11,15 @@ import { api, codeOf } from '../../lib/api';
 import { errorMessage } from '../../lib/errors';
 import { supabase } from '../../lib/supabase';
 import { magicLinkRequest, safeNextPathOrDefault } from './next';
+import { PromoOffer } from '../promo/PromoOffer';
+import promo from '../promo/Redeem.module.css';
 import s from './SignIn.module.css';
 
 export function SignIn() {
   const [params] = useSearchParams();
   const next = safeNextPathOrDefault(params.get('next'));
+  // Arrived from a code link: the code stays in `next` through the sign in email.
+  const redeeming = next.startsWith('/redeem');
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState<string | null>(null);
@@ -93,10 +97,15 @@ export function SignIn() {
     <div className={p.content}>
       <section className={s.panel} aria-labelledby="signin-title">
         <div className={p.stack}>
+          {redeeming ? <PromoOffer compact headingLevel="h2" /> : null}
           <h1 id="signin-title" className={p.h1}>
-            Sign in to Nexa
+            {redeeming ? 'Create your account' : 'Sign in to Nexa'}
           </h1>
-          <p className={p.intro}>Enter your email address and a sign in link will be sent to it. No password is needed. A new account is created the first time you sign in.</p>
+          {redeeming ? (
+            <p className={p.intro}>Enter your email address to claim your free month. A sign in link will be sent to it. No password is needed, and it takes under a minute. Already have an account? The same link signs you in.</p>
+          ) : (
+            <p className={p.intro}>Enter your email address and a sign in link will be sent to it. No password is needed. A new account is created the first time you sign in.</p>
+          )}
         </div>
         {failure ? <ErrorPanel title="The sign in link was not sent" body={failure} /> : null}
         <form onSubmit={onSubmit} className={p.stack} noValidate>
@@ -113,7 +122,7 @@ export function SignIn() {
             error={error}
             required
           />
-          <Button type="submit" size="lg" disabled={busy}>
+          <Button type="submit" size="lg" disabled={busy} className={redeeming ? promo.cta : undefined}>
             Send sign in link
           </Button>
         </form>

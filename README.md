@@ -61,6 +61,7 @@ If your Docker setup cannot reach `public.ecr.aws`, start the stack with `SUPABA
 | `npm run test:e2e` | Playwright end to end and accessibility tests at 375 and 1280 px (needs the local stack and `.env.local`) |
 | `SCREENSHOTS=1 npx playwright test e2e/screens.spec.ts` | Screenshots at 375, 768 and 1280 px, fails on horizontal scrolling |
 | `npm run audit` | `npm audit --audit-level=high` |
+| `npm run promo -- <command>` | Event promo codes: create, status, deactivate, activate, qr (see Event promo codes) |
 
 CI (`.github/workflows/ci.yml`) runs audit, type check, lint, unit tests and build, then starts the local Supabase stack and runs pgTAP and Playwright.
 
@@ -98,6 +99,39 @@ Rotating `TOKEN_SECRET` invalidates all invite links.
 Payments are switched off until the business is registered: `PAYMENTS_AVAILABLE` in `shared/plans.ts` is `false`, so the server mounts no billing or webhook routes and the app shows a note when someone tries to pay. To switch them on, set it to `true`, add the four Stripe variables in Vercel and redeploy.
 
 Payments use Stripe Checkout and the Stripe Customer Portal; card details never reach Nexa. The webhook endpoint `<APP_URL>/api/stripe/webhook` must send these events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.subscription.paused`, `customer.subscription.resumed`, `invoice.paid`, `invoice.payment_failed`. Every request is checked against `STRIPE_WEBHOOK_SECRET`; each event id is applied once (`stripe_events`) and each Checkout session once (`billing_purchases`). Subscription changes are read back from Stripe, so events that arrive out of order cannot roll the state back. Plan limits are enforced in the database (`supabase/migrations/20261112194410_plans_and_billing.sql`).
+
+### Event promo codes
+
+A shared code gives Premium (everything in the monthly plan) for a fixed number of days, without payment. It is meant for one event: a short window, a cap on uses, one redemption per account and campaign, and an off switch. Nothing on the public site mentions it; the code only arrives through the QR link `<APP_URL>/redeem?code=XXXXXXXXXX`.
+
+- Premium is computed: an account has it while `billing_accounts.premium_until` is in the future. `private.subscription_active()` counts it, so the database applies the monthly plan's rules and Premium ends on its own (no scheduled job). Projects created during Premium keep their data afterwards, but brief breakdowns and statements in them stop, as after a cancelled subscription.
+- `public.redeem_promo_code` applies every rule in one transaction (`supabase/migrations/20261124104335_event_promo.sql`). `POST /api/promo/redeem` needs a signed-in user and allows 5 **failed** attempts per user and per IP address in a 15 minute window; successful redemptions are never counted, so a room on one WiFi can all redeem. Every failure gets the same message.
+- `promo_codes` and `promo_redemptions` have no client access at all. Only the server (service role) and the script below touch them.
+
+Run the script from your computer with the production keys in a file that git ignores (every `.env.*` file is ignored), for example `.env.promo.local`:
+
+```
+SUPABASE_URL=https://fauotybbzqlerctitcsc.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<secret key from Supabase, Project settings, API Keys>
+PROMO_BASE_URL=https://nexa-groups.com
+```
+
+| Command | What it does |
+|---|---|
+| `npm run promo -- create --env .env.promo.local --campaign rubicon-final --event-start 2026-11-27T18:00` | Creates the code, valid from 1 hour before the event until midnight (Irish time), 60 uses, 30 days. Prints the redeem URL and writes `promo-out/rubicon-final-qr.png` (2400 px) and `.svg` (error correction Q, 4 module quiet zone). Options: `--max-uses`, `--premium-days`, `--valid-from`/`--valid-until`, `--base-url`, `--out`, `--replace`, `--dry-run`. |
+| `npm run promo -- status --env .env.promo.local --campaign rubicon-final` | Uses / max uses, redemptions, state and window. |
+| `npm run promo -- deactivate --env .env.promo.local --campaign rubicon-final` | Switches the code off at once. Premium already given is kept. |
+| `npm run promo -- activate --env .env.promo.local --campaign rubicon-final` | Switches the newest code back on. |
+| `npm run promo -- qr --env .env.promo.local --campaign rubicon-final` | Writes the QR files again. |
+
+Without the script, in the Supabase SQL editor (works from a phone):
+
+```sql
+update public.promo_codes set active = false where campaign = 'rubicon-final';   -- off now
+select * from public.promo_campaign_status('rubicon-final');                       -- uses / max_uses
+```
+
+Use a separate campaign (for example `rubicon-test`) for testing, so tests never use up the event code. `promo-out/` is ignored by git; do not commit codes or QR files.
 
 ## Deployment
 

@@ -35,8 +35,38 @@ export async function rateLimit(checks: Array<{ limit: Limit; key: string }>): P
   }
 }
 
+// For routes that count only failed attempts (promo codes, where a whole venue shares one IP
+// address). Refuses the request while any bucket is used up, without counting it.
+export async function refuseWhenFailuresUsedUp(checks: Array<{ limit: Limit; key: string }>): Promise<void> {
+  for (const { limit, key } of checks) {
+    const { data, error } = await adminClient().rpc('rate_limit_count', {
+      p_bucket: bucketKey([limit.name, key]),
+      p_window_seconds: limit.windowSeconds,
+    });
+    if (error) throw new HttpError(500, 'server_error');
+    if ((data ?? 0) >= limit.max * multiplier()) {
+      throw new HttpError(429, 'rate_limited', undefined, { 'Retry-After': String(limit.windowSeconds) });
+    }
+  }
+}
+
+// Counts one failed attempt in each bucket.
+export async function recordFailure(checks: Array<{ limit: Limit; key: string }>): Promise<void> {
+  for (const { limit, key } of checks) {
+    const { error } = await adminClient().rpc('rate_limit_hit', {
+      p_bucket: bucketKey([limit.name, key]),
+      p_max: limit.max * multiplier(),
+      p_window_seconds: limit.windowSeconds,
+    });
+    if (error) throw new HttpError(500, 'server_error');
+  }
+}
+
 export const LIMITS = {
-  magicLinkIp: { name: 'magic-link:ip', max: 5, windowSeconds: 3600 },
+  // Many people sign up from one venue WiFi or mobile carrier address at an event (the promo QR
+  // code), so the per IP limit is generous. The per email limit below stops repeated links to
+  // one address.
+  magicLinkIp: { name: 'magic-link:ip', max: 60, windowSeconds: 3600 },
   magicLinkEmail: { name: 'magic-link:email', max: 3, windowSeconds: 3600 },
   aiUser: { name: 'ai:user', max: 10, windowSeconds: 3600 },
   aiUserDay: { name: 'ai:user:day', max: 15, windowSeconds: 86400 },
@@ -54,6 +84,11 @@ export const LIMITS = {
   helpChatIp: { name: 'help-chat:ip', max: 20, windowSeconds: 3600 },
   helpChatUser: { name: 'help-chat:user', max: 50, windowSeconds: 86400 },
   billingUser: { name: 'billing:user', max: 20, windowSeconds: 3600 },
+  // Failed promo code attempts only. Successful redemptions are never counted, so a room of
+  // people on the same venue WiFi can all redeem.
+  promoFailUser: { name: 'promo-fail:user', max: 5, windowSeconds: 900 },
+  promoFailIp: { name: 'promo-fail:ip', max: 5, windowSeconds: 900 },
+  consentUser: { name: 'consent:user', max: 30, windowSeconds: 3600 },
   // Stripe sends from a small set of addresses; this only stops floods of forged requests.
   stripeWebhookIp: { name: 'stripe-webhook:ip', max: 2000, windowSeconds: 3600 },
 } satisfies Record<string, Limit>;

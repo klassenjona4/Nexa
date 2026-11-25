@@ -24,9 +24,9 @@ export type Database = {
         Relationships: [];
       };
       billing_accounts: {
-        Row: { cancel_at_period_end: boolean; created_at: string; current_period_end: string | null; free_project_used: boolean; project_credits: number; stripe_customer_id: string | null; subscription_id: string | null; subscription_status: string | null; updated_at: string; user_id: string };
-        Insert: { cancel_at_period_end?: boolean; created_at?: string; current_period_end?: string | null; free_project_used?: boolean; project_credits?: number; stripe_customer_id?: string | null; subscription_id?: string | null; subscription_status?: string | null; updated_at?: string; user_id: string };
-        Update: { cancel_at_period_end?: boolean; created_at?: string; current_period_end?: string | null; free_project_used?: boolean; project_credits?: number; stripe_customer_id?: string | null; subscription_id?: string | null; subscription_status?: string | null; updated_at?: string; user_id?: string };
+        Row: { cancel_at_period_end: boolean; created_at: string; current_period_end: string | null; free_project_used: boolean; premium_until: string | null; project_credits: number; stripe_customer_id: string | null; subscription_id: string | null; subscription_status: string | null; updated_at: string; user_id: string };
+        Insert: { cancel_at_period_end?: boolean; created_at?: string; current_period_end?: string | null; free_project_used?: boolean; premium_until?: string | null; project_credits?: number; stripe_customer_id?: string | null; subscription_id?: string | null; subscription_status?: string | null; updated_at?: string; user_id: string };
+        Update: { cancel_at_period_end?: boolean; created_at?: string; current_period_end?: string | null; free_project_used?: boolean; premium_until?: string | null; project_credits?: number; stripe_customer_id?: string | null; subscription_id?: string | null; subscription_status?: string | null; updated_at?: string; user_id?: string };
         Relationships: [{ foreignKeyName: 'billing_accounts_user_id_fkey'; columns: ['user_id']; isOneToOne: true; referencedRelation: 'profiles'; referencedColumns: ['id'] }];
       };
       billing_purchases: {
@@ -95,6 +95,24 @@ export type Database = {
         Insert: { kind: Database['public']['Enums']['usage_kind']; project_id: string; updated_at?: string; used?: number };
         Update: { kind?: Database['public']['Enums']['usage_kind']; project_id?: string; updated_at?: string; used?: number };
         Relationships: [{ foreignKeyName: 'project_usage_project_id_fkey'; columns: ['project_id']; isOneToOne: false; referencedRelation: 'projects'; referencedColumns: ['id'] }];
+      };
+      marketing_consents: {
+        Row: { decided_at: string; email_updates: boolean; source: string; user_id: string };
+        Insert: { decided_at?: string; email_updates: boolean; source: string; user_id: string };
+        Update: { decided_at?: string; email_updates?: boolean; source?: string; user_id?: string };
+        Relationships: [{ foreignKeyName: 'marketing_consents_user_id_fkey'; columns: ['user_id']; isOneToOne: true; referencedRelation: 'profiles'; referencedColumns: ['id'] }];
+      };
+      promo_codes: {
+        Row: { active: boolean; campaign: string; code: string; created_at: string; id: string; max_uses: number; premium_days: number; uses: number; valid_from: string; valid_until: string };
+        Insert: { active?: boolean; campaign: string; code: string; created_at?: string; id?: string; max_uses?: number; premium_days?: number; uses?: number; valid_from: string; valid_until: string };
+        Update: { active?: boolean; campaign?: string; code?: string; created_at?: string; id?: string; max_uses?: number; premium_days?: number; uses?: number; valid_from?: string; valid_until?: string };
+        Relationships: [];
+      };
+      promo_redemptions: {
+        Row: { campaign: string; code_id: string; id: string; premium_until: string; redeemed_at: string; user_id: string };
+        Insert: { campaign: string; code_id: string; id?: string; premium_until: string; redeemed_at?: string; user_id: string };
+        Update: { campaign?: string; code_id?: string; id?: string; premium_until?: string; redeemed_at?: string; user_id?: string };
+        Relationships: [];
       };
       help_chat_daily_usage: {
         Row: { day: string; used: number };
@@ -179,6 +197,9 @@ export type Database = {
       my_entitlements: { Args: never; Returns: { free_project_available: boolean; project_credits: number; subscription_active: boolean }[] };
       prepare_account_deletion: { Args: { p_user: string }; Returns: undefined };
       project_allowance: { Args: { p_project: string }; Returns: { kind: Database['public']['Enums']['usage_kind']; max: number; plan: string; subscription_active: boolean | null; unlimited: boolean; used: number }[] };
+      promo_campaign_status: { Args: { p_campaign: string }; Returns: { active: boolean; code: string; created_at: string; max_uses: number; premium_days: number; redemptions: number; uses: number; valid_from: string; valid_until: string }[] };
+      rate_limit_count: { Args: { p_bucket: string; p_window_seconds: number }; Returns: number };
+      redeem_promo_code: { Args: { p_code: string; p_user: string }; Returns: { premium_days: number; premium_until: string }[] };
       rate_limit_hit: { Args: { p_bucket: string; p_max: number; p_window_seconds: number }; Returns: boolean };
       release_usage: { Args: { p_kind: Database['public']['Enums']['usage_kind']; p_project: string }; Returns: undefined };
       reserve_usage: { Args: { p_kind: Database['public']['Enums']['usage_kind']; p_project: string }; Returns: number | null };

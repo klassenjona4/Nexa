@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
+import { formatDateTime } from '../../../shared/dates';
 import { useAuth } from '../../app/AuthProvider';
 import p from '../../app/page.module.css';
 import { PageHeader } from '../../app/PageHeader';
@@ -11,6 +12,8 @@ import { useToast } from '../../components/Toast';
 import { api, codeOf } from '../../lib/api';
 import { downloadFromApi } from '../../lib/download';
 import { errorMessage } from '../../lib/errors';
+import { type RedeemPromoResponse, saveEmailUpdates, useEmailUpdates } from '../../lib/promo';
+import { RedeemConfirmation, RedeemForm } from '../promo/RedeemForm';
 import s from './Account.module.css';
 import { Billing } from './Billing';
 
@@ -59,6 +62,10 @@ export function Account() {
         </form>
 
         <Billing userId={user?.id} />
+
+        <RedeemSection />
+
+        <EmailUpdates userId={user?.id} />
 
         <section className={s.section} aria-labelledby="data-title">
           <h2 id="data-title" className={[p.h2, p.h2Rule].join(' ')}>
@@ -132,5 +139,68 @@ export function Account() {
         }}
       />
     </div>
+  );
+}
+
+function RedeemSection() {
+  const [result, setResult] = useState<RedeemPromoResponse | null>(null);
+  return (
+    <section className={s.section} aria-labelledby="redeem-title">
+      <h2 id="redeem-title" className={[p.h2, p.h2Rule].join(' ')}>
+        Redeem code
+      </h2>
+      {result ? (
+        <RedeemConfirmation result={result} headingLevel="h3" />
+      ) : (
+        <div className={s.row}>
+          <RedeemForm compact onRedeemed={setResult} />
+        </div>
+      )}
+    </section>
+  );
+}
+
+function EmailUpdates({ userId }: { userId: string | undefined }) {
+  const consent = useEmailUpdates(userId);
+  const qc = useQueryClient();
+  const toast = useToast();
+  const [busy, setBusy] = useState(false);
+  // Shows the new choice at once and returns to the stored one if saving fails.
+  const [pending, setPending] = useState<boolean | null>(null);
+  const checked = pending ?? consent.data?.email_updates ?? false;
+
+  return (
+    <section className={s.section} aria-labelledby="emails-title">
+      <h2 id="emails-title" className={[p.h2, p.h2Rule].join(' ')}>
+        Emails about Nexa
+      </h2>
+      <label className={s.consent}>
+        <input
+          type="checkbox"
+          checked={checked}
+          disabled={busy || consent.isPending}
+          onChange={async (e) => {
+            const value = e.target.checked;
+            setPending(value);
+            setBusy(true);
+            try {
+              await saveEmailUpdates(value);
+              await qc.invalidateQueries({ queryKey: ['email-updates', userId] });
+              toast.show(value ? 'You will receive occasional emails about Nexa.' : 'You will no longer receive emails about Nexa.');
+            } catch (err) {
+              toast.show(`Error: ${errorMessage(codeOf(err))}`);
+            } finally {
+              setPending(null);
+              setBusy(false);
+            }
+          }}
+        />
+        <span>Send me occasional emails about Nexa.</span>
+      </label>
+      <p className={p.caption}>
+        Optional. Sign in links, invites, reminders and deletion notices are sent either way.
+        {consent.data ? ` Last changed ${formatDateTime(consent.data.decided_at)}.` : ''}
+      </p>
+    </section>
   );
 }
