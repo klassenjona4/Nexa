@@ -29,12 +29,12 @@ const STEPS = [
   },
 ];
 
-// Example cards from the app, placed around the video. They show what each step produces.
+// What each part of Nexa does, placed around the video.
 const CARDS = [
-  { key: 'brief', label: 'Brief read', main: '4 deliverables, 3 deadlines', detail: '2,500 words, 5 marking criteria' },
-  { key: 'split', label: 'Tasks split', main: '12 tasks, 38\u00a0h', detail: 'Even split across 4 members' },
-  { key: 'log', label: 'Contribution log', main: 'Literature review: done', detail: 'Confirmed by 2 teammates, 14:32' },
-  { key: 'statement', label: 'Contribution statement', main: 'Exported as PDF', detail: 'One factual paragraph per member' },
+  { key: 'brief', label: 'Brief', main: 'Reads your brief', detail: 'Lists the deliverables, deadlines, word counts and marking criteria.' },
+  { key: 'split', label: 'Tasks', main: 'Splits the work', detail: 'Proposes tasks with estimated hours and shares them evenly.' },
+  { key: 'log', label: 'Log', main: 'Records each part', detail: 'Logs every finished task and teammate confirmation with a date.' },
+  { key: 'statement', label: 'Statement', main: 'Drafts the statement', detail: 'Exports a factual contribution statement for peer assessment.' },
 ];
 
 export function LandingVideo() {
@@ -73,7 +73,7 @@ export function LandingVideo() {
         <h2 id="video-title" className="visually-hidden">
           Nexa in under a minute
         </h2>
-        <ul className={s.cards} aria-label="What Nexa produces">
+        <ul className={s.cards} aria-label="What Nexa does">
           {CARDS.map((c) => (
             <li key={c.key} className={[s.card, s[c.key]].join(' ')}>
               <span className={s.cardLabel}>{c.label}</span>
