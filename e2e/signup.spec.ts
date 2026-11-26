@@ -81,3 +81,12 @@ test('download my data and delete my account', async ({ page }) => {
   await signIn(page, email, 'Seán Kelly');
   await expect(page.getByText('You are not in a group yet')).toBeVisible();
 });
+
+test('the sign in page says MTU addresses are blocked and points to Google or a personal address', async ({ page }) => {
+  await page.goto('/sign-in');
+  await expect(page.getByText("MTU's email system is currently blocking Nexa sign in links", { exact: false })).toBeVisible();
+  await page.getByLabel('Email address').fill(`r${Date.now()}@mymtu.ie`);
+  await page.getByRole('button', { name: 'Send sign in link' }).click();
+  await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible();
+  await expect(page.getByText('this email may not arrive', { exact: false })).toBeVisible();
+});
