@@ -1,4 +1,6 @@
 import { type FormEvent, useState } from 'react';
+import { isMtuAddress } from '../../../shared/emailDomains';
+import { InlineNotice } from '../../components/Display';
 import { Link, useSearchParams } from 'react-router';
 import p from '../../app/page.module.css';
 import { PublicFooter } from '../../app/Shell';
@@ -71,6 +73,11 @@ export function SignIn() {
               A sign in link was sent to <strong className={s.email}>{sent}</strong>. Open the email on this device and select the link. It works once and expires after 15 minutes.
             </p>
             <p className={[p.serif, p.muted].join(' ')}>If the email has not arrived after 2 minutes, check your spam or junk folder.</p>
+            {isMtuAddress(sent) ? (
+              <InlineNotice role="note">
+                MTU's email system is currently blocking Nexa sign in links, so this email may not arrive. Use a different email address below, or go back and choose Continue with Google.
+              </InlineNotice>
+            ) : null}
           </div>
           {failure ? <p className={s.failure}>Error: {failure}</p> : null}
           <div className={p.stack}>
@@ -107,6 +114,9 @@ export function SignIn() {
             <p className={p.intro}>Enter your email address and a sign in link will be sent to it. No password is needed. A new account is created the first time you sign in.</p>
           )}
         </div>
+        <InlineNotice role="note">
+          <strong>MTU email addresses:</strong> MTU's email system is currently blocking Nexa sign in links. We are working on a fix. Until then, use Continue with Google or a personal email address; both work as normal.
+        </InlineNotice>
         {failure ? <ErrorPanel title="The sign in link was not sent" body={failure} /> : null}
         <form onSubmit={onSubmit} className={p.stack} noValidate>
           <TextField
